@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
   <meta property="og:type" content="website">
@@ -103,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -117,16 +118,58 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -145,6 +188,388 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E5%88%AE%E5%BC%80%E6%9C%89%E5%A5%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E5%88%AE%E5%BC%80%E6%9C%89%E5%A5%96/" class="post-title-link" itemprop="url">刮开有奖</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 22:28:11 / Modified: 22:31:33" itemprop="dateCreated datePublished" datetime="2022-09-12T22:28:11+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="题目地址"><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%E5%88%AE%E5%BC%80%E6%9C%89%E5%A5%96">题目地址</a></h2>
+<h2 id="解题过程">解题过程</h2>
+<h3 id="peid查看无壳拖入ida反编译结果如下">PEID查看无壳，拖入IDA反编译，结果如下：</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL __stdcall <span class="title">DialogFunc</span><span class="params">(HWND hDlg, UINT a2, WPARAM a3, LPARAM a4)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v4; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v5; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">int</span> v7; <span class="comment">// [esp+8h] [ebp-20030h]</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// [esp+Ch] [ebp-2002Ch]</span></span><br><span class="line">  <span class="type">int</span> v9; <span class="comment">// [esp+10h] [ebp-20028h]</span></span><br><span class="line">  <span class="type">int</span> v10; <span class="comment">// [esp+14h] [ebp-20024h]</span></span><br><span class="line">  <span class="type">int</span> v11; <span class="comment">// [esp+18h] [ebp-20020h]</span></span><br><span class="line">  <span class="type">int</span> v12; <span class="comment">// [esp+1Ch] [ebp-2001Ch]</span></span><br><span class="line">  <span class="type">int</span> v13; <span class="comment">// [esp+20h] [ebp-20018h]</span></span><br><span class="line">  <span class="type">int</span> v14; <span class="comment">// [esp+24h] [ebp-20014h]</span></span><br><span class="line">  <span class="type">int</span> v15; <span class="comment">// [esp+28h] [ebp-20010h]</span></span><br><span class="line">  <span class="type">int</span> v16; <span class="comment">// [esp+2Ch] [ebp-2000Ch]</span></span><br><span class="line">  <span class="type">int</span> v17; <span class="comment">// [esp+30h] [ebp-20008h]</span></span><br><span class="line">  CHAR String; <span class="comment">// [esp+34h] [ebp-20004h]</span></span><br><span class="line">  <span class="type">char</span> v19; <span class="comment">// [esp+35h] [ebp-20003h]</span></span><br><span class="line">  <span class="type">char</span> v20; <span class="comment">// [esp+36h] [ebp-20002h]</span></span><br><span class="line">  <span class="type">char</span> v21; <span class="comment">// [esp+37h] [ebp-20001h]</span></span><br><span class="line">  <span class="type">char</span> v22; <span class="comment">// [esp+38h] [ebp-20000h]</span></span><br><span class="line">  <span class="type">char</span> v23; <span class="comment">// [esp+39h] [ebp-1FFFFh]</span></span><br><span class="line">  <span class="type">char</span> v24; <span class="comment">// [esp+3Ah] [ebp-1FFFEh]</span></span><br><span class="line">  <span class="type">char</span> v25; <span class="comment">// [esp+3Bh] [ebp-1FFFDh]</span></span><br><span class="line">  <span class="type">char</span> v26; <span class="comment">// [esp+10034h] [ebp-10004h]</span></span><br><span class="line">  <span class="type">char</span> v27; <span class="comment">// [esp+10035h] [ebp-10003h]</span></span><br><span class="line">  <span class="type">char</span> v28; <span class="comment">// [esp+10036h] [ebp-10002h]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a2 == <span class="number">272</span> )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">if</span> ( a2 != <span class="number">273</span> )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( (_WORD)a3 == <span class="number">1001</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">memset</span>(&amp;String, <span class="number">0</span>, <span class="number">0xFFFF</span>u);</span><br><span class="line">    <span class="built_in">GetDlgItemTextA</span>(hDlg, <span class="number">1000</span>, &amp;String, <span class="number">0xFFFF</span>);</span><br><span class="line">    <span class="keyword">if</span> ( <span class="built_in">strlen</span>(&amp;String) == <span class="number">8</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v7 = <span class="number">90</span>;</span><br><span class="line">      v8 = <span class="number">74</span>;</span><br><span class="line">      v9 = <span class="number">83</span>;</span><br><span class="line">      v10 = <span class="number">69</span>;</span><br><span class="line">      v11 = <span class="number">67</span>;</span><br><span class="line">      v12 = <span class="number">97</span>;</span><br><span class="line">      v13 = <span class="number">78</span>;</span><br><span class="line">      v14 = <span class="number">72</span>;</span><br><span class="line">      v15 = <span class="number">51</span>;</span><br><span class="line">      v16 = <span class="number">110</span>;</span><br><span class="line">      v17 = <span class="number">103</span>;</span><br><span class="line">      <span class="built_in">sub_4010F0</span>(&amp;v7, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">      <span class="built_in">memset</span>(&amp;v26, <span class="number">0</span>, <span class="number">0xFFFF</span>u);</span><br><span class="line">      v26 = v23;</span><br><span class="line">      v28 = v25;</span><br><span class="line">      v27 = v24;</span><br><span class="line">      v4 = (<span class="type">const</span> <span class="type">char</span> *)<span class="built_in">sub_401000</span>(&amp;v26, <span class="built_in">strlen</span>(&amp;v26));</span><br><span class="line">      <span class="built_in">memset</span>(&amp;v26, <span class="number">0</span>, <span class="number">0xFFFF</span>u);</span><br><span class="line">      v27 = v21;</span><br><span class="line">      v26 = v20;</span><br><span class="line">      v28 = v22;</span><br><span class="line">      v5 = (<span class="type">const</span> <span class="type">char</span> *)<span class="built_in">sub_401000</span>(&amp;v26, <span class="built_in">strlen</span>(&amp;v26));</span><br><span class="line">      <span class="keyword">if</span> ( String == v7 + <span class="number">34</span></span><br><span class="line">        &amp;&amp; v19 == v11</span><br><span class="line">        &amp;&amp; <span class="number">4</span> * v20 - <span class="number">141</span> == <span class="number">3</span> * v9</span><br><span class="line">        &amp;&amp; v21 / <span class="number">4</span> == <span class="number">2</span> * (v14 / <span class="number">9</span>)</span><br><span class="line">        &amp;&amp; !<span class="built_in">strcmp</span>(v4, <span class="string">&quot;ak1w&quot;</span>)</span><br><span class="line">        &amp;&amp; !<span class="built_in">strcmp</span>(v5, <span class="string">&quot;V1Ax&quot;</span>) )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">MessageBoxA</span>(hDlg, <span class="string">&quot;U g3t 1T!&quot;</span>, <span class="string">&quot;@_@&quot;</span>, <span class="number">0</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( (_WORD)a3 != <span class="number">1</span> &amp;&amp; (_WORD)a3 != <span class="number">2</span> )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">EndDialog</span>(hDlg, (<span class="type">unsigned</span> __int16)a3);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>发现关键代码如下： <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( String == v7 + <span class="number">34</span></span><br><span class="line">        &amp;&amp; v19 == v11</span><br><span class="line">        &amp;&amp; <span class="number">4</span> * v20 - <span class="number">141</span> == <span class="number">3</span> * v9</span><br><span class="line">        &amp;&amp; v21 / <span class="number">4</span> == <span class="number">2</span> * (v14 / <span class="number">9</span>)</span><br><span class="line">        &amp;&amp; !<span class="built_in">strcmp</span>(v4, <span class="string">&quot;ak1w&quot;</span>)</span><br><span class="line">        &amp;&amp; !<span class="built_in">strcmp</span>(v5, <span class="string">&quot;V1Ax&quot;</span>) )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">MessageBoxA</span>(hDlg, <span class="string">&quot;U g3t 1T!&quot;</span>, <span class="string">&quot;@_@&quot;</span>, <span class="number">0</span>);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure> 将v4、v5分别与<code>"ak1w"</code>、<code>"V1Ax"</code>对比，String与v7+34对比，其他类似，从String开始到v25为我方输入，后续对String部分进行变换。 1. sub_4010F0(&amp;v7, 0, 10)函数对v7开始的数组进行排序（升序）， 2. sub_401000函数为base64编码。</p>
+<h3 id="编写py对其还原">编写py对其还原：</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line">a = [<span class="string">&#x27;Z&#x27;</span>,<span class="string">&#x27;J&#x27;</span>,<span class="string">&#x27;S&#x27;</span>,<span class="string">&#x27;E&#x27;</span>,<span class="string">&#x27;C&#x27;</span>,<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;N&#x27;</span>,<span class="string">&#x27;H&#x27;</span>,<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;n&#x27;</span>,<span class="string">&#x27;g&#x27;</span>]</span><br><span class="line">a = [<span class="built_in">ord</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> a]</span><br><span class="line">a.sort()</span><br><span class="line">res = []</span><br><span class="line">res.append(<span class="built_in">chr</span>(a[<span class="number">0</span>]+<span class="number">34</span>))                        <span class="comment"># str[0]</span></span><br><span class="line">res.append(<span class="built_in">chr</span>(a[<span class="number">4</span>]))                           <span class="comment"># str[1] = v19</span></span><br><span class="line">res.append( <span class="built_in">chr</span>((a[<span class="number">2</span>] * <span class="number">3</span> + <span class="number">141</span>) // <span class="number">4</span>) )        <span class="comment"># v20</span></span><br><span class="line">res.append(base64.b64decode(<span class="string">&quot;ak1w&quot;</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>)[<span class="number">1</span>:])        <span class="comment"># v21-v22</span></span><br><span class="line">res.append(base64.b64decode(<span class="string">&quot;V1Ax&quot;</span>).decode(<span class="string">&#x27;utf-8&#x27;</span>))            <span class="comment"># v23-v25</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;&#x27;</span>.join(res))</span><br></pre></td></tr></table></figure>
+<h3 id="得到flagujwmpwp1">得到flag：UJWMpWP1</h3>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E4%B8%8D%E4%B8%80%E6%A0%B7%E7%9A%84flag/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E4%B8%8D%E4%B8%80%E6%A0%B7%E7%9A%84flag/" class="post-title-link" itemprop="url">不一样的flag</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 22:22:37 / Modified: 22:31:58" itemprop="dateCreated datePublished" datetime="2022-09-12T22:22:37+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="题目地址"><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%E4%B8%8D%E4%B8%80%E6%A0%B7%E7%9A%84flag">题目地址</a></h2>
+<h2 id="解题过程">解题过程</h2>
+<p>PEID查看无壳，拖入IDA反编译，结果如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> **argv, <span class="type">const</span> <span class="type">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">char</span> v3; <span class="comment">// [esp+17h] [ebp-35h]</span></span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// [esp+30h] [ebp-1Ch]</span></span><br><span class="line">  <span class="type">int</span> v5; <span class="comment">// [esp+34h] [ebp-18h]</span></span><br><span class="line">  <span class="type">signed</span> <span class="type">int</span> v6; <span class="comment">// [esp+38h] [ebp-14h]</span></span><br><span class="line">  <span class="type">int</span> i; <span class="comment">// [esp+3Ch] [ebp-10h]</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// [esp+40h] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  __main();</span><br><span class="line">  v4 = <span class="number">0</span>;</span><br><span class="line">  v5 = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">qmemcpy</span>(&amp;v3, _data_start__, <span class="number">0x19</span>u);  <span class="comment">// &#x27;*11110100001010000101111#&#x27;</span></span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;you can choose one action to execute&quot;</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;1 up&quot;</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;2 down&quot;</span>);</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;3 left&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;4 right\n:&quot;</span>);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;v6);</span><br><span class="line">    <span class="keyword">if</span> ( v6 == <span class="number">2</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      ++v4;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ( v6 &gt; <span class="number">2</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( v6 == <span class="number">3</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        --v5;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( v6 != <span class="number">4</span> )</span><br><span class="line">LABEL_13:</span><br><span class="line">          <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">        ++v5;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( v6 != <span class="number">1</span> )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_13;</span><br><span class="line">      --v4;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; ++i )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( *(&amp;v4 + i) &lt; <span class="number">0</span> || *(&amp;v4 + i) &gt; <span class="number">4</span> )</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)&amp;v8 + <span class="number">5</span> * v4 + v5 - <span class="number">41</span>) == <span class="string">&#x27;1&#x27;</span> )</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> ( *((_BYTE *)&amp;v8 + <span class="number">5</span> * v4 + v5 - <span class="number">41</span>) == <span class="string">&#x27;#&#x27;</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;\nok, the order you enter is the flag!&quot;</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析代码，初始化将_data_start__字符串<code>*11110100001010000101111#</code>复制到v3处，后续逻辑为，用户输入数字1234分别代表上下左右，分别对应变量 ++v4、--v5、++v5、--v4。 然后将v5和v4作为字符串数组索引，取v3<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>字符串数组对应的值，判断该值与'1'和'#'的关系。</p>
+<p>将<code>*11110100001010000101111#</code>数组按5位一组排列，即为： *1111 01000 01010 00010 1111# 因此解法为走迷宫，从*开始，每一步走到0，直到遇到符号#。</p>
+<h3 id="得到flag222441144222">得到flag：<code>222441144222</code></h3>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1" role="doc-endnote"><p>v3地址为[esp+17h]，v8地址为[esp+40h]，两者相距 29h即41。<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">分组加密模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 21:33:32 / Modified: 22:15:03" itemprop="dateCreated datePublished" datetime="2022-09-12T21:33:32+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>There are five types of operations in block cipher modes, ECB (Electronic Code Block) mode, CBC (Cipher Block Chaining) mode, CFB (Cipher Feedback) mode, OFB (Output Feedback) mode and CTR ( Counter) mode.</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/12/%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">BIRD 入门</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 21:23:11 / Modified: 21:33:50" itemprop="dateCreated datePublished" datetime="2022-09-12T21:23:11+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>BIRD，即BIRD Internet Routing Daemon，是一个开源软件，支持各类标准路由协议，包括BGP，RIP和OSPF。本文主要关注BGP和OSPF协议，下面对其进行简单介绍。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E5%B0%8F%E7%B1%B36X%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/%E5%B0%8F%E7%B1%B36X%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" class="post-title-link" itemprop="url">小米6X刷机教程</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 18:45:29 / Modified: 21:23:27" itemprop="dateCreated datePublished" datetime="2022-09-12T18:45:29+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Life/" itemprop="url" rel="index"><span itemprop="name">Life</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最进闲来无事，早就想将手中的<code>小米6X</code>手机刷机了，本以为刷机很简单，却也整整搞了一天才完成，这里记录下刷机的过程。</p>
+<h2 id="解锁">解锁</h2>
+<p>首先下载<a target="_blank" rel="noopener" href="https://www.miui.com/unlock/download.html">官方解锁工具</a>，然后进行以下步骤：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/09/12/%E5%B0%8F%E7%B1%B36X%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -174,7 +599,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 16:44:42 / Modified: 17:00:39" itemprop="dateCreated datePublished" datetime="2022-09-12T16:44:42+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 16:44:42 / Modified: 22:00:14" itemprop="dateCreated datePublished" datetime="2022-09-12T16:44:42+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,7 +677,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 16:32:35 / Modified: 16:44:36" itemprop="dateCreated datePublished" datetime="2022-09-12T16:32:35+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 16:32:35 / Modified: 21:57:13" itemprop="dateCreated datePublished" datetime="2022-09-12T16:32:35+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -481,7 +906,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 16:01:52 / Modified: 16:25:42" itemprop="dateCreated datePublished" datetime="2022-09-12T16:01:52+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 16:01:52 / Modified: 22:08:23" itemprop="dateCreated datePublished" datetime="2022-09-12T16:01:52+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -529,394 +954,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/Easy-RSA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/12/Easy-RSA/" class="post-title-link" itemprop="url">Easy RSA</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-12 15:58:21 / Modified: 16:10:09" itemprop="dateCreated datePublished" datetime="2022-09-12T15:58:21+08:00">2022-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="easy-rsa">Easy RSA</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/12/Easy-RSA/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/weak-DSA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/12/weak-DSA/" class="post-title-link" itemprop="url">weak DSA</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-12 15:55:02 / Modified: 16:25:30" itemprop="dateCreated datePublished" datetime="2022-09-12T15:55:02+08:00">2022-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="weak-dsa">weak DSA</h2>
-<ol type="1">
-<li><p>题目： 打开附件，看到存在五个文件</p>
-<p></p></li></ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/12/weak-DSA/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/" class="post-title-link" itemprop="url">CBC反转攻击</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-12 15:36:47 / Modified: 15:53:36" itemprop="dateCreated datePublished" datetime="2022-09-12T15:36:47+08:00">2022-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="cbc-反转攻击">CBC 反转攻击</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/Babylfsr/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/12/Babylfsr/" class="post-title-link" itemprop="url">Babylfsr</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-12 15:03:42 / Modified: 15:06:18" itemprop="dateCreated datePublished" datetime="2022-09-12T15:03:42+08:00">2022-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol type="1">
-<li>例题如下：</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/12/Babylfsr/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E5%A8%81%E5%B0%94%E9%80%8A%E5%AE%9A%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/12/%E5%A8%81%E5%B0%94%E9%80%8A%E5%AE%9A%E7%90%86/" class="post-title-link" itemprop="url">威尔逊定理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-12 14:16:25 / Modified: 15:03:14" itemprop="dateCreated datePublished" datetime="2022-09-12T14:16:25+08:00">2022-09-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="威尔逊定理">威尔逊定理</h2>
-<ol type="1">
-<li><p>定义</p>
-<blockquote>
-<p>当且仅当p为素数时，<span class="math inline">\((p-1)!\equiv -1\mod p\)</span></p>
-</blockquote>
-<p></p></li></ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/12/%E5%A8%81%E5%B0%94%E9%80%8A%E5%AE%9A%E7%90%86/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -981,17 +1023,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">categories</span>
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">tags</span>
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -1060,6 +1106,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

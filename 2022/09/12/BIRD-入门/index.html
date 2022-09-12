@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="BIRD，即BIRD Internet Routing Daemon，是一个开源软件，支持各类标准路由协议，包括BGP，RIP和OSPF。本文主要关注BGP和OSPF协议，下面对其进行简单介绍。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BIRD 入门">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="BIRD，即BIRD Internet Routing Daemon，是一个开源软件，支持各类标准路由协议，包括BGP，RIP和OSPF。本文主要关注BGP和OSPF协议，下面对其进行简单介绍。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/image-20220912212527054-16629891354721.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/Users/lylan/Desktop/resources/8e5851d6517a45fe8067e76f0b6e0f64.png">
+<meta property="article:published_time" content="2022-09-12T13:23:11.000Z">
+<meta property="article:modified_time" content="2022-09-12T13:33:50.487Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="bird">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/image-20220912212527054-16629891354721.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>BIRD 入门 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BIRD 入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 21:23:11 / Modified: 21:33:50" itemprop="dateCreated datePublished" datetime="2022-09-12T21:23:11+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>BIRD，即BIRD Internet Routing Daemon，是一个开源软件，支持各类标准路由协议，包括BGP，RIP和OSPF。本文主要关注BGP和OSPF协议，下面对其进行简单介绍。</p>
+<span id="more"></span>
+<p>BIRD配置文件<code>bird.conf</code>位于<code>/etc/bird</code>文件目录下。其配置十分复杂且跟协议相关，详细的配置可参考<a target="_blank" rel="noopener" href="https://bird.network.cz/">BIRD manual</a>，本文仅关注Emulator所依赖的features。</p>
+<p><strong>BIRD 路由表</strong> 路由协议的主要功能是作为协议参与者与其对等者（peers）交换信息，这些路由信息存放在路由表中。BIRD在内存中存放有数个路由表，这些路由表如何接收或导出其数据被称为<code>protocol</code>。在某些例子中，这些协议是真正的路由协议，如bgp，rip，ospf，将导出或导入到各类路由器的路由表中。但某些协议不是真正的路由协议，BIRD使用<code>protocol</code>关键字，指明BIRD路由表从哪获取路由，并将路由发送何处。这些特殊的<code>protocol</code>用于指明数据如何从一个路由表流向另一个路由表。</p>
+<figure>
+<img src="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/image-20220912212527054-16629891354721.png" alt="image-20220912212527054"><figcaption aria-hidden="true">image-20220912212527054</figcaption>
+</figure>
+<h2 id="pipe-between-tables">Pipe Between Tables</h2>
+<p>对于IPv4，仅存储在BIRD主表<code>master4</code>中的路由将会被导出到内核的路由表中（通过<code>kernel</code>协议）。如果未指明协议中的表名，将会默认使用master table。对于不同的协议将会使用不同的表名，这些路由将使用<code>pipe</code>协议传送到master table中。</p>
+<p><code>pipe</code>协议连接两个路由表，分别为主表（使用<code>table</code>关键字）和次表（使用<code>peer</code>关键字）。在import和export两个方向中可以使用filter过滤路由信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">protocol pipe &#123;</span><br><span class="line">	table t_bgp;</span><br><span class="line">	peer table master4;</span><br><span class="line">	import none;</span><br><span class="line">	export all;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述的例子中，所有t_bgp的表项被导出到master4表中，但master4中没有任何路由被导入到t_bgp中。在下列的例子中，所有t_direct表中的路由项被导出到t_bgp表中，且路由的local preference属性设为40。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">protocol pipe &#123;</span><br><span class="line">	table t_direct;</span><br><span class="line">	peer table t_bgp;</span><br><span class="line">	import none;</span><br><span class="line">	export filter &#123; bgp_local_pref = <span class="number">40</span>; accept; &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="bgp路由表与kernel路由表">BGP路由表与Kernel路由表</h2>
+<p>BIRD没有真正用于路由的路由表，真正用于路由的路由表叫kernel路由表，位于系统kernel中，但kernel路由表取决于路由协议学习真正的路由。为此，BIRD提供<code>kernel</code>协议用于连接BIRD的路由表与kernel路由表。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">protocol kernel &#123;</span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		import all;</span><br><span class="line">		export all;</span><br><span class="line">	&#125;;</span><br><span class="line">	learn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述的例子中，未指定路由表名，因此默认为master表（master4用于IPv4）。“import all”表示BIRD将从kernel路由表导入所有信息到master4表，“export all”表示master4表中所有路由信息将导出到kernel路由表中。</p>
+<h2 id="device-协议">device 协议</h2>
+<p>每个BGP路由器中都有一个叫<code>device</code>的强制协议，该协议不是真正的路由协议，不生成任何路由，也不接受任何路由。该协议仅用于从kernel中获取网卡信息。在Emulator中，该协议仅为一个empty block。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protocol device &#123; &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="bgpas所有的ip前缀">BGP：AS所有的IP前缀</h2>
+<p>在BGP协议中，每个BGP路由器需要告知Internet其代表的自治系统所拥有的网络前缀，告知其他AS本AS是这些IP前缀的所有者。BGP路由器如何知道这些前缀属于自身AS？BGP路由器可以通过以下几种方法获取该信息。</p>
+<ol type="1">
+<li>从BGP路由器所附加的网络中</li>
+<li>从配置文件添加的静态表项中</li>
+<li>从IBGP（Interior BGP）和IGP（Internal Gateway Protocol）中，例如从其他属于同一AS的路由器中。</li>
+</ol>
+<h3 id="使用direct协议生成路由">使用direct协议生成路由</h3>
+<p>每个BGP路由器附加在AS的一个或多个内部网络中，因此可以从自身网卡所在的网络中获取IP前缀。BIRD使用<code>direct</code>协议来收集这些IP前缀信息，并且生成相应的路由。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">protocol direct local_nets &#123; <span class="meta"># give it a customized name: local_nets</span></span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		table t_direct;</span><br><span class="line">		<span class="meta"># import all the generated routes to t_direct</span></span><br><span class="line">		import all;</span><br><span class="line">	&#125;;</span><br><span class="line">	interface <span class="string">&quot;eth0&quot;</span>;</span><br><span class="line">	interface <span class="string">&quot;eth1&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>direct</code>协议中，<code>interface</code>关键字用于从接口中生成路由。假定BGP路由器分别使用 <em>eth0</em> 和 <em>eth1</em> 连接到自治系统的内部网络 <em>10.150.0.0./24</em> 和 <em>10.150.1.0/24</em> ，direct协议将会生成对于 <em>10.150.0.0./24</em> 和 <em>10.150.1.0/24</em> 的路由项，存储到t_direct表中。 使用<code>birdc show route</code>命令列出每个表中的路由项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">birdc show route all table t direct 10.150.0.0/24</span></span><br><span class="line">Table t_direct:</span><br><span class="line">10.150.0.0/24 unicast [local_nets 13:51:05.189] * (240)</span><br><span class="line">dev net0</span><br><span class="line">Type: device univ</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">birdc show route all table t bgp 10.150.0.0/24</span></span><br><span class="line">Table t_bgp:</span><br><span class="line">10.150.0.0/24 unicast [local_nets 13:51:05.189] * (240)</span><br><span class="line">dev net0</span><br><span class="line">Type: device univ</span><br><span class="line">BGP.local_pref: 40</span><br><span class="line">BGP.large_community: (150, 0, 0)</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">birdc show route all table master4 10.150.0.0/24</span></span><br><span class="line">Table master4:</span><br><span class="line">10.150.0.0/24 unicast [local_nets 13:51:05.189] * (240)</span><br><span class="line">dev net0</span><br><span class="line">Type: device univ</span><br><span class="line">BGP.local_pref: 40</span><br><span class="line">BGP.large_community: (150, 0, 0)</span><br></pre></td></tr></table></figure>
+<h3 id="从static协议中生成路由">从static协议中生成路由</h3>
+<p>BIRD使用<code>static</code>协议在BGP配置文件中添加静态IP前缀信息，该协议同样不是真正的协议，因为该协议不支持从peer中导入路由，仅提供预定义的路由信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">protocol <span class="type">static</span> &#123;</span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		table t_bgp;</span><br><span class="line">	&#125;;</span><br><span class="line">	route <span class="number">10.150</span><span class="number">.1</span><span class="number">.0</span>/<span class="number">24</span> via <span class="number">10.150</span><span class="number">.0</span><span class="number">.254</span> &#123;</span><br><span class="line">		bgp_large_community.add(LOCAL_COMM);</span><br><span class="line">	&#125;;</span><br><span class="line">	route <span class="number">10.150</span><span class="number">.2</span><span class="number">.0</span>/<span class="number">24</span> blackhole &#123;</span><br><span class="line">		bgp_large_community.add(LOCAL_COMM);</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="asn和ip前缀">ASN和IP前缀</h3>
+<p>现实世界中，我们需要知道一个特定的AS所拥有的IP前缀和特定的IP前缀属于哪个AS。可以使用RADB数据库获取该信息。示例如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">whois -h whois.radb.net -- <span class="string">&#x27;-i origin AS11872&#x27;</span> | grep route</span></span><br><span class="line">route:      128.230.0.0/16</span><br><span class="line">route:      149.119.0.0/16</span><br><span class="line">route:      128.230.0.0/17</span><br><span class="line">route:      128.230.128.0/17</span><br><span class="line">route:      128.230.0.0/18</span><br><span class="line">route:      128.230.64.0/18</span><br><span class="line">route:      128.230.128.0/18</span><br><span class="line">route:      128.230.192.0/18</span><br><span class="line">route:      128.230.0.0/19</span><br><span class="line">route:      128.230.32.0/19</span><br><span class="line">route:      128.230.64.0/19</span><br><span class="line">route:      128.230.96.0/19</span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">whois -h whois.radb.net 110.75.129.5</span></span><br><span class="line">route:          110.75.129.0/24</span><br><span class="line">descr:          Alibaba (US) Technology Co., Ltd.</span><br><span class="line">origin:         AS45102</span><br><span class="line">mnt-by:         MAINT-CNNIC-AP</span><br><span class="line">last-modified:  2020-06-28T00:10:33Z</span><br><span class="line">source:         APNIC</span><br><span class="line"></span><br><span class="line">route:          110.75.129.0/24</span><br><span class="line">descr:          Alibaba (US) Technology Co., Ltd.</span><br><span class="line">origin:         AS37963</span><br><span class="line">mnt-by:         MAINT-CNNIC-AP</span><br><span class="line">last-modified:  2020-06-28T00:09:56Z</span><br><span class="line">source:         APNIC</span><br></pre></td></tr></table></figure>
+<h2 id="bgp-peering">BGP Peering</h2>
+<p>在IX-100中，AS-150，AS-151，AS-2，AS-3和AS-4都连接到IX-100网络 <em>0.100.0.0/24</em>。每个自治系统都有BGP路由器连接到该网络中，且属于物理连接，但并不意味着自治系统已经与其他系统进行了对等连接，为了建立对等连接，每个BGP路由器需要设置<code>peering</code>关系。</p>
+<figure>
+<img src="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/Users\lylan\Desktop\resources\8e5851d6517a45fe8067e76f0b6e0f64.png" alt="IX-100.png"><figcaption aria-hidden="true">IX-100.png</figcaption>
+</figure>
+<h3 id="建立peering关系">建立Peering关系</h3>
+<p>在两个BGP路由器物理连接后，需要设置BGP peering用于相互通信和交换路由信息。BGP路由器可以建立多个peer，每个叫做 <em>peering session</em>。BIRD使用<code>bgp</code>协议建立 <em>peering session</em>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp u_as2 &#123;</span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		table t_bgp;</span><br><span class="line">		import filter &#123;</span><br><span class="line">			... omitted ...</span><br><span class="line">		&#125;;</span><br><span class="line">		export where ... filter omitted ...</span><br><span class="line">		next hop self;</span><br><span class="line">	&#125;;</span><br><span class="line">	local <span class="number">10.100</span><span class="number">.0</span><span class="number">.150</span> as <span class="number">150</span>;</span><br><span class="line">	neighbor <span class="number">10.100</span><span class="number">.0</span><span class="number">.2</span> as <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>local 选项</strong>：指定了路由器属于哪个AS和路由器的IP地址，该IP地址应当属于IX网络（IX网络段为10.100.0.0/24）。IP地址是可选的，但当路由器具有多个IP地址时，可以避免BGP session选择错误的IP地址。</p>
+<p><strong>neighnor 选项</strong>：指定了peer的IP地址和peer所属的AS，该IP地址同样属于IX网络。</p>
+<p><strong>IPv4 channel和路由表</strong>：每个协议都通过channel连接到一个路由表。BGP支持IPv4和IPv6 channel，每个channel包含两个filter，分别为import和export filter，能够接收，拒绝和修改路由。</p>
+<h3 id="import和export-filters">Import和Export Filters</h3>
+<p>当导入和导出路由时，可以使用过滤规则。BIRD包含简单的编程语言，其过滤规则为程序。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">table t_bgp;</span><br><span class="line">import filter &#123;</span><br><span class="line">	bgp_large_community.add(PROVIDER_COMM);</span><br><span class="line">	bgp_local_pref = <span class="number">10</span>;</span><br><span class="line">	accept;</span><br><span class="line">&#125;;</span><br><span class="line">export where bgp_large_community ˜ [LOCAL_COMM, CUSTOMER_COMM];</span><br></pre></td></tr></table></figure>
+<p>在上述的例子中，当路由从peer中导入时，社区信息将被添加且local preference值被设为10，当路由导出到peer时，仅属于LOCAL_COMM和CUSTOMER_COMM 社区的路由将会被导出。 路由具有许多属性，filter可以通过预定义的变量访问这些属性，部分预定义变量如下：</p>
+<ul>
+<li>net：路由网络前缀</li>
+<li>bgp_path：路由AS路径</li>
+<li>bgp_local_pref：路由的本地preference值，用于路径选择</li>
+<li>bgp_next_hop：转发包到目的地的下一跳</li>
+<li>bgp_large_community：与路由相关的large 社区值列表</li>
+</ul>
+<h3 id="peering-via-路由服务器">Peering via 路由服务器</h3>
+<p>Internet exchanges提供叫 <code>router server</code>的特别服务器，N个自治系统仅需要连接到该路由服务器便可以互相交换路由信息。<code>route server</code>从BGP的参与者接收到路由时，将会转发其他所有的参与者，其功能类似于多播。 AS-2，AS-3和AS-4通过<code>router server</code>与其他互相连接，其中AS-2 BGP路由器的BGP表项如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp p_rs100 &#123;</span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		table t_bgp;</span><br><span class="line">		import filter &#123;</span><br><span class="line">			bgp_large_community.add(PREE_COMM);</span><br><span class="line">			bgp_local_pref = <span class="number">20</span>;</span><br><span class="line">			accept;</span><br><span class="line">		&#125;;</span><br><span class="line">		export where bgp_large_community ~ [LOCAL_COMM, CUSTOMER_COMM];</span><br><span class="line">		next_hop self;</span><br><span class="line">	&#125;;</span><br><span class="line">	local <span class="number">10.100</span><span class="number">.0</span><span class="number">.2</span> as <span class="number">2</span>;</span><br><span class="line">	neighbor <span class="number">10.100</span><span class="number">.0</span><span class="number">.100</span> as <span class="number">100</span>; <span class="meta"># peer with the route server</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>router server需要添加所有的AS-2，AS-3和AS-4的peering entry，包含“rs client”选项开启。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">protocol bgp p_as2 &#123;</span><br><span class="line">	ipv4 &#123;</span><br><span class="line">		import all;</span><br><span class="line">		export all;</span><br><span class="line">	&#125;;</span><br><span class="line">	rs client;</span><br><span class="line">	local <span class="number">10.100</span><span class="number">.0</span><span class="number">.100</span> as <span class="number">100</span>;</span><br><span class="line">	neighbor <span class="number">10.100</span><span class="number">.0</span><span class="number">.2</span> as <span class="number">2</span>; ➙Peer with AS<span class="number">-2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="route-advertisements">Route Advertisements</h3>
+<p>BGP路由器转发其路由消息时，该路由advertisement包含两个section：</p>
+<ul>
+<li><strong>路径属性</strong>：
+<ul>
+<li>Origin：定义路由信息来源，如internal或external路由协议</li>
+<li>AS Path：AS列表</li>
+<li>Next hop：下一跳路由器地址</li>
+</ul></li>
+<li><strong>网络层可达信息</strong>（NLRI）：从特定路径可达的IP前缀，例如 <em>100.5.0.0./24</em></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Internet Protocol Version 4, Src: 10.100.0.3, Dst: 10.100.0.150</span><br><span class="line">Transmission Control Protocol, Src Port: 179, Dst Port: 33905, ...</span><br><span class="line">Border Gateway Protocol - UPDATE Message</span><br><span class="line">	Marker: ffffffffffffffffffffffffffffffff</span><br><span class="line">	Length: 94</span><br><span class="line">	Type: UPDATE Message (2)</span><br><span class="line">	Withdrawn Routes Length: 0</span><br><span class="line">	Total Path Attribute Length: 67</span><br><span class="line">	Path attributes</span><br><span class="line">		Path Attribute - ORIGIN: IGP</span><br><span class="line">		Path Attribute - AS PATH: 3 12 164</span><br><span class="line">		Path Attribute - NEXT HOP: 10.100.0.3</span><br><span class="line">		Path Attribute - LARGE_COMMUNITY: 3:1:0 12:1:0 164:0:0</span><br><span class="line">	Network Layer Reachability Information (NLRI)</span><br><span class="line">		10.164.0.0/24</span><br><span class="line">			NLRI prefix length: 24</span><br><span class="line">			NLRI prefix: 10.164.0.0</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/bird/" rel="tag"># bird</a>
+              <a href="/tags/network/" rel="tag"># network</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/12/%E5%B0%8F%E7%B1%B36X%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="prev" title="小米6X刷机教程">
+      <i class="fa fa-chevron-left"></i> 小米6X刷机教程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E6%A8%A1%E5%BC%8F/" rel="next" title="分组加密模式">
+      分组加密模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#pipe-between-tables"><span class="nav-number">1.</span> <span class="nav-text">Pipe Between Tables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bgp%E8%B7%AF%E7%94%B1%E8%A1%A8%E4%B8%8Ekernel%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="nav-number">2.</span> <span class="nav-text">BGP路由表与Kernel路由表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#device-%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.</span> <span class="nav-text">device 协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bgpas%E6%89%80%E6%9C%89%E7%9A%84ip%E5%89%8D%E7%BC%80"><span class="nav-number">4.</span> <span class="nav-text">BGP：AS所有的IP前缀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8direct%E5%8D%8F%E8%AE%AE%E7%94%9F%E6%88%90%E8%B7%AF%E7%94%B1"><span class="nav-number">4.1.</span> <span class="nav-text">使用direct协议生成路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8Estatic%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%94%9F%E6%88%90%E8%B7%AF%E7%94%B1"><span class="nav-number">4.2.</span> <span class="nav-text">从static协议中生成路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#asn%E5%92%8Cip%E5%89%8D%E7%BC%80"><span class="nav-number">4.3.</span> <span class="nav-text">ASN和IP前缀</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bgp-peering"><span class="nav-number">5.</span> <span class="nav-text">BGP Peering</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E7%AB%8Bpeering%E5%85%B3%E7%B3%BB"><span class="nav-number">5.1.</span> <span class="nav-text">建立Peering关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#import%E5%92%8Cexport-filters"><span class="nav-number">5.2.</span> <span class="nav-text">Import和Export Filters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#peering-via-%E8%B7%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">5.3.</span> <span class="nav-text">Peering via 路由服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#route-advertisements"><span class="nav-number">5.4.</span> <span class="nav-text">Route Advertisements</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

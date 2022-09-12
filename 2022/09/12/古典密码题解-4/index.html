@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
   <meta name="description" content="异性相吸  打开压缩文件">
@@ -28,7 +28,7 @@
 <meta property="og:description" content="异性相吸  打开压缩文件">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-12T08:44:42.000Z">
-<meta property="article:modified_time" content="2022-09-12T09:00:39.413Z">
+<meta property="article:modified_time" content="2022-09-12T14:00:14.046Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="crypto">
 <meta property="article:tag" content="classical cryptography">
@@ -109,6 +109,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -123,16 +124,58 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -180,7 +223,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 16:44:42 / Modified: 17:00:39" itemprop="dateCreated datePublished" datetime="2022-09-12T16:44:42+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 16:44:42 / Modified: 22:00:14" itemprop="dateCreated datePublished" datetime="2022-09-12T16:44:42+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,7 +278,7 @@
 </blockquote>
 <p>因此offset偏移为<code>-149</code>，且key1和key2分别为：<code>DBAPP</code>，<code>LINKEDBYX</code></p></li>
 <li><p>编写解密脚本，求取flag</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cons_martix</span>(<span class="params">key: <span class="built_in">str</span></span>):  <span class="comment"># 构造矩阵</span></span><br><span class="line">    key_set = <span class="built_in">set</span>()</span><br><span class="line">    s = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> key:  <span class="comment"># 移除重复字符</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> i <span class="keyword">in</span> key_set:</span><br><span class="line">            s += i</span><br><span class="line">            key_set.add(i)</span><br><span class="line">    <span class="built_in">print</span>(key_set)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>)+<span class="number">1</span>):  <span class="comment"># 添加除key中出现过的26个英文字母(除掉Q)</span></span><br><span class="line">        <span class="keyword">if</span> i != <span class="built_in">ord</span>(<span class="string">&#x27;Q&#x27;</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">chr</span>(i) <span class="keyword">not</span> <span class="keyword">in</span> key_set:</span><br><span class="line">                s += <span class="built_in">chr</span>(i)</span><br><span class="line">                key_set.add(i)</span><br><span class="line">    <span class="keyword">assert</span> (<span class="built_in">len</span>(s) == <span class="number">25</span>)</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">key1, key2, enc_txt</span>):</span><br><span class="line">    m1, m2 = cons_martix(key1), cons_martix(key2)</span><br><span class="line">    cm = [<span class="built_in">chr</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;z&#x27;</span>) + <span class="number">1</span>)]</span><br><span class="line">    cm.remove(<span class="string">&#x27;q&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(cm)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(enc_txt):</span><br><span class="line">        t1 = m1.find(enc_txt[i])</span><br><span class="line">        t2 = m2.find(enc_txt[i+<span class="number">1</span>])</span><br><span class="line">        x1, y1 = t1 // <span class="number">5</span>, t1 % <span class="number">5</span></span><br><span class="line">        x2, y2 = t2 // <span class="number">5</span>, t2 % <span class="number">5</span></span><br><span class="line">        res = res + cm[x1 * <span class="number">5</span> + y2] + cm[x2*<span class="number">5</span>+y1]</span><br><span class="line">        i += <span class="number">2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">res = decrypt(res1, res2, enc_txt)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(res, hashlib.md5(<span class="built_in">bytes</span>(res, encoding=<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cons_martix</span>(<span class="params">key: <span class="built_in">str</span></span>):  <span class="comment"># 构造矩阵</span></span><br><span class="line">    key_set = <span class="built_in">set</span>()</span><br><span class="line">    s = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> key:  <span class="comment"># 移除重复字符</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> i <span class="keyword">in</span> key_set:</span><br><span class="line">            s += i</span><br><span class="line">            key_set.add(i)</span><br><span class="line">    <span class="built_in">print</span>(key_set)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>)+<span class="number">1</span>):  <span class="comment"># 添加除key中出现过的26个英文字母(除掉Q)</span></span><br><span class="line">        <span class="keyword">if</span> i != <span class="built_in">ord</span>(<span class="string">&#x27;Q&#x27;</span>):</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">chr</span>(i) <span class="keyword">not</span> <span class="keyword">in</span> key_set:</span><br><span class="line">                s += <span class="built_in">chr</span>(i)</span><br><span class="line">                key_set.add(i)</span><br><span class="line">    <span class="keyword">assert</span> (<span class="built_in">len</span>(s) == <span class="number">25</span>)</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">key1, key2, enc_txt</span>):</span><br><span class="line">    m1, m2 = cons_martix(key1), cons_martix(key2)</span><br><span class="line">    cm = [<span class="built_in">chr</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;z&#x27;</span>) + <span class="number">1</span>)]</span><br><span class="line">    cm.remove(<span class="string">&#x27;q&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(cm)</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(enc_txt):</span><br><span class="line">        t1 = m1.find(enc_txt[i])</span><br><span class="line">        t2 = m2.find(enc_txt[i+<span class="number">1</span>])</span><br><span class="line">        x1, y1 = t1 // <span class="number">5</span>, t1 % <span class="number">5</span></span><br><span class="line">        x2, y2 = t2 // <span class="number">5</span>, t2 % <span class="number">5</span></span><br><span class="line">        res = res + cm[x1 * <span class="number">5</span> + y2] + cm[x2*<span class="number">5</span>+y1]</span><br><span class="line">        i += <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line">res = decrypt(res1, res2, enc_txt)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(res, hashlib.md5(<span class="built_in">bytes</span>(res, encoding=<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest())</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
 <p>运行结果如下：</p>
 <blockquote>
 <p>{'P', 'B', 'D', 'A'}</p>
@@ -249,7 +292,7 @@
 <ol type="1">
 <li><p>打开文件发现内容为，推测为栅栏密码：<code>felhaagv&#123;ewtehtehfilnakgw&#125;</code></p></li>
 <li><p>编写脚本:</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 栅栏密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">s: <span class="built_in">str</span>, n: <span class="built_in">int</span>, pad_char: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    m = <span class="built_in">len</span>(s) // n  <span class="comment"># 共多少组</span></span><br><span class="line">    l = <span class="built_in">len</span>(s) % n  <span class="comment"># 补余数</span></span><br><span class="line">    res = <span class="built_in">list</span>(s)</span><br><span class="line">    <span class="keyword">if</span> l:</span><br><span class="line">        pad_num = n - l</span><br><span class="line">        <span class="keyword">while</span> pad_num &gt; <span class="number">1</span>:</span><br><span class="line">            res.insert(-(pad_num-<span class="number">1</span>)*m, <span class="built_in">chr</span>(pad_char))</span><br><span class="line">            pad_num -= <span class="number">1</span></span><br><span class="line">        res.append(<span class="built_in">chr</span>(pad_char))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(res)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">s, n</span>):</span><br><span class="line">    pad_s = pad(s, n, <span class="number">1</span>)</span><br><span class="line">    cates = <span class="built_in">len</span>(pad_s) // n  <span class="comment"># 组数</span></span><br><span class="line">    res = [<span class="string">&#x27;&#x27;</span>] * cates</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(pad_s):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(cates):</span><br><span class="line">            res[j] += pad_s[i+j]</span><br><span class="line">        i += cates</span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span>.join(res)</span><br><span class="line">    <span class="keyword">return</span> res.strip(<span class="built_in">chr</span>(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">loop</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(s)):</span><br><span class="line">        <span class="built_in">print</span>(decrypt(s, i))</span><br></pre></td></tr></table></figure></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 栅栏密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">s: <span class="built_in">str</span>, n: <span class="built_in">int</span>, pad_char: <span class="built_in">int</span></span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">    m = <span class="built_in">len</span>(s) // n  <span class="comment"># 共多少组</span></span><br><span class="line">    l = <span class="built_in">len</span>(s) % n  <span class="comment"># 补余数</span></span><br><span class="line">    res = <span class="built_in">list</span>(s)</span><br><span class="line">    <span class="keyword">if</span> l:</span><br><span class="line">        pad_num = n - l</span><br><span class="line">        <span class="keyword">while</span> pad_num &gt; <span class="number">1</span>:</span><br><span class="line">            res.insert(-(pad_num-<span class="number">1</span>)*m, <span class="built_in">chr</span>(pad_char))</span><br><span class="line">            pad_num -= <span class="number">1</span></span><br><span class="line">        res.append(<span class="built_in">chr</span>(pad_char))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>.join(res)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">s, n</span>):</span><br><span class="line">    pad_s = pad(s, n, <span class="number">1</span>)</span><br><span class="line">    cates = <span class="built_in">len</span>(pad_s) // n  <span class="comment"># 组数</span></span><br><span class="line">    res = [<span class="string">&#x27;&#x27;</span>] * cates</span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(pad_s):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(cates):</span><br><span class="line">            res[j] += pad_s[i+j]</span><br><span class="line">        i += cates</span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span>.join(res)</span><br><span class="line">    <span class="keyword">return</span> res.strip(<span class="built_in">chr</span>(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">loop</span>(<span class="params">s</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>, <span class="built_in">len</span>(s)):</span><br><span class="line">        <span class="built_in">print</span>(decrypt(s, i))</span><br></pre></td></tr></table></figure></p>
 <p>得到flag为：<code>flag&#123;wethinkwehavetheflag&#125;</code></p></li>
 </ol>
 <h2 id="真的是键盘吗">真的是键盘吗？</h2>
@@ -287,7 +330,10 @@
     <a href="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/" rel="prev" title="古典密码题解 3">
       <i class="fa fa-chevron-left"></i> 古典密码题解 3
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/%E5%B0%8F%E7%B1%B36X%E5%88%B7%E6%9C%BA%E6%95%99%E7%A8%8B/" rel="next" title="小米6X刷机教程">
+      小米6X刷机教程 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -360,17 +406,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">categories</span>
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">tags</span>
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -439,6 +489,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

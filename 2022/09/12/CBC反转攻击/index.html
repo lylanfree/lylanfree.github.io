@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
   <meta name="description" content="CBC 反转攻击">
@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/27c02823d6c18308ea47bd1f21558f8b.png">
 <meta property="article:published_time" content="2022-09-12T07:36:47.000Z">
-<meta property="article:modified_time" content="2022-09-12T07:53:36.755Z">
+<meta property="article:modified_time" content="2022-09-12T14:05:56.405Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="crypto">
 <meta name="twitter:card" content="summary">
@@ -110,6 +110,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -124,16 +125,58 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -181,7 +224,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 15:36:47 / Modified: 15:53:36" itemprop="dateCreated datePublished" datetime="2022-09-12T15:36:47+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 15:36:47 / Modified: 22:05:56" itemprop="dateCreated datePublished" datetime="2022-09-12T15:36:47+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,7 +251,7 @@
 <span id="more"></span>
 <ol type="1">
 <li><p>查看文件内容</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">flag = <span class="string">&#x27;DASCTF&#123;********************************&#125;&#x27;</span></span><br><span class="line">BLOCKSIZE = <span class="number">16</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">data</span>):</span><br><span class="line">    pad_len = BLOCKSIZE - (<span class="built_in">len</span>(data) %</span><br><span class="line">                        BLOCKSIZE) <span class="keyword">if</span> <span class="built_in">len</span>(data) % BLOCKSIZE != <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> data + <span class="string">&quot;=&quot;</span> * pad_len</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">unpad</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="keyword">return</span> data.replace(<span class="string">&quot;=&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enc</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">    encrypt = cipher.encrypt(pad(data))</span><br><span class="line">    <span class="keyword">return</span> encrypt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">        encrypt = cipher.decrypt(data)</span><br><span class="line">        <span class="keyword">return</span> unpad(encrypt)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">task</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        key = os.urandom(<span class="number">16</span>)</span><br><span class="line">        iv = os.urandom(<span class="number">16</span>)</span><br><span class="line">        pre = <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            choice = raw_input(menu)</span><br><span class="line">            <span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                name = raw_input(<span class="string">&quot;What&#x27;s your name?&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> name == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                    exit()</span><br><span class="line">                token = enc(pre+name, key, iv)</span><br><span class="line">                <span class="built_in">print</span> <span class="string">&quot;Here is your token(in hex): &quot;</span>+iv.encode(<span class="string">&#x27;hex&#x27;</span>)+token.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">                token = raw_input(<span class="string">&quot;Your token(in hex): &quot;</span>).decode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                iv = token[:<span class="number">16</span>]</span><br><span class="line">                name = dec(token[<span class="number">16</span>:], key, iv)</span><br><span class="line">                <span class="built_in">print</span> iv.encode(<span class="string">&#x27;hex&#x27;</span>)+name.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span> name[:<span class="number">16</span>] == <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span>:</span><br><span class="line">                    <span class="built_in">print</span> <span class="string">&quot;Hello, &quot;</span>+name[<span class="number">16</span>:]</span><br><span class="line">                    <span class="keyword">if</span> name[<span class="number">16</span>:] == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                        <span class="built_in">print</span> flag</span><br><span class="line">                        exit()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">menu = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">1. register</span></span><br><span class="line"><span class="string">2. login</span></span><br><span class="line"><span class="string">3. exit</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    task()</span><br></pre></td></tr></table></figure></p></li>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">flag = <span class="string">&#x27;DASCTF&#123;********************************&#125;&#x27;</span></span><br><span class="line">BLOCKSIZE = <span class="number">16</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">data</span>):</span><br><span class="line">    pad_len = BLOCKSIZE - (<span class="built_in">len</span>(data) %</span><br><span class="line">                        BLOCKSIZE) <span class="keyword">if</span> <span class="built_in">len</span>(data) % BLOCKSIZE != <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> data + <span class="string">&quot;=&quot;</span> * pad_len</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">unpad</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="keyword">return</span> data.replace(<span class="string">&quot;=&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enc</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">    encrypt = cipher.encrypt(pad(data))</span><br><span class="line">    <span class="keyword">return</span> encrypt</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">        encrypt = cipher.decrypt(data)</span><br><span class="line">        <span class="keyword">return</span> unpad(encrypt)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">task</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        key = os.urandom(<span class="number">16</span>)</span><br><span class="line">        iv = os.urandom(<span class="number">16</span>)</span><br><span class="line">        pre = <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            choice = raw_input(menu)</span><br><span class="line">            <span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                name = raw_input(<span class="string">&quot;What&#x27;s your name?&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> name == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                    exit()</span><br><span class="line">                token = enc(pre+name, key, iv)</span><br><span class="line">                <span class="built_in">print</span> <span class="string">&quot;Here is your token(in hex): &quot;</span>+iv.encode(<span class="string">&#x27;hex&#x27;</span>)+token.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">                token = raw_input(<span class="string">&quot;Your token(in hex): &quot;</span>).decode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                iv = token[:<span class="number">16</span>]</span><br><span class="line">                name = dec(token[<span class="number">16</span>:], key, iv)</span><br><span class="line">                <span class="built_in">print</span> iv.encode(<span class="string">&#x27;hex&#x27;</span>)+name.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span> name[:<span class="number">16</span>] == <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span>:</span><br><span class="line">                    <span class="built_in">print</span> <span class="string">&quot;Hello, &quot;</span>+name[<span class="number">16</span>:]</span><br><span class="line">                    <span class="keyword">if</span> name[<span class="number">16</span>:] == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                        <span class="built_in">print</span> flag</span><br><span class="line">                        exit()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line">menu = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">1. register</span></span><br><span class="line"><span class="string">2. login</span></span><br><span class="line"><span class="string">3. exit</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    task()</span><br></pre></td></tr></table></figure></p></li>
 <li><p>攻击思路 题目提示为CBC反转攻击，需要了解CBC反转攻击原因 <img src="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/27c02823d6c18308ea47bd1f21558f8b.png" alt="27c02823d6c18308ea47bd1f21558f8b.png"> 用户能够控制IV和密文输入，<span class="math inline">\(plain2 = cipher1 \oplus Dec(cipher)\)</span>，当用户的密文输入为<span class="math inline">\(cipher1 \oplus plain2 \oplus [tamperd]\)</span>时，解密的<code>plain2</code>则被修改为 <span class="math display">\[
  cipher1 \oplus plain2 \oplus [tamperd] \oplus Dec(cipher) = \\
  cipher1 \oplus Dec(cipher) \oplus plain2 \oplus [tamperd] = \\
@@ -313,17 +356,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">categories</span>
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">tags</span>
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -392,6 +439,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
