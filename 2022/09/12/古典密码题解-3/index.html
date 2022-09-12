@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="世上无难事 题目 以下为某国总统外发的一段指令，经过一种奇怪的加密方式，看来只能用分析方法了，请将这段语句还原成通顺语句，并从其中找到KEY作为答案提交：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="古典密码题解 3">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="世上无难事 题目 以下为某国总统外发的一段指令，经过一种奇怪的加密方式，看来只能用分析方法了，请将这段语句还原成通顺语句，并从其中找到KEY作为答案提交：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E8%B0%B1%E5%AD%90.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E7%8C%AA%E5%9C%881.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E7%8C%AA%E5%9C%882.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E6%9B%B2%E8%B7%AF.png">
+<meta property="article:published_time" content="2022-09-12T08:32:35.000Z">
+<meta property="article:modified_time" content="2022-09-12T08:44:36.937Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="classical cryptography">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E8%B0%B1%E5%AD%90.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>古典密码题解 3 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          古典密码题解 3
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 16:32:35 / Modified: 16:44:36" itemprop="dateCreated datePublished" datetime="2022-09-12T16:32:35+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="世上无难事">世上无难事</h2>
+<h3 id="题目">题目</h3>
+<p>以下为某国总统外发的一段指令，经过一种奇怪的加密方式，看来只能用分析方法了，请将这段语句还原成通顺语句，并从其中找到KEY作为答案提交：</p>
+<span id="more"></span>
+<blockquote>
+<p>VIZZB IFIUOJBWO NVXAP OBC XZZ UKHVN IFIUOJBWO HB XVIXW XAW VXFI X QIXN VBD KQ IFIUOJBWO WBKAH NBWXO VBD XJBCN NKG QLKEIU DI XUI VIUI DKNV QNCWIANQ XN DXPIMKIZW VKHV QEVBBZ KA XUZKAHNBA FKUHKAKX XAW DI VXFI HBN QNCWIANQ NCAKAH KA MUBG XZZ XEUBQQ XGIUKEX MUBG PKAWIUHXUNIA NVUBCHV 12NV HUXWI XAW DI XUI SCQN QB HZXW NVXN XZZ EBCZW SBKA CQ NBWXO XAW DI DXAN NB NVXAP DXPIMKIZW MBU JIKAH QCEV XA BCNQNXAWKAH VBQN HKFI OBCUQIZFIQ X JKH UBCAW BM XLLZXCQI XAW NVI PIO KQ 640I11012805M211J0XJ24MM02X1IW09</p>
+</blockquote>
+<h3 id="解题">解题</h3>
+<p>应当采用词频分析，可以看出 VIZZB = HELLO，使用<a target="_blank" rel="noopener" href="https://quipqiup.com/">词频分析网站</a>，可得结果为： &gt; HELLO EVERYBODY THANK YOU ALL RIGHT EVERYBODY GO AHEAD AND HAVE A SEAT HOW IS EVERYBODY DOING TODAY HOW ABOUT TIM SPICER WE ARE HERE WITH STUDENTS AT WAKEFIELD HIGH SCHOOL IN ARLINGTON VIRGINIA AND WE HAVE GOT STUDENTS TUNING IN FROM ALL ACROSS AMERICA FROM KINDERGARTEN THROUGH 12TH GRADE AND WE ARE JUST SO GLAD THAT ALL COULD JOIN US TODAY AND WE WANT TO THANK WAKEFIELD FOR BEING SUCH AN OUTSTANDING HOST GIVE YOURSELVES A BIG ROUND OF APPLAUSE AND THE KEY IS 640E11012805F211B0AB24FF02A1ED09</p>
+<p>因此flag为<code>640e11012805f211b0ab24ff02a1ed09</code></p>
+<h2 id="其实很简单">其实很简单</h2>
+<h3 id="题目-1">题目</h3>
+<p>学习凯撒密码后，密码前辈又创造出新奇异的加密方法，维吉尼亚是其中一种。出题者是一个程序员，喜欢拿helloworld做秘钥，下面是密文：dlpcsegkshrjj。</p>
+<h3 id="解题-1">解题</h3>
+<p>编写脚本如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">key, enc_txt</span>):</span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    key_len = <span class="built_in">len</span>(key)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(enc_txt)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">26</span>):</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">ord</span>(key[i % key_len]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + j)  % <span class="number">26</span>  + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) == <span class="built_in">ord</span>(enc_txt[i]):</span><br><span class="line">                res += <span class="built_in">chr</span>(j + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(decrypt(<span class="string">&#x27;helloworld&#x27;</span>, <span class="string">&#x27;dlpcsegkshrjj&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
+<p>运行结果为<code>whereisthekey</code></p>
+<h2 id="密码学的心声">密码学的心声</h2>
+<h3 id="题目-2">题目</h3>
+<p>二战时期，某国军官与一个音乐家情妇相好，然而自从那时起，他屡战屡败，敌人似乎料事如神。他也有怀疑过他的情妇，但是他经过24小时观察他的情妇，发现她每天都只是作曲，然后弹奏给战地电台，为士兵们鼓气，并未有任何逾越。那么，间谍到底是谁？这张曲谱是否有猫腻？</p>
+<figure>
+<img src="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/谱子.png" alt="谱子.png"><figcaption aria-hidden="true">谱子.png</figcaption>
+</figure>
+<h3 id="解题-2">解题</h3>
+<p>题目提示没有8，因此将八进制转换为Ascii，编写脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">&#x27;111114157166145123145143165162151164171126145162171115165143150&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(s))</span><br><span class="line">i = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i &lt; <span class="built_in">len</span>(s):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">chr</span>(<span class="built_in">int</span>(s[i:i+<span class="number">3</span>], <span class="number">8</span>)), end =<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    i += <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>结果为<code>ILoveSecurityVeryMuch</code></p>
+<h2 id="萌萌哒的八戒">萌萌哒的八戒</h2>
+<h3 id="题目-3">题目</h3>
+<p>萌萌哒的八戒原来曾经是猪村的村长，从远古时期，猪村就有一种神秘的代码。请从附件中找出代码，看看萌萌哒的猪八戒到底想说啥</p>
+<h3 id="解题-3">解题</h3>
+<p>根据题目信息，提示为猪圈密码，打开图片后如下所示： <img src="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/猪圈1.png" alt="猪圈1.png"></p>
+<figure>
+<img src="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/猪圈2.png" alt="猪圈2.png"><figcaption aria-hidden="true">猪圈2.png</figcaption>
+</figure>
+<p>根据猪圈密码，解得flag为<code>whenthepigwanttoeat</code></p>
+<h2 id="两种密码">两种密码</h2>
+<h3 id="解题-4">解题</h3>
+<p>根据题目信息，发现Bill.txt和Ciphertext.txt，加密方式包含Bill密码，编写脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">index = [<span class="number">34</span>, <span class="number">6</span>, <span class="number">13</span>, <span class="number">43</span>, <span class="number">68</span>, <span class="number">21</span>, <span class="number">43</span>, <span class="number">1</span>, <span class="number">77</span>, <span class="number">100</span>, <span class="number">6</span>, <span class="number">41</span>, <span class="number">5</span>, <span class="number">54</span>, <span class="number">68</span>, <span class="number">100</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">13</span>, <span class="number">68</span>, <span class="number">41</span>, <span class="number">2</span>, <span class="number">34</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">34</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">34</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">34</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">56</span>, <span class="number">94</span>, <span class="number">34</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">56</span>, <span class="number">23</span>, <span class="number">56</span>, <span class="number">34</span>]</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;D:\CTF\CRYPTO\两种密码\Bill.txt&#x27;</span>, <span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    s = f.read().split(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> index:</span><br><span class="line">            <span class="built_in">print</span>(s[i][<span class="number">0</span>], end = <span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>结果如下： the_decrption_path_is<br>
+&lt;--------oo&lt;-<br>
+-&gt;oo----&gt;oo-&gt;<br>
+&lt;-oo&lt;----oo&lt;-<br>
+-&gt;oo----&gt;oo-&gt;<br>
+&lt;-oo&lt;------&lt;-</p>
+<p>根据结果，发现第二种加密方式为曲路密码，对秘文<code>lf1e7f05&#125;ba83909764e2686e&#123;7a7fsi_galfagb8d004</code>进行排列，得到结果为 <img src="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/曲路.png" alt="曲路.png"></p>
+<p>因此flag为<code>flag_isflag&#123;7a7f1e8be6862f7d09764e05400938ab&#125;</code></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/crypto/" rel="tag"># crypto</a>
+              <a href="/tags/classical-cryptography/" rel="tag"># classical cryptography</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-2/" rel="prev" title="古典密码题解 2">
+      <i class="fa fa-chevron-left"></i> 古典密码题解 2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-4/" rel="next" title="古典密码题解 4">
+      古典密码题解 4 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%96%E4%B8%8A%E6%97%A0%E9%9A%BE%E4%BA%8B"><span class="nav-number">1.</span> <span class="nav-text">世上无难事</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E5%AE%9E%E5%BE%88%E7%AE%80%E5%8D%95"><span class="nav-number">2.</span> <span class="nav-text">其实很简单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="nav-number">2.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98-1"><span class="nav-number">2.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E7%9A%84%E5%BF%83%E5%A3%B0"><span class="nav-number">3.</span> <span class="nav-text">密码学的心声</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="nav-number">3.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98-2"><span class="nav-number">3.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%90%8C%E8%90%8C%E5%93%92%E7%9A%84%E5%85%AB%E6%88%92"><span class="nav-number">4.</span> <span class="nav-text">萌萌哒的八戒</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="nav-number">4.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98-3"><span class="nav-number">4.2.</span> <span class="nav-text">解题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E5%AF%86%E7%A0%81"><span class="nav-number">5.</span> <span class="nav-text">两种密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E9%A2%98-4"><span class="nav-number">5.1.</span> <span class="nav-text">解题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
