@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CBC 反转攻击">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CBC反转攻击">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="CBC 反转攻击">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/27c02823d6c18308ea47bd1f21558f8b.png">
+<meta property="article:published_time" content="2022-09-12T07:36:47.000Z">
+<meta property="article:modified_time" content="2022-09-12T07:53:36.755Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="crypto">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/27c02823d6c18308ea47bd1f21558f8b.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CBC反转攻击 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CBC反转攻击
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 15:36:47 / Modified: 15:53:36" itemprop="dateCreated datePublished" datetime="2022-09-12T15:36:47+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="cbc-反转攻击">CBC 反转攻击</h2>
+<span id="more"></span>
+<ol type="1">
+<li><p>查看文件内容</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">flag = <span class="string">&#x27;DASCTF&#123;********************************&#125;&#x27;</span></span><br><span class="line">BLOCKSIZE = <span class="number">16</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">data</span>):</span><br><span class="line">    pad_len = BLOCKSIZE - (<span class="built_in">len</span>(data) %</span><br><span class="line">                        BLOCKSIZE) <span class="keyword">if</span> <span class="built_in">len</span>(data) % BLOCKSIZE != <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> data + <span class="string">&quot;=&quot;</span> * pad_len</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">unpad</span>(<span class="params">data</span>):</span><br><span class="line">    <span class="keyword">return</span> data.replace(<span class="string">&quot;=&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">enc</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">    encrypt = cipher.encrypt(pad(data))</span><br><span class="line">    <span class="keyword">return</span> encrypt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">dec</span>(<span class="params">data, key, iv</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cipher = AES.new(key, AES.MODE_CBC, iv)</span><br><span class="line">        encrypt = cipher.decrypt(data)</span><br><span class="line">        <span class="keyword">return</span> unpad(encrypt)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">task</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        key = os.urandom(<span class="number">16</span>)</span><br><span class="line">        iv = os.urandom(<span class="number">16</span>)</span><br><span class="line">        pre = <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">            choice = raw_input(menu)</span><br><span class="line">            <span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">                name = raw_input(<span class="string">&quot;What&#x27;s your name?&quot;</span>)</span><br><span class="line">                <span class="keyword">if</span> name == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                    exit()</span><br><span class="line">                token = enc(pre+name, key, iv)</span><br><span class="line">                <span class="built_in">print</span> <span class="string">&quot;Here is your token(in hex): &quot;</span>+iv.encode(<span class="string">&#x27;hex&#x27;</span>)+token.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">                token = raw_input(<span class="string">&quot;Your token(in hex): &quot;</span>).decode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                iv = token[:<span class="number">16</span>]</span><br><span class="line">                name = dec(token[<span class="number">16</span>:], key, iv)</span><br><span class="line">                <span class="built_in">print</span> iv.encode(<span class="string">&#x27;hex&#x27;</span>)+name.encode(<span class="string">&#x27;hex&#x27;</span>)</span><br><span class="line">                <span class="keyword">if</span> name[:<span class="number">16</span>] == <span class="string">&quot;yusa&quot;</span>*<span class="number">4</span>:</span><br><span class="line">                    <span class="built_in">print</span> <span class="string">&quot;Hello, &quot;</span>+name[<span class="number">16</span>:]</span><br><span class="line">                    <span class="keyword">if</span> name[<span class="number">16</span>:] == <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">                        <span class="built_in">print</span> flag</span><br><span class="line">                        exit()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">menu = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">1. register</span></span><br><span class="line"><span class="string">2. login</span></span><br><span class="line"><span class="string">3. exit</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    task()</span><br></pre></td></tr></table></figure></p></li>
+<li><p>攻击思路 题目提示为CBC反转攻击，需要了解CBC反转攻击原因 <img src="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/27c02823d6c18308ea47bd1f21558f8b.png" alt="27c02823d6c18308ea47bd1f21558f8b.png"> 用户能够控制IV和密文输入，<span class="math inline">\(plain2 = cipher1 \oplus Dec(cipher)\)</span>，当用户的密文输入为<span class="math inline">\(cipher1 \oplus plain2 \oplus [tamperd]\)</span>时，解密的<code>plain2</code>则被修改为 <span class="math display">\[
+ cipher1 \oplus plain2 \oplus [tamperd] \oplus Dec(cipher) = \\
+ cipher1 \oplus Dec(cipher) \oplus plain2 \oplus [tamperd] = \\
+ plain2 \oplus plain2 \oplus [tamperd] =[tamperd]
+ \]</span> 因此，可以将login返回的token（iv和token）分别进行修改</p>
+<p><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">token = `xxxxxx`</span><br><span class="line">iv = token[:32]</span><br><span class="line">c1 = token[32:64]</span><br><span class="line">c2 = token[64:]</span><br><span class="line">s1 = c1 ^ 原文2 ^ 篡改内容</span><br><span class="line"></span><br><span class="line">token2 = send(iv+s1+c2)</span><br><span class="line">s2 = token[:32] ^ 原文1 ^ iv</span><br><span class="line">send(s2 + s1 + c2)</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/crypto/" rel="tag"># crypto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/12/Babylfsr/" rel="prev" title="Babylfsr">
+      <i class="fa fa-chevron-left"></i> Babylfsr
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/weak-DSA/" rel="next" title="weak DSA">
+      weak DSA <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cbc-%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB"><span class="nav-number">1.</span> <span class="nav-text">CBC 反转攻击</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

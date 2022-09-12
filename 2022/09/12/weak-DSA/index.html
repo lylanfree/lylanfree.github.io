@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="weak DSA  题目： 打开附件，看到存在五个文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="weak DSA">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/12/weak-DSA/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="weak DSA  题目： 打开附件，看到存在五个文件">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-12T07:55:02.000Z">
+<meta property="article:modified_time" content="2022-09-12T08:10:15.449Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="DSA">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/12/weak-DSA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>weak DSA | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/12/weak-DSA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          weak DSA
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-12 15:55:02 / Modified: 16:10:15" itemprop="dateCreated datePublished" datetime="2022-09-12T15:55:02+08:00">2022-09-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="weak-dsa">weak DSA</h2>
+<ol type="1">
+<li>题目： 打开附件，看到存在五个文件</li>
+</ol>
+<span id="more"></span>
+<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ll</span></span><br><span class="line">总用量 24</span><br><span class="line">-rwxrw-rw- 1 mrt mrt  653  2月 20  2019 dsa_public.pem</span><br><span class="line">-rwxrw-rw- 1 mrt mrt  514  2月 20  2019 message1</span><br><span class="line">-rwxrw-rw- 1 mrt mrt  374  2月 20  2019 message2</span><br><span class="line">-rwxrw-rw- 1 mrt mrt   46  2月 20  2019 sign1</span><br><span class="line">-rwxrw-rw- 1 mrt mrt   46  2月 20  2019 sign2</span><br><span class="line">-rwxrw-rw- 1 mrt mrt 1376  2月 20  2019 tipcode.py</span><br></pre></td></tr></table></figure>
+
+题目意思为弱DSA签名算法，判断用同一个K参数进行签名，并提供了2个message和2个sign签名文件。</code></pre>
+<ol start="2" type="1">
+<li><p>解题</p>
+<ul>
+<li>使用openssl命令查看文件签名</li>
+</ul>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">openssl asn1parse -inform der -<span class="keyword">in</span> sign1</span> </span><br><span class="line">    0:d=0  hl=2 l=  44 cons: SEQUENCE          </span><br><span class="line">    2:d=1  hl=2 l=  20 prim: INTEGER           :3A9CBF6D944B37943CF4FA72374D3FF87D55C8AB</span><br><span class="line">24:d=1  hl=2 l=  20 prim: INTEGER           :2C507D83CC9DB08B3D13B059A37B846189D32EC8</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">openssl asn1parse -inform der -<span class="keyword">in</span> sign2</span></span><br><span class="line">    0:d=0  hl=2 l=  44 cons: SEQUENCE          </span><br><span class="line">    2:d=1  hl=2 l=  20 prim: INTEGER           :3A9CBF6D944B37943CF4FA72374D3FF87D55C8AB</span><br><span class="line">24:d=1  hl=2 l=  20 prim: INTEGER           :704302989E4D680DEDF760E354C1F23760FA95BE</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>第一项内容为r，后一内容为s，可以看出sign1和sign2共享了密钥k，因为其r值<code>3A9CBF6D944B37943CF4FA72374D3FF87D55C8AB</code>一致。</p>
+<ul>
+<li>查看公钥文件内容</li>
+</ul>
+<p><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">$ openssl dsa -<span class="keyword">in</span> dsa_public.pem -text -noout -pubin</span><br><span class="line"><span class="built_in">read</span> DSA key</span><br><span class="line">pub: </span><br><span class="line">    5e:ef:ca:12:9c:84:b4:3d:e1:d0:1e:c4:d3:85:b4:</span><br><span class="line">    48:b8:e2:c2:77:fb:49:e0:01:d1:1b:f9:18:43:<span class="built_in">fc</span>:</span><br><span class="line">    da:5a:31:99:0e:93:67:d2:19:49:d2:1d:14:23:45:</span><br><span class="line">    23:a7:1a:22:69:92:85:a9:f9:37:17:f8:57:c0:4e:</span><br><span class="line">    73:73:03:c1:aa:f3:35:38:9d:ba:af:5a:3b:4d:27:</span><br><span class="line">    a8:3f:03:5d:02:5a:da:27:b6:d7:0c:52:<span class="built_in">fc</span>:78:a1:</span><br><span class="line">    67:41:01:84:b2:46:82:f0:d6:5b:43:05:2b:ab:05:</span><br><span class="line">    38:6b:50:d6:fa:be:3b:<span class="built_in">df</span>:89:<span class="built_in">df</span>:bb:72:51:48:ab:</span><br><span class="line">    d4:9e:a2:63:2c:7d:3b:7d</span><br><span class="line">P:   </span><br><span class="line">    00:bb:65:76:c4:bd:9b:1e:64:9f:dc:1b:5f:0d:35:</span><br><span class="line">    ae:db:c0:c0:85:bb:3c:cf:d7:1a:a7:9f:e9:d4:29:</span><br><span class="line">    12:23:3c:84:a0:d2:e5:bc:d7:7d:fb:a3:bb:3d:27:</span><br><span class="line">    b2:bd:db:a6:e7:21:72:f6:6b:94:d1:f6:11:86:d2:</span><br><span class="line">    6f:ee:44:38:f9:71:1f:d5:a2:96:e3:09:e3:bd:76:</span><br><span class="line">    a6:7d:88:77:2f:1b:2e:fe:77:66:77:24:49:81:da:</span><br><span class="line">    55:27:5a:2f:99:0e:8f:b3:1a:18:5d:dc:<span class="built_in">fc</span>:4b:b4:</span><br><span class="line">    15:65:67:fa:6b:62:a0:e7:26:74:<span class="built_in">fc</span>:92:db:ef:8c:</span><br><span class="line">    7e:cb:fe:95:88:3f:04:4f:c5</span><br><span class="line">Q:   </span><br><span class="line">    00:8a:92:14:5a:fa:41:1f:5d:90:51:ef:a4:a3:74:</span><br><span class="line">    3a:c9:98:85:76:7d</span><br><span class="line">G:   </span><br><span class="line">    05:fb:e9:06:39:a3:b2:f3:36:8d:4d:47:fd:f2:42:</span><br><span class="line">    8c:e3:80:<span class="built_in">cd</span>:8e:84:ae:fe:90:eb:4a:fd:21:2a:99:</span><br><span class="line">    a9:59:3e:b0:1f:f6:d6:26:48:a0:16:67:bf:f9:72:</span><br><span class="line">    4e:4b:01:96:6e:f6:0b:f1:b2:77:6d:a2:a1:81:a2:</span><br><span class="line">    6e:5e:60:8f:ff:94:a3:e3:92:38:4a:cf:62:1c:23:</span><br><span class="line">    e4:93:b6:3c:24:7c:30:b3:ea:<span class="built_in">dd</span>:e4:0d:4c:36:e5:</span><br><span class="line">    55:27:31:8a:84:d5:87:16:2c:d7:40:5d:66:85:22:</span><br><span class="line">    60:23:8c:48:3e:72:bf:10:71:85:10:7a:6e:43:76:</span><br><span class="line">    90:58:77:bc:82:8c:1d:20</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>编写脚本如下：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Crypto.PublicKey <span class="keyword">import</span> DSA</span><br><span class="line"><span class="keyword">from</span> hashlib <span class="keyword">import</span> sha1</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;dsa_public.pem&#x27;</span>) <span class="keyword">as</span> f: <span class="comment"># 读取公钥文件</span></span><br><span class="line">    key = DSA.import_key(f.read())</span><br><span class="line">    y = key.y</span><br><span class="line">    g = key.g</span><br><span class="line">    p = key.p</span><br><span class="line">    q = key.q</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;message1&#x27;</span>, encoding = <span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data1 = f.read()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;message2&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data2 = f.read()</span><br><span class="line"></span><br><span class="line">sha = sha1() <span class="comment"># sha1 hash</span></span><br><span class="line">sha.update(data1.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">m1 = <span class="built_in">int</span>(sha.hexdigest(), <span class="number">16</span>) <span class="comment"># 获取message1内容sha1哈希值</span></span><br><span class="line"></span><br><span class="line">sha = sha1()</span><br><span class="line">sha.update(data2.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">m2 = <span class="built_in">int</span>(sha.hexdigest(), <span class="number">16</span>) <span class="comment"># 获取message2内容sha1哈希值</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(m1, m2)</span><br><span class="line"></span><br><span class="line">s1 = <span class="number">0x2C507D83CC9DB08B3D13B059A37B846189D32EC8</span> <span class="comment"># 签名文件sign1 s 值</span></span><br><span class="line">s2 = <span class="number">0x704302989E4D680DEDF760E354C1F23760FA95BE</span> <span class="comment"># 签名文件sign2 s 值</span></span><br><span class="line">r = <span class="number">0x3A9CBF6D944B37943CF4FA72374D3FF87D55C8AB</span></span><br><span class="line"></span><br><span class="line">ds = s2 - s1</span><br><span class="line">dm = m2 - m1</span><br><span class="line">k = gmpy2.mul(dm, gmpy2.invert(ds, q))</span><br><span class="line">k = gmpy2.f_mod(k, q)</span><br><span class="line">tmp = gmpy2.mul(k, s1) - m1</span><br><span class="line">x = tmp * gmpy2.invert(r,q)</span><br><span class="line">x = gmpy2.f_mod(x, q) <span class="comment"># x is the private key</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">int</span>(x))</span><br></pre></td></tr></table></figure>
+<p>脚本运行结果如下：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./exp.py </span><br><span class="line">292662942869370611771676609473484271930756369187 94408533737537379184444430172035752205145606426</span><br><span class="line">301024118086430365762957779330181182629483123408</span><br></pre></td></tr></table></figure></p>
+<p>因此flag为<code>301024118086430365762957779330181182629483123408</code></p></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/crypto/" rel="tag"># crypto</a>
+              <a href="/tags/DSA/" rel="tag"># DSA</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/" rel="prev" title="CBC反转攻击">
+      <i class="fa fa-chevron-left"></i> CBC反转攻击
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/Easy-RSA/" rel="next" title="Easy RSA">
+      Easy RSA <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#weak-dsa"><span class="nav-number">1.</span> <span class="nav-text">weak DSA</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

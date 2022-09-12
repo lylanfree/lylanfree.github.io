@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="例题如下：  12345678910111213141516171819202122232425262728293031323334353637383940414243import hashlibfrom secret import KEY,FLAG,MASKassert(FLAG&#x3D;&#x3D;&quot;de1ctf&amp;#123;&quot;+hashlib.sha256(hex(KEY)[2:].">
+  <meta name="description" content="例题如下：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Babylfsr">
 <meta property="og:url" content="http://lylanfree.github.io/2022/09/12/Babylfsr/index.html">
 <meta property="og:site_name" content="lylanfree&#39;s blog">
-<meta property="og:description" content="例题如下：  12345678910111213141516171819202122232425262728293031323334353637383940414243import hashlibfrom secret import KEY,FLAG,MASKassert(FLAG&#x3D;&#x3D;&quot;de1ctf&amp;#123;&quot;+hashlib.sha256(hex(KEY)[2:].">
+<meta property="og:description" content="例题如下：">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-12T07:03:42.000Z">
-<meta property="article:modified_time" content="2022-09-12T07:05:22.541Z">
+<meta property="article:modified_time" content="2022-09-12T07:06:18.134Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="crypto">
 <meta name="twitter:card" content="summary">
@@ -179,7 +179,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 15:03:42 / Modified: 15:05:22" itemprop="dateCreated datePublished" datetime="2022-09-12T15:03:42+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 15:03:42 / Modified: 15:06:18" itemprop="dateCreated datePublished" datetime="2022-09-12T15:03:42+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -205,6 +205,7 @@
         <ol type="1">
 <li>例题如下：</li>
 </ol>
+<span id="more"></span>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">from</span> secret <span class="keyword">import</span> KEY,FLAG,MASK</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span>(FLAG==<span class="string">&quot;de1ctf&#123;&quot;</span>+hashlib.sha256(<span class="built_in">hex</span>(KEY)[<span class="number">2</span>:].rstrip(<span class="string">&#x27;L&#x27;</span>)).hexdigest()+<span class="string">&quot;&#125;&quot;</span>)</span><br><span class="line"><span class="keyword">assert</span>(FLAG[<span class="number">7</span>:<span class="number">11</span>]==<span class="string">&#x27;1224&#x27;</span>)</span><br><span class="line"></span><br><span class="line">LENGTH = <span class="number">256</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span>(KEY.bit_length()==LENGTH)</span><br><span class="line"><span class="keyword">assert</span>(MASK.bit_length()==LENGTH)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad</span>(<span class="params">m</span>):</span><br><span class="line">    pad_length = <span class="number">8</span> - <span class="built_in">len</span>(m)</span><br><span class="line">    <span class="keyword">return</span> pad_length*<span class="string">&#x27;0&#x27;</span>+m</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">lfsr</span>():</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, init, mask, length</span>):</span><br><span class="line">        self.init = init</span><br><span class="line">        self.mask = mask</span><br><span class="line">        self.lengthmask = <span class="number">2</span>**(length+<span class="number">1</span>)-<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">next</span>(<span class="params">self</span>):</span><br><span class="line">        nextdata = (self.init &lt;&lt; <span class="number">1</span>) &amp; self.lengthmask </span><br><span class="line">        i = self.init &amp; self.mask &amp; self.lengthmask </span><br><span class="line">        output = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i != <span class="number">0</span>:</span><br><span class="line">            output ^= (i &amp; <span class="number">1</span>)</span><br><span class="line">            i = i &gt;&gt; <span class="number">1</span></span><br><span class="line">        nextdata ^= output</span><br><span class="line">        self.init = nextdata</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    l = lfsr(KEY,MASK,LENGTH)</span><br><span class="line">    r = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">63</span>):</span><br><span class="line">        b = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">            b = (b&lt;&lt;<span class="number">1</span>)+l.<span class="built_in">next</span>()</span><br><span class="line">        r += pad(<span class="built_in">bin</span>(b)[<span class="number">2</span>:])</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;output&#x27;</span>,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(r)</span><br></pre></td></tr></table></figure>
 <p>另外给的信息为：</p>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">001010010111101000001101101111010000001111011001101111011000100001100011111000010001100101110110011000001100111010111110000000111011000110111110001110111000010100110010011111100011010111101101101001110000010111011110010110010011101101010010100101011111011001111010000000001011000011000100000101111010001100000011010011010111001010010101101000110011001110111010000011010101111011110100011110011010000001100100101000010110100100100011001000101010001100000010000100111001110110101000000101011100000001100010</span><br></pre></td></tr></table></figure>
@@ -245,7 +246,10 @@
     <a href="/2022/09/12/%E5%A8%81%E5%B0%94%E9%80%8A%E5%AE%9A%E7%90%86/" rel="prev" title="威尔逊定理">
       <i class="fa fa-chevron-left"></i> 威尔逊定理
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/12/CBC%E5%8F%8D%E8%BD%AC%E6%94%BB%E5%87%BB/" rel="next" title="CBC反转攻击">
+      CBC反转攻击 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -318,7 +322,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -327,7 +331,7 @@
         <span class="site-state-item-name">categories</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
