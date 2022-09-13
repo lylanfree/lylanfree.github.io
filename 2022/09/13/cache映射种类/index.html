@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="Cache的容量很小，它保存的内容只是主存内容的一个子集，且Cache与主存的数据交换是以块为单位的。为了把信息放到Cache中，必须应用某种函数把主存地址定位到Cache中，这称为地址映射。在信息按这种映射关系装入Cache后，CPU执行程序时，会将程序中的主存地址变换成Cache地址，这个变换过程叫做地址变换。 Cache的地址映射方式有直接映射、全相联映射和组相联映射。假设某台计算机主存容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cache映射种类">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="Cache的容量很小，它保存的内容只是主存内容的一个子集，且Cache与主存的数据交换是以块为单位的。为了把信息放到Cache中，必须应用某种函数把主存地址定位到Cache中，这称为地址映射。在信息按这种映射关系装入Cache后，CPU执行程序时，会将程序中的主存地址变换成Cache地址，这个变换过程叫做地址变换。 Cache的地址映射方式有直接映射、全相联映射和组相联映射。假设某台计算机主存容">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/8c5e6e14f8f446c1bbaa5927a8e7c74a-16630354709608.gif">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/909b5be8dccb4c7e96824a364371363f-166303548562910.gif">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/7be3283b8b02490ba52cae653dfde1a0-166303550540612.gif">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/c2e354808af84ebf84c680839586de22-166303551596014.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/abc64a76ead74d5b97faa28fa3359f76-166303553065116.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/7703ebdd1f544637bd7a253cfe7b6cd5-166303554265218.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/6fd3941001bf4fa7a759caa5c6f0e38d-166303555491920.jpg">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/96bca75190ac4c30bb24425483fa2b6f-166303556809422.png">
+<meta property="article:published_time" content="2022-09-13T02:06:41.000Z">
+<meta property="article:modified_time" content="2022-09-13T02:28:37.138Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="cache">
+<meta property="article:tag" content="arch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/8c5e6e14f8f446c1bbaa5927a8e7c74a-16630354709608.gif">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>cache映射种类 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          cache映射种类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-13 10:06:41 / Modified: 10:28:37" itemprop="dateCreated datePublished" datetime="2022-09-13T10:06:41+08:00">2022-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Computer-Architecture/" itemprop="url" rel="index"><span itemprop="name">Computer Architecture</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Cache的容量很小，它保存的内容只是主存内容的一个子集，且Cache与主存的数据交换是以块为单位的。为了把信息放到Cache中，必须应用某种函数把主存地址定位到Cache中，这称为地址映射。在信息按这种映射关系装入Cache后，CPU执行程序时，会将程序中的主存地址变换成Cache地址，这个变换过程叫做地址变换。</p>
+<p>Cache的地址映射方式有直接映射、全相联映射和组相联映射。假设某台计算机主存容量为l MB，被分为2048块，每块512B；Cache容量为8KB，被分为16块，每块也是512B。下面以此为例介绍三种基本的地址映射方法。</p>
+<span id="more"></span>
+<h2 id="直接映射">直接映射</h2>
+<p>直接映射的Cache组织如图3-14所示。主存中的一个块只能映射到Cache的某一特定块中去。例如，主存的第0块、第16块、……、第2032块，只能映射到Cache的第0块；而主存的第1块、第17块、……、第2033块，只能映射到Cache的第1块……。</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/8c5e6e14f8f446c1bbaa5927a8e7c74a-16630354709608.gif" alt="8c5e6e14f8f446c1bbaa5927a8e7c74a"><figcaption aria-hidden="true">8c5e6e14f8f446c1bbaa5927a8e7c74a</figcaption>
+</figure>
+<p>直接映射是最简单的地址映射方式，它的硬件简单，成本低，地址变换速度快，而且不涉及替换<code>算法</code>问题。但是这种方式不够灵活，Cache的存储空间得不到充分利用，每个主存块只有一个固定位置可存放，容易产生冲突，使Cache效率下降，因此只适合大容量Cache采用。例如，如果一个程序需要重复引用主存中第0块与第16块，最好将主存第0块与第16块同时复制到Cache中，但由于它们都只能复制到Cache的第0块中去，即使Cache中别的存储空间空着也不能占用，因此这两个块会不断地交替装入Cache中，导致命中率降低。</p>
+<h2 id="全相联映射">全相联映射</h2>
+<p>图3-15 是全相联映射的Cache组织，主存中任何一块都可以映射到Cache中的任何一块位置上。</p>
+<p>​</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/909b5be8dccb4c7e96824a364371363f-166303548562910.gif" alt="909b5be8dccb4c7e96824a364371363f"><figcaption aria-hidden="true">909b5be8dccb4c7e96824a364371363f</figcaption>
+</figure>
+<p>全相联映射方式比较灵活，主存的各块可以映射到Cache的任一块中，Cache的利用率高，块冲突概率低，只要淘汰Cache中的某一块，即可调入主存的任一块。但是，由于Cache比较电路的设计和实现比较困难，这种方式只适合于小容量Cache采用。</p>
+<h2 id="组相联映射">组相联映射</h2>
+<p>组相联映射实际上是直接映射和全相联映射的折中方案，其组织结构如图3-16所示。主存和Cache都分组，主存中一个组内的块数与Cache中的分组数相同，组间采用直接映射，组内采用全相联映射。也就是说，将Cache分成u组，每组v块，主存块存放到哪个组是固定的，至于存到该组哪一块则是灵活的。例如，主存分为256组，每组8块，Cache分为8组，每组2块。</p>
+<p>​</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/7be3283b8b02490ba52cae653dfde1a0-166303550540612.gif" alt="7be3283b8b02490ba52cae653dfde1a0"><figcaption aria-hidden="true">7be3283b8b02490ba52cae653dfde1a0</figcaption>
+</figure>
+<p>主存中的各块与Cache的组号之间有固定的映射关系，但可自由映射到对应Cache组中的任何一块。例如，主存中的第0块、第8块……均映射于Cache的第0组，但可映射到Cache第0组中的第0块或第1块；主存的第1块、第9块……均映射于Cache的第1组，但可映射到Cache第1组中的第2块或第3块。</p>
+<p>常采用的组相联结构Cache，每组内有2、4、8、16块，称为2路、4路、8路、16路组相联Cache。组相联结构Cache是前两种方法的折中方案，适度兼顾二者的优点，尽量避免二者的缺点，因而得到普遍采用。</p>
+<h2 id="一次内存访问示意图">一次内存访问示意图</h2>
+<p>​</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/c2e354808af84ebf84c680839586de22-166303551596014.png" alt="c2e354808af84ebf84c680839586de22"><figcaption aria-hidden="true">c2e354808af84ebf84c680839586de22</figcaption>
+</figure>
+<p><strong>注意事项</strong></p>
+<ul>
+<li><p>TLB采用组相联</p></li>
+<li><p>页表采用两级页表</p></li>
+<li><p>cache采用组相联</p></li>
+<li><p>cache仅考虑L1 d-cache，不考虑L1 i-cache、L2 cache和L3 cache</p></li>
+<li><p>未考虑页表缺页</p></li>
+<li><p>简化了cache未命中情况</p></li>
+</ul>
+<h2 id="实际例子">实际例子</h2>
+<p>下面展示了现代Intel处理器的CPU cache是如何组织的。有关cache的讨论往往缺乏具体的实例，使得一些简单的概念变得扑朔迷离。也许是我可爱的小脑瓜有点迟钝吧，但不管怎样，至少下面讲述了故事的前一半，即Core 2的 L1 cache是如何被访问的：</p>
+<p>​</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/abc64a76ead74d5b97faa28fa3359f76-166303553065116.png" alt="abc64a76ead74d5b97faa28fa3359f76"><figcaption aria-hidden="true">abc64a76ead74d5b97faa28fa3359f76</figcaption>
+</figure>
+<p>​ L1 cache – 32KB，8路组相联，64字节缓存线</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/7703ebdd1f544637bd7a253cfe7b6cd5-166303554265218.png" alt="7703ebdd1f544637bd7a253cfe7b6cd5"><figcaption aria-hidden="true">7703ebdd1f544637bd7a253cfe7b6cd5</figcaption>
+</figure>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/6fd3941001bf4fa7a759caa5c6f0e38d-166303555491920.jpg" alt="6fd3941001bf4fa7a759caa5c6f0e38d"><figcaption aria-hidden="true">6fd3941001bf4fa7a759caa5c6f0e38d</figcaption>
+</figure>
+<h3 id="由索引拣选缓存组行">1. 由索引拣选缓存组（行）</h3>
+<p>在cache中的数据是以<strong>缓存线</strong>（line）为单位组织的，一条缓存线对应于内存中一个连续的字节块。这个cache使用了64字节的缓存线。这些线被保存在cache bank中，也叫<strong>路</strong>（way）。每一路都有一个专门的<strong>目录</strong>（directory）用来保存一些登记信息。你可以把每一路连同它的目录想象成电子表格中的一列，而表的一行构成了cache的一<strong>组</strong>（set）。列中的每一个单元（cell）都含有一条缓存线，由与之对应的目录单元跟踪管理。图中的cache有64 组、每组8路，因此有512个含有缓存线的单元，合计32KB的存储空间。</p>
+<p>在cache眼中，物理内存被分割成了许多4KB大小的物理内存页（page）。每一页都含有<code>4KB / 64 bytes</code> == 64条缓存线。在一个4KB的页中，第0到63字节是第一条缓存线，第64到127字节是第二条缓存线，以此类推。每一页都重复着这种划分，所以第0页第3条缓存线与第1页第3条缓存线是不同的。</p>
+<p>在<strong>全相联缓存</strong>（fully associative cache）中，内存中的任意一条缓存线都可以被存储到任意的缓存单元中。这种存储方式十分灵活，但也使得要访问它们时，检索缓存单元的工作变得复杂、昂贵。由于L1和L2 cache工作在很强的约束之下，包括功耗，芯片物理空间，存取速度等，所以在多数情况下，使用全相联缓存并不是一个很好的折中。</p>
+<p>取而代之的是图中的<strong>组相联缓存</strong>（set associative cache）。意思是，内存中一条给定的缓存线只能被保存在一个特定的组（或行）中。所以，<em>任意</em>物理内存页的第0条缓存线（页内第0到63字节）<strong>必须</strong>存储到第0组，第1条缓存线存储到第1组，以此类推。每一组有8个单元可用于存储它所关联的缓存线，从而形成一个8路关联的组（8-way associative set）。当访问一个内存地址时，地址的第6到11位（译注：组索引）指出了在4KB内存页中缓存线的编号，从而决定了即将使用的缓存组。举例来说，物理地址0x800010a0的组索引是<code>000010</code>，所以此地址的内容一定是在第2组中缓存的。</p>
+<p>但是还有一个问题，就是要找出一组中<em>哪个</em>单元包含了想要的信息，如果有的话。这就到了缓存目录登场的时刻。每一个缓存线都被其对应的目录单元做了<em>标记</em>（tag）；这个标记就是一个简单的内存页编号，指出缓存线来自于哪一页。由于处理器可以寻址64GB的物理RAM，所以总共有<code>64GB / 4KB</code> == 224个内存页，需要24位来保存标记。前例中的物理地址0x800010a0对应的页号为<code>524,289</code>。下面是故事的后一半：</p>
+<p>​</p>
+<figure>
+<img src="/2022/09/13/cache%E6%98%A0%E5%B0%84%E7%A7%8D%E7%B1%BB/96bca75190ac4c30bb24425483fa2b6f-166303556809422.png" alt="96bca75190ac4c30bb24425483fa2b6f"><figcaption aria-hidden="true">96bca75190ac4c30bb24425483fa2b6f</figcaption>
+</figure>
+<h3 id="在组中搜索匹配标记">2、在组中搜索匹配标记</h3>
+<p>由于我们只需要去查看某一组中的8路，所以查找匹配标记是非常迅速的；事实上，从电学角度讲，所有的标记是同时进行比对的，我用箭头来表示这一点。如果此时正好有一条具有匹配标签的有效缓存线，我们就获得一次缓存命中（cache hit）。否则，这个请求就会被转发的L2 cache，如果还没匹配上就再转发给主系统内存。通过应用各种调节尺寸和容量的技术，Intel给CPU配置了较大的L2 cache，但其基本的设计都是相同的。比如，你可以将原先的缓存增加8路而获得一个64KB的缓存；再将组数增加到4096，每路可以存储<code>256KB</code>。经过这两次修改，就得到了一个4MB的L2 cache。在此情况下，需要18位来保存标记，12位保存组索引；缓存所使用的物理内存页的大小与其一路的大小相等。（译注：有4096组，就需要lg(4096)==12位的组索引，缓存线依然是64字节，所以一路有4096*64B==256KB字节；在L2 cache眼中，内存被分割为许多256KB的块，所以需要lg(64GB/256KB)==18位来保存标记。）</p>
+<p>如果有一组已经被放满了，那么在另一条缓存线被存储进来之前，已有的某一条则必须被腾空（evict）。为了避免这种情况，对运算速度要求较高的程序就要尝试仔细组织它的数据，使得内存访问均匀的分布在已有的缓存线上。举例来说，假设程序中有一个数组，元素的大小是512字节，其中一些对象在内存中相距4KB。这些对象的各个字段都落在同一缓存线上，并竞争同一缓存组。如果程序频繁的访问一个给定的字段（比如，通过<code>虚函数表</code>调用虚函数），那么这个组看起来就好像一直是被填满的，缓存开始变得毫无意义，因为缓存线一直在重复着腾空与重新载入的步骤。在我们的例子中，由于组数的限制，L1 cache仅能保存8个这类对象的虚函数表。这就是组相联策略的折中所付出的代价：即使在整体缓存的使用率并不高的情况下，由于组冲突，我们还是会遇到缓存缺失的情况。然而，鉴于计算机中各个存储层次的<code>相对速度</code>，不管怎么说，大部分的应用程序并不必为此而担心。</p>
+<p>一个内存访问经常由一个线性（或虚拟）地址发起，所以L1 cache需要依赖分页单元（paging unit）来求出物理内存页的地址，以便用于缓存标记。与此相反，组索引来自于线性地址的低位，所以不需要转换就可以使用了（在我们的例子中为第6到11位）。因此L1 cache是物理标记但虚拟索引的（<strong>physically tagged</strong> but <strong>virtually indexed</strong>），从而帮助CPU进行并行的查找操作。因为L1 cache的一路绝不会比MMU的一页还大，所以可以保证一个给定的物理地址位置总是关联到同一组，即使组索引是虚拟的。在另一方面L2 cache必须是物理标记和物理索引的，因为它的一路比MMU的一页要大。但是，当一个请求到达L2 cache时，物理地址已经被L1 cache准备（resolved）完毕了，所以L2 cache会工作得很好。</p>
+<p>最后，目录单元还存储了对应缓存线的<em>状态</em>（state）。在L1代码缓存中的一条缓存线要么是无效的（invalid）要么是共享的（shared，意思是有效的，真的J）。在L1数据缓存和L2缓存中，一条缓存线可以为4个MESI状态之一：被修改的（modified），独占的（exclusive），共享的（shared），无效的（invalid）。Intel缓存是包容式的（<strong>inclusive</strong>）：L1缓存的内容会被复制到L2缓存中。</p>
+<h2 id="总结">总结</h2>
+<ol type="1">
+<li><p>内存层次结构的意义在于利用引用的空间局部性和时间局部性原理，将经常被访问的数据放到快速的存储器中，而将不经常访问的数据留在较慢的存储器中。</p></li>
+<li><p>一般情况下，除了寄存器和L1缓存可以操作指定字长的数据，下层的内存子系统就不会再使用这么小的单位了，而是直接移动数据块，比如以缓存线为单位访问数据。</p></li>
+<li><p>对于组冲突，可以这么理解：与上文相似，假设一个缓存，由512条缓存线组成，每条线64字节，容量32KB。</p>
+<ol type="1">
+<li>假如它是直接映射缓存，由于它往往使用地址的低位直接映射缓存线编号，所以所有的32K倍数的地址（32K，64K，96K等）都会映射到同一条线上（即第0线）。假如程序的内存组织不当，交替的去访问布置在这些地址的数据，则会导致冲突。从外表看来就好像缓存只有1条线了，尽管其他缓存线一直是空闲着的。</li>
+<li>如果是全相联缓存，那么每条缓存线都是独立的，可以对应于内存中的任意缓存线。只有当所有的512条缓存线都被占满后才会出现冲突。</li>
+<li>组相联是前两者的折中，每一路中的缓存线采用直接映射方式，而在路与路之间，缓存控制器使用全相联映射算法，决定选择一组中的哪一条线。</li>
+<li>如果是2路组相联缓存，那么这512条缓存线就被分为了2路，每路256条线，一路16KB。此时所有为16K整数倍的地址（16K，32K，48K等）都会映射到第0线，但由于2路是关联的，所以可以同时有2个这种地址的内容被缓存，不会发生冲突。当然了，如果要访问第三个这种地址，还是要先腾空已有的一条才行。所以极端情况下，从外表看来就好像缓存只有2条线了，尽管其他缓存线一直是空闲着的。</li>
+<li>如果是8路组相联缓存（与文中示例相同），那么这512条缓存线就被分为了8路，每路64条线，一路4KB。所以如果数组中元素地址是4K对齐的，并且程序交替的访问这些元素，就会出现组冲突。从外表看来就好像缓存只有8条线了，尽管其他缓存线一直是空闲着的。</li>
+</ol></li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://my.oschina.net/fileoptions/blog/1630855">原文链接</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cache/" rel="tag"># cache</a>
+              <a href="/tags/arch/" rel="tag"># arch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/13/%E4%BE%A7%E4%BF%A1%E9%81%93%E6%94%BB%E5%87%BB/" rel="prev" title="侧信道攻击">
+      <i class="fa fa-chevron-left"></i> 侧信道攻击
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%98%A0%E5%B0%84"><span class="nav-number">1.</span> <span class="nav-text">直接映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%A8%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84"><span class="nav-number">2.</span> <span class="nav-text">全相联映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E7%9B%B8%E8%81%94%E6%98%A0%E5%B0%84"><span class="nav-number">3.</span> <span class="nav-text">组相联映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E6%AC%A1%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E7%A4%BA%E6%84%8F%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">一次内存访问示意图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E4%BE%8B%E5%AD%90"><span class="nav-number">5.</span> <span class="nav-text">实际例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B1%E7%B4%A2%E5%BC%95%E6%8B%A3%E9%80%89%E7%BC%93%E5%AD%98%E7%BB%84%E8%A1%8C"><span class="nav-number">5.1.</span> <span class="nav-text">1. 由索引拣选缓存组（行）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E7%BB%84%E4%B8%AD%E6%90%9C%E7%B4%A2%E5%8C%B9%E9%85%8D%E6%A0%87%E8%AE%B0"><span class="nav-number">5.2.</span> <span class="nav-text">2、在组中搜索匹配标记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">67k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:01</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E7%8C%AA%E5%9C%882.png">
 <meta property="og:image" content="http://lylanfree.github.io/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/%E6%9B%B2%E8%B7%AF.png">
 <meta property="article:published_time" content="2022-09-12T08:32:35.000Z">
-<meta property="article:modified_time" content="2022-09-12T13:57:13.121Z">
+<meta property="article:modified_time" content="2022-09-12T14:46:47.185Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="crypto">
 <meta property="article:tag" content="classical cryptography">
@@ -209,7 +209,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="">
+      <meta itemprop="description" content="持续学习的程序员">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -228,7 +228,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2022-09-12 16:32:35 / Modified: 21:57:13" itemprop="dateCreated datePublished" datetime="2022-09-12T16:32:35+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 16:32:35 / Modified: 22:46:47" itemprop="dateCreated datePublished" datetime="2022-09-12T16:32:35+08:00">2022-09-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,7 +240,21 @@
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
 
         </div>
       </header>
@@ -265,7 +279,8 @@
 <h3 id="题目-1">题目</h3>
 <p>学习凯撒密码后，密码前辈又创造出新奇异的加密方法，维吉尼亚是其中一种。出题者是一个程序员，喜欢拿helloworld做秘钥，下面是密文：dlpcsegkshrjj。</p>
 <h3 id="解题-1">解题</h3>
-<p>编写脚本如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">key, enc_txt</span>):</span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    key_len = <span class="built_in">len</span>(key)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(enc_txt)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">26</span>):</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">ord</span>(key[i % key_len]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + j)  % <span class="number">26</span>  + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) == <span class="built_in">ord</span>(enc_txt[i]):</span><br><span class="line">                res += <span class="built_in">chr</span>(j + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(decrypt(<span class="string">&#x27;helloworld&#x27;</span>, <span class="string">&#x27;dlpcsegkshrjj&#x27;</span>))</span><br></pre></td></tr></table></figure></p>
+<p>编写脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt</span>(<span class="params">key, enc_txt</span>):</span><br><span class="line">    res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    key_len = <span class="built_in">len</span>(key)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(enc_txt)):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">26</span>):</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">ord</span>(key[i % key_len]) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + j)  % <span class="number">26</span>  + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) == <span class="built_in">ord</span>(enc_txt[i]):</span><br><span class="line">                res += <span class="built_in">chr</span>(j + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(decrypt(<span class="string">&#x27;helloworld&#x27;</span>, <span class="string">&#x27;dlpcsegkshrjj&#x27;</span>))</span><br></pre></td></tr></table></figure>
 <p>运行结果为<code>whereisthekey</code></p>
 <h2 id="密码学的心声">密码学的心声</h2>
 <h3 id="题目-2">题目</h3>
@@ -385,27 +400,27 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">lylanfree</p>
-  <div class="site-description" itemprop="description"></div>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -437,6 +452,18 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">67k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:01</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
