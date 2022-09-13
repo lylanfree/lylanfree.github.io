@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/my_ico.ico">
+  <link rel="mask-icon" href="/images/my_ico.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="什么是逆向工程 逆向工程（Reversing Engineering，RE）一般指通过分析物体、机械设备或系统，了解其结构、功能、行为等，掌握其原理并改善不足之处、添加新创意的一系列过程。 代码逆向工程是逆向工程在软件领域中的应用，主要指对软件的结构，流程，算法，代码等进行逆向拆解和分析，其实质就是对软件进行深入细致的分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="逆向工程">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="什么是逆向工程 逆向工程（Reversing Engineering，RE）一般指通过分析物体、机械设备或系统，了解其结构、功能、行为等，掌握其原理并改善不足之处、添加新创意的一系列过程。 代码逆向工程是逆向工程在软件领域中的应用，主要指对软件的结构，流程，算法，代码等进行逆向拆解和分析，其实质就是对软件进行深入细致的分析。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171736849.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171754217.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171807828.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171823288.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171857009.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171914941.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171929358.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171946863.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171958437.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172018026.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172115614.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172135521.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172146475.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172201928.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172213706.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172225099.png">
+<meta property="article:published_time" content="2022-09-13T09:15:53.000Z">
+<meta property="article:modified_time" content="2022-09-13T09:25:05.552Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="reverse">
+<meta property="article:tag" content="share">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171736849.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>逆向工程 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          逆向工程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-13 17:15:53 / Modified: 17:25:05" itemprop="dateCreated datePublished" datetime="2022-09-13T17:15:53+08:00">2022-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>6.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>6 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是逆向工程">什么是逆向工程</h3>
+<p>逆向工程（Reversing Engineering，RE）一般指通过分析物体、机械设备或系统，了解其结构、功能、行为等，掌握其原理并改善不足之处、添加新创意的一系列过程。</p>
+<p>代码逆向工程是逆向工程在软件领域中的应用，主要指对软件的结构，流程，算法，代码等进行逆向拆解和分析，其实质就是对软件进行深入细致的分析。</p>
+<span id="more"></span>
+<h3 id="应用领域">应用领域</h3>
+<p>病毒分析、软件（游戏）破解、游戏外挂与反外挂、漏洞挖掘</p>
+<h3 id="ctf中的逆向">CTF中的逆向</h3>
+<p>涉及Windows、Linux、Android平台的多种编程技术，要求利用常用工具对源代码及二进制文件进行逆向分析，掌握Android移动应用APK文件的逆向分析、掌握加解密、内核编程、算法、反调试和代码混淆技术。</p>
+<h3 id="逆向方法">逆向方法</h3>
+<h4 id="静态分析法">静态分析法</h4>
+<p>静态分析法是在不执行代码文件的情形下，对代码进行静态分析的一种方法。通过观察代码文件的外部特征，获取文件类型（EXE、DLL、DOC、ZIP等）、大小、PE头信息、导入/导出表、内部字符串、是否运行时解压缩、调试信息等。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171736849.png" alt="ida"><figcaption aria-hidden="true">ida</figcaption>
+</figure>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171754217.png" alt="die"><figcaption aria-hidden="true">die</figcaption>
+</figure>
+<h4 id="动态分析法">动态分析法</h4>
+<p>动态分析法是在程序文件的执行过程中对代码进行动态分析的一种方法，通过调试来分析代码流，获得内存状态等。通常使用调试器（Debugger）分析软件程序的内部结构和动作原理。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171807828.png" alt="od"><figcaption aria-hidden="true">od</figcaption>
+</figure>
+<h3 id="ctf软件逆向流程">CTF软件逆向流程</h3>
+<ol type="1">
+<li>使用IDA等静态分析工具收集信息，并根据这些静态信息进行搜索</li>
+<li>研究程序的保护方法，如代码混淆，保护壳及反调试等技术，并设法破除或绕过保护</li>
+<li>反汇编目标软件，快速定位到关键代码进行分析</li>
+<li>结合动态调试，验证自己的初期猜想，在分析的过程中理清程序功能</li>
+<li>针对程序功能，写出对应脚本，求解出 flag</li>
+</ol>
+<h2 id="逆向工程基础">逆向工程基础</h2>
+<h3 id="编译与反编译">编译与反编译</h3>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171823288.png" alt="assem"><figcaption aria-hidden="true">assem</figcaption>
+</figure>
+<p>编译过程可分为4步：</p>
+<p>预处理(Preprocessing)、编译(Compliation)、汇编(Assembly)和链接(Linking)。</p>
+<ol type="1">
+<li>预编译：gcc –E hello.c –o hello.i</li>
+<li>编译：gcc –S hello.c –o hello.s</li>
+<li>汇编：gcc –c hello.s –o hello.o 或者gcc –c hello.c –o hello.o</li>
+<li>链接：gcc hello.c –o hello</li>
+</ol>
+<p>可以通过-save-temps参数永久保存这些中间编译产生的文件</p>
+<p><strong>反编译</strong></p>
+<p>反编译并没有标准的工具，无法精确得到源代码文件，一般借助IDA等工具对二进制文件进行反编译。</p>
+<h3 id="汇编基础">汇编基础</h3>
+<h4 id="寄存器">寄存器</h4>
+<p>寄存器属于CPU中的一块存储区域，拥有着非常高的读写速度，而程序运行最重要的就是快。</p>
+<p>x86处理器有8个32位通用寄存器：EAX,EBX,ECX,EDX,ESI,EDI称为通用寄存器；ESP,EBP为栈指针寄存器</p>
+<p>通用寄存器可以被分段开来使用，可以将EAX的最低2个字节视为16位寄存器AX，还可将EAX的最低1个字节视为8位寄存器AL，最高的1个字节也可视为一个8位寄存器AH；其它寄存器相同。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171857009.png" alt="reg"><figcaption aria-hidden="true">reg</figcaption>
+</figure>
+<p>x86_64位处理器下有16个64位寄存器：RAX, RBX, RCX, RDX, RSI, RDI, <em>R8, R9, R10, R11, R12, R13, R14, R15</em>, RSP, RBP，多了8个寄存器。</p>
+<h4 id="指令">指令</h4>
+<p>计算机是不能直接识别我们所编写的C程序或者Java程序的。它只能识别机器语言，而<strong>机器语言是用二进制代码表示的计算机能直接识别和执行的一种机器指指令系统令的集合</strong>。</p>
+<blockquote>
+<p>机器语言示例：1000100111011000</p>
+</blockquote>
+<p>用机器语言编写程序，编程人员要首先熟记所用计算机的全部指令代码和代码的涵义。手编程序时，程序员得自己处理每条指令和每一数据的存储分配和输入输出，还得记住编程过程中每步所使用的工作单元处在何种状态。这是一件十分繁琐的工作。编写程序花费的时间往往是实际运行时间的几十倍或几百倍，而且，编出的程序全是些0和1的指令代码，直观性差，还容易出错。</p>
+<p>那么该怎么办呢？这时候<code>汇编语言</code>便产生了。</p>
+<p>汇编语言的主体是汇编指令。汇编指令和机器指令的差别在于指令的表示方法上，汇编指令是机器指令便于记忆的书写格式。</p>
+<p>比如下面将寄存器 BX 的内容发送到 AX 上：</p>
+<blockquote>
+<p>操作：寄存器BX的内容送到AX中</p>
+<p>1000100111011000 机器指令</p>
+<p>mov ax,bx 汇编指令</p>
+</blockquote>
+<p>我们能很明显的从上面两条指令看出区别，汇编指令相对于机器指令是很容易记住的。</p>
+<h5 id="数据移动指令">数据移动指令</h5>
+<ul>
+<li>mov
+<ul>
+<li>mov a,b</li>
+</ul></li>
+<li>Push (入栈)
+<ul>
+<li>Push &lt;reg</li>
+<li>Push &lt;memory</li>
+<li>Push &lt;data</li>
+</ul></li>
+<li>Pop (出栈)
+<ul>
+<li>Pop &lt;reg</li>
+<li>Pop &lt;memory</li>
+<li>Pop &lt;data</li>
+</ul></li>
+<li>Lea
+<ul>
+<li>Lea &lt;mem ,&lt;reg</li>
+</ul></li>
+</ul>
+<h5 id="逻辑运算指令">逻辑运算指令</h5>
+<ul>
+<li>Add
+<ul>
+<li>Add a,b</li>
+</ul></li>
+<li>Sub
+<ul>
+<li>Sub a,b</li>
+</ul></li>
+<li>Inc 、dec(自增、自减)
+<ul>
+<li>inc &lt;reg</li>
+<li>inc &lt;mem</li>
+<li>dec &lt;reg</li>
+<li>dec &lt;mem</li>
+</ul></li>
+<li>Imul (整数相乘)
+<ul>
+<li>Imul a,b</li>
+<li>Imul a,b,c</li>
+</ul></li>
+<li>Idiv (整数相除)
+<ul>
+<li>Idiv &lt;reg</li>
+<li>Idiv &lt;mem</li>
+</ul></li>
+<li>and 、or、xor (按位与，或，异或)
+<ul>
+<li>and(or,xor) a,b</li>
+</ul></li>
+</ul>
+<h5 id="流程控制指令">流程控制指令</h5>
+<ul>
+<li>jmp
+<ul>
+<li>jmp address</li>
+</ul></li>
+<li>Jcondition 有条件的跳转
+<ul>
+<li>je &lt;label ;当相等的时候跳转</li>
+<li>jne &lt;label ;当不相等的时候跳转</li>
+<li>jz &lt;label ;当最后结果为 0 的时候跳转</li>
+<li>jg &lt;label ;当大于的时候跳转</li>
+<li>jge &lt;label ;当大于等于的时候跳转</li>
+<li>jl &lt;label ;当小于的时候跳转</li>
+<li>jle &lt;label ;当小于等于的时候跳转</li>
+</ul></li>
+</ul>
+<h4 id="进程内存块">进程内存块</h4>
+<p>进程内存是一个平面地址空间，所有代码和数据都被合并在一起，组成一个很大的组织结构。内容被分割为不同的区块（Setion，又称区段，节等），区段中包含代码或数据，各个区块按照页边界来对齐，区块没有限制大小，是一个连续的结构。每块都有他自己在内存中的属性，比如：这个块是否可读可写，或者只读等。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171914941.png" alt="mem"><figcaption aria-hidden="true">mem</figcaption>
+</figure>
+<ol type="1">
+<li>bss段（bss segment）通常是指用来存放程序中<strong>未初始化</strong>的全局变量的一块内存区域，bss段属于静态内存分配。</li>
+<li>data段：数据段（data segment）通常是指用来存放程序中<strong>已初始化</strong>的全局变量的一块内存区域，数据段属于静态内存分配。</li>
+<li>text段：代码段（code segment/text segment）通常是指用来存放程序执行代码的一块内存区域。这部分区域的大小在程序运行前就已经确定，并且内存区域通常属于只读(某些架构也允许代码段为可写，即允许修改程序)。在代码段中，也有可能包含一些只读的常数变量，例如字符串常量等。</li>
+<li>堆（heap）：堆是用于存放进程运行中被<strong>动态分配</strong>的内存段，它的大小并不固定，可动态扩张或缩减。当进程调用malloc等函数分配内存时，新分配的内存就被动态添加到堆上（堆被扩张）；当利用free等函数释放内存时，被释放的内存从堆中被剔除（堆被缩减）。</li>
+<li>栈（stack）：栈又称堆栈，是用户存放程序临时创建的<strong>局部变量</strong>，也就是说我们函数括弧“{}”中定义的变量（但不包括static声明的变量，static意味着在数据段中存放变量）。除此以外，在函数被调用时，其参数也会被压入发起调用的进程栈中，并且待到调用结束后，函数的返回值也会被存放回栈中。由于栈的先进先出(FIFO)特点，所以栈特别方便用来保存/恢复调用现场。</li>
+</ol>
+<h3 id="逆向工具及使用">逆向工具及使用</h3>
+<h5 id="ida-pro">IDA Pro</h5>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171929358.png" alt="ida_icno"><figcaption aria-hidden="true">ida_icno</figcaption>
+</figure>
+<p>工具分为64位和32位版本，分别用于分析64位程序和32位程序。</p>
+<p><strong>常用快捷键</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">快捷键</th>
+<th style="text-align: left;">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">f5</td>
+<td style="text-align: left;">一键反编译</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">a</td>
+<td style="text-align: left;">将数据转换为字符串</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">esc</td>
+<td style="text-align: left;">回退键，能够倒回上一部操作的视图（只有在反汇编窗口才是这个作用，如果是在其</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">他窗口按下esc，会关闭该窗口）</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">shift+f12</td>
+<td style="text-align: left;">可以打开string窗口，一键找出所有的字符串，右击setup，还能对窗口的属性进行设置</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">对着某个函数、变量按该快捷键，可以查看它的交叉引用</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">g</td>
+<td style="text-align: left;">直接跳转到某个地址</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">n</td>
+<td style="text-align: left;">更改变量的名称</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">y</td>
+<td style="text-align: left;">更改变量的类型</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">/</td>
+<td style="text-align: left;">在反编译后伪代码的界面中写下注释</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">\</td>
+<td style="text-align: left;">在反编译后伪代码的界面中隐藏/显示变量和函数的类型描述，有时候变量特别多的时候隐藏掉类型描述看起来会轻松很多</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">；</td>
+<td style="text-align: left;">在反汇编后的界面中写下注释</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">u</td>
+<td style="text-align: left;">undefine，取消定义函数、代码、数据的定义</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">p</td>
+<td style="text-align: left;">定义函数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>常用设置</strong></p>
+<blockquote>
+<p>菜单栏 &gt; view–&gt;open subviews: 可以恢复你无意中关闭的数据显示窗口</p>
+<blockquote>
+<p>windows–&gt;reset desktop: 可以恢复初始ida布局</p>
+</blockquote>
+<blockquote>
+<p>option–&gt;font: 可以改变字体的相关属性</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>在流程视图中添加地址偏移：option–&gt;general -&gt; Line prefixes(graph)</p>
+<blockquote>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171946863.png" alt="flow"><figcaption aria-hidden="true">flow</figcaption>
+</figure>
+</blockquote>
+<blockquote>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913171958437.png" alt="flow2"><figcaption aria-hidden="true">flow2</figcaption>
+</figure>
+</blockquote>
+<p>自动添加反汇编注释:option–&gt;general -&gt; Auto comments &gt; <img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172018026.png" alt="comments"></p>
+</blockquote>
+<h5 id="练习">练习</h5>
+<p>test1</p>
+<p>[BUUCTF]REVERSE——reverse2</p>
+<p>test2</p>
+<h5 id="ollydbg">Ollydbg</h5>
+<p><strong>常用快捷键</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ctrl+F1</td>
+<td>打开与所选行内符号相关的 API 帮助文档。</td>
+</tr>
+<tr class="even">
+<td>F2</td>
+<td>在光标选定位置按 F2 键设置或取消断点。</td>
+</tr>
+<tr class="odd">
+<td>Shift+F2</td>
+<td>在首个选择命令设置条件断点。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F2</td>
+<td>重新启动被调试程序。</td>
+</tr>
+<tr class="odd">
+<td>F4</td>
+<td>运行到光标选定位置处暂停。</td>
+</tr>
+<tr class="even">
+<td>Shift+F4</td>
+<td>设置记录断点。</td>
+</tr>
+<tr class="odd">
+<td>F5</td>
+<td>最大化当前窗口。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F5</td>
+<td>打开与首个选择的命令相对应的源文件。</td>
+</tr>
+<tr class="odd">
+<td>Alt+F5</td>
+<td>让 OllyDbg 窗口总在最前面。</td>
+</tr>
+<tr class="even">
+<td>F6</td>
+<td>切换到下一个窗口。</td>
+</tr>
+<tr class="odd">
+<td>Shift+F6</td>
+<td>切换到前一个窗口。</td>
+</tr>
+<tr class="even">
+<td>F7</td>
+<td>单步步入，每次执行一条指令，遇到 call 等子程序时进入其中。</td>
+</tr>
+<tr class="odd">
+<td>Shift+F7</td>
+<td>与 F7 相同，但当被调试程序发生异常而中止时，调试器首先尝试步入被调试程序指定的异常处理。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F7</td>
+<td>自动步入，在所有的函数调用中一条一条地执行命令。</td>
+</tr>
+<tr class="odd">
+<td>Alt+F7</td>
+<td>转到上一个找到的参考。</td>
+</tr>
+<tr class="even">
+<td>F8</td>
+<td>单步步过，每次执行一条指令，遇到 call 等子程序时不进入其中。</td>
+</tr>
+<tr class="odd">
+<td>Shift+F8</td>
+<td>与 F8 相同，但当被调试程序发生异常而中止时，调试器首先尝试步过被调试程序指定的异常处理。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F8</td>
+<td>自动步过，一条一条执行命令，但不进入函数内部调用。</td>
+</tr>
+<tr class="odd">
+<td>Alt+F8</td>
+<td>转到下一个找到的参考。</td>
+</tr>
+<tr class="even">
+<td>F9</td>
+<td>运行，被调试软件继续运行，直到遇到下一个断点。</td>
+</tr>
+<tr class="odd">
+<td>Shift+F9</td>
+<td>与 F9 相同，但当被调试程序发生异常而中止时，调试器首先尝试执行被调试程序指定的异常处理。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F9</td>
+<td>执行到返回，在执行到一个 ret 指令时暂停，常用于从当前函数快速返回到上一个函数。</td>
+</tr>
+<tr class="odd">
+<td>Alt+F9</td>
+<td>执行到用户代码，可用于从系统部分快速返回到被调试程序部分。</td>
+</tr>
+<tr class="even">
+<td>F10</td>
+<td>打开与当前窗口或面板相关的快捷菜单。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+F11</td>
+<td>Run 跟踪步入，一条一条执行命令，进入子函数调用，并把寄存器信息加入到 Run 跟踪的存储数据中。</td>
+</tr>
+<tr class="even">
+<td>F12</td>
+<td>停止执行，暂停所有线程。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+F12</td>
+<td>Run 跟踪步过，一条一条执行命令，不进入子函数调用，并把寄存器信息加入到 Run 跟踪的存储数据中。</td>
+</tr>
+<tr class="even">
+<td>Alt+F3</td>
+<td>关闭当前窗口。</td>
+</tr>
+<tr class="odd">
+<td>Alt+B</td>
+<td>显示断点窗口。</td>
+</tr>
+<tr class="even">
+<td>Alt+C</td>
+<td>显示 CPU 窗口。</td>
+</tr>
+<tr class="odd">
+<td>Alt+E</td>
+<td>显示模块列表。</td>
+</tr>
+<tr class="even">
+<td>Alt+K</td>
+<td>显示调用栈。</td>
+</tr>
+<tr class="odd">
+<td>Alt+L</td>
+<td>显示日志窗口。</td>
+</tr>
+<tr class="even">
+<td>Alt+M</td>
+<td>显示内存窗口。</td>
+</tr>
+<tr class="odd">
+<td>Alt+O</td>
+<td>显示选项对话框。</td>
+</tr>
+<tr class="even">
+<td>Alt+Backspace</td>
+<td>撤销对所选部分的修改。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+A</td>
+<td>分析当前模块的代码段。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+B</td>
+<td>开始二进制搜索。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+E</td>
+<td>以十六进制格式编辑所选内容。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+F</td>
+<td>开始命令搜索。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+G</td>
+<td>转到某地址。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+J</td>
+<td>列出所有的涉及到该位置的调用和跳转。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+K</td>
+<td>查看与当前函数相关的调用树。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+L</td>
+<td>搜索下一个。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+N</td>
+<td>打开当前模块的名称列表。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+O</td>
+<td>扫描对象文件。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+P</td>
+<td>显示补丁窗口。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+R</td>
+<td>搜索所选命令的参考。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+S</td>
+<td>命令搜索。</td>
+</tr>
+<tr class="even">
+<td>Ctrl+T</td>
+<td>打开“暂停Run跟踪”对话框。</td>
+</tr>
+<tr class="odd">
+<td>Esc</td>
+<td>停止自动执行或跟踪。</td>
+</tr>
+<tr class="even">
+<td>Enter</td>
+<td>将选中的命令添加到命令历史，如果当前命令是一个跳转或者函数，则进入到目的地址。</td>
+</tr>
+<tr class="odd">
+<td>Backspace</td>
+<td>如果分析器将代码误识为数据，可以将选中部分的自动分析信息移除。</td>
+</tr>
+<tr class="even">
+<td>*</td>
+<td>转到原始位置</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+*</td>
+<td>指定新的起始位置。</td>
+</tr>
+<tr class="even">
+<td>+</td>
+<td>如果 Run 跟踪没有激活，则根据历史命令跳到下一条运行过命令的地方；否则跳到 Run 跟踪的下一个记录。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl++</td>
+<td>跳到前一个函数的开始处。</td>
+</tr>
+<tr class="even">
+<td>-</td>
+<td>如果 Run 跟踪没有激活，则根据历史命令跳到前一条运行过命令的地方；否则跳到 Run 跟踪的前一个记录。</td>
+</tr>
+<tr class="odd">
+<td>Ctrl+-</td>
+<td>跳到下一个函数的开始处。</td>
+</tr>
+<tr class="even">
+<td>Space</td>
+<td>修改命令。</td>
+</tr>
+<tr class="odd">
+<td>:</td>
+<td>添加标签。</td>
+</tr>
+<tr class="even">
+<td>;</td>
+<td>添加注释。</td>
+</tr>
+</tbody>
+</table>
+<h5 id="练习-1">练习</h5>
+<p>helloReversing.exe</p>
+<h2 id="高级逆向">高级逆向</h2>
+<h3 id="多语言逆向">多语言逆向</h3>
+<h4 id="python">python</h4>
+<p>Python逆向其目标针对pyc文件，pyc是一种二进制文件，是由py文件经过编译后，生成的文件，是一种byte code，py文件变成pyc文件后，加载的速度有所提高，而且pyc是一种跨平台的字节码，是由python的虚拟机来执行的</p>
+<p>逆向方法： 1. 在线编译网站 https://tool.lu/pyc/ 2. 反编译工具：Unpycompyle6 pip install unpycompyle6</p>
+<p><strong>练习：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BGWCTF%202019%5Dpyre">[GWCTF 2019]pyre</a></p>
+<h4 id="java">Java</h4>
+<p>借用github开源项目jadx可以反编译java的代码，遇到安卓逆向的问题也可以使用该工具 逆向工具：jadx，jd-gui</p>
+<p><strong>练习：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#Java%E9%80%86%E5%90%91%E8%A7%A3%E5%AF%86">Java逆向解密</a></p>
+<h4 id="go">Go</h4>
+<p>IDA 7.7 Pro已经支持Go语言反编译，可以直接反编译出伪Go代码，其反编译的特征是函数名常带有fmt_xxx。</p>
+<p><strong>练习：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BMRCTF2020%5Dhello_world_go">[MRCTF2020]hello_world_go</a></p>
+<h4 id="csharp">Csharp</h4>
+<p>Dnspy可用于反编译C#程序，且可以进行调试。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172115614.png" alt="c#"><figcaption aria-hidden="true">c#</figcaption>
+</figure>
+<p><strong>练习：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BFlareOn1%5DBob%20Doge">[FlareOn1]Bob Doge</a></p>
+<h4 id="apk">APK</h4>
+<p>APK（全称：Android application package，Android应用程序包）是Android操作系统使用的一种应用程序包文件格式，用于分发和安装移动应用及中间件。一个Android应用程序的代码想要在Android设备上运行，必须先进行编译，然后被打包成为一个被Android系统所能识别的文件才可以被运行，而这种能被Android系统识别并运行的文件格式便是“APK”。</p>
+<p>一个APK文件内包含被编译的代码文件(.dex 文件)，文件资源（resources）， 原生资源文件（assets），证书（certificates），和清单文件（manifest file）</p>
+<p>APK逆向工具有jadx，GDA。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172135521.png" alt="apk"><figcaption aria-hidden="true">apk</figcaption>
+</figure>
+<h3 id="保护壳">保护壳</h3>
+<p>壳是在一些计算机软件里也有一段专门负责保护软件不被非法修改或反编译的程序。它们一般都是先于程序运行，拿到控制权，然后完成它们保护软件的任务。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172146475.png" alt="shell"><figcaption aria-hidden="true">shell</figcaption>
+</figure>
+<h3 id="花指令">花指令</h3>
+<p>花指令是企图隐藏掉不想被逆向工程的代码块 (或其它功能) 的一种方法, 在真实代码中插入一些垃圾代码的同时还保证原有程序的正确执行, 而程序无法很好地反编译, 难以理解程序内容, 达到混淆视听的效果。</p>
+<h3 id="反调试">反调试</h3>
+<p>程序运行时会检测程序运行时的环境（当前的窗口、当前的进程、当前的一些指示信息、当前的一些端口开放状态等），通过一些敏感的信息反馈出是否在调试当中，如果检测自身处于调试环境中，则执行流与在正常环境下执行流不一致。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172201928.png" alt="anti_debug1"><figcaption aria-hidden="true">anti_debug1</figcaption>
+</figure>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172213706.png" alt="anti_debug2"><figcaption aria-hidden="true">anti_debug2</figcaption>
+</figure>
+<p>解决思路： 1. 整改环境 2. 改变程序逻辑</p>
+<h3 id="vm逆向">VM逆向</h3>
+<p>在商业上，有一种叫做VMProtect的保护软件，通过利用伪指令虚拟机将指定代码进行变形和虚拟化处理后，达到隐藏关键代码的作用，具有很高的安全性。在阅读汇编代码时如同想把一本英文书翻译成中文书，却发现书里是法文写的。 而在CTF比赛中，出题人通过自己的伪指令实现小型虚拟机，达到混淆、增大题目难度的作用。它将基于x86汇编系统中的可执行代码转换为字节码指令系统的代码，来达到不被轻易逆向和篡改的目的。简单点说就是将程序的代码转换自定义的操作码(opcode)，然后在程序执行时再通过解释这些操作码，选择对应的函数执行，从而实现程序原有的功能。</p>
+<figure>
+<img src="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/image-20220913172225099.png" alt="vm"><figcaption aria-hidden="true">vm</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/reverse/" rel="tag"># reverse</a>
+              <a href="/tags/share/" rel="tag"># share</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="prev" title="密码学">
+      <i class="fa fa-chevron-left"></i> 密码学
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/13/PWN/" rel="next" title="PWN">
+      PWN <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">什么是逆向工程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">应用领域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctf%E4%B8%AD%E7%9A%84%E9%80%86%E5%90%91"><span class="nav-number">3.</span> <span class="nav-text">CTF中的逆向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E5%90%91%E6%96%B9%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">逆向方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">静态分析法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">动态分析法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ctf%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E6%B5%81%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">CTF软件逆向流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="nav-number"></span> <span class="nav-text">逆向工程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E4%B8%8E%E5%8F%8D%E7%BC%96%E8%AF%91"><span class="nav-number">1.</span> <span class="nav-text">编译与反编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">汇编基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4"><span class="nav-number">2.2.</span> <span class="nav-text">指令</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%A7%BB%E5%8A%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">2.2.1.</span> <span class="nav-text">数据移动指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E6%8C%87%E4%BB%A4"><span class="nav-number">2.2.2.</span> <span class="nav-text">逻辑运算指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E6%8C%87%E4%BB%A4"><span class="nav-number">2.2.3.</span> <span class="nav-text">流程控制指令</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E5%86%85%E5%AD%98%E5%9D%97"><span class="nav-number">2.3.</span> <span class="nav-text">进程内存块</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%86%E5%90%91%E5%B7%A5%E5%85%B7%E5%8F%8A%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">逆向工具及使用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ida-pro"><span class="nav-number">3.0.1.</span> <span class="nav-text">IDA Pro</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">3.0.2.</span> <span class="nav-text">练习</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ollydbg"><span class="nav-number">3.0.3.</span> <span class="nav-text">Ollydbg</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0-1"><span class="nav-number">3.0.4.</span> <span class="nav-text">练习</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AB%98%E7%BA%A7%E9%80%86%E5%90%91"><span class="nav-number"></span> <span class="nav-text">高级逆向</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%AF%AD%E8%A8%80%E9%80%86%E5%90%91"><span class="nav-number">1.</span> <span class="nav-text">多语言逆向</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#python"><span class="nav-number">1.1.</span> <span class="nav-text">python</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#java"><span class="nav-number">1.2.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#go"><span class="nav-number">1.3.</span> <span class="nav-text">Go</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#csharp"><span class="nav-number">1.4.</span> <span class="nav-text">Csharp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#apk"><span class="nav-number">1.5.</span> <span class="nav-text">APK</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E6%8A%A4%E5%A3%B3"><span class="nav-number">2.</span> <span class="nav-text">保护壳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%8A%B1%E6%8C%87%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E8%B0%83%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">反调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vm%E9%80%86%E5%90%91"><span class="nav-number">5.</span> <span class="nav-text">VM逆向</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lylanfree"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">109k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:39</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('post.copy_button').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('post.copy_success')
+          else $(this).text('post.copy_failure')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('post.copy_button')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

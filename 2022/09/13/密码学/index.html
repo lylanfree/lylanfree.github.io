@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/my_ico.ico">
+  <link rel="mask-icon" href="/images/my_ico.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lylanfree.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。 密码学概述 密码学（Cryptography）一般可分为古典密码学和现代密码学。 其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：  单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="密码学">
+<meta property="og:url" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。 密码学概述 密码学（Cryptography）一般可分为古典密码学和现代密码学。 其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：  单">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155811688.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155837499.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155920433.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155939726.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160012030.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160026901.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160037083.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160101570.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160121725.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160136431.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160149259.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160241776.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160253070.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160305798.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/7b3b9d10db494a4c8323e81f506fa5d1.webp">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160408841.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160502967.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160514687.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160536135.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160548577.png">
+<meta property="og:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160558355.png">
+<meta property="article:published_time" content="2022-09-13T07:50:05.000Z">
+<meta property="article:modified_time" content="2022-09-13T09:25:13.716Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="crypto">
+<meta property="article:tag" content="share">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
+
+<link rel="canonical" href="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>密码学 | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://lylanfree.github.io/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          密码学
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-09-13 15:50:05 / Modified: 17:25:13" itemprop="dateCreated datePublished" datetime="2022-09-13T15:50:05+08:00">2022-09-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>14 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。</p>
+<h2 id="密码学概述">密码学概述</h2>
+<p>密码学（Cryptography）一般可分为古典密码学和现代密码学。</p>
+<p>其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：</p>
+<ul>
+<li>单表替换加密（Monoalphabetic Cipher）</li>
+<li>多表替换加密（Polyalphabetic Cipher）</li>
+<li>奇奇怪怪的加密方式</li>
+</ul>
+<span id="more"></span>
+<p>而现代密码学则起源于 20 世纪中后期出现的大量相关理论，1949 年香农（C. E. Shannon）发表了题为《保密系统的通信理论》的经典论文标志着现代密码学的开始。现代密码学主要包含以下几个方面：</p>
+<ul>
+<li>对称加密（Symmetric Cryptography），以 DES，AES，RC4 为代表。</li>
+<li>非对称加密（Asymmetric Cryptography），以 RSA，ElGamal，椭圆曲线加密为代表。</li>
+<li>哈希函数（Hash Function），以 MD5，SHA-1，SHA-512 等为代表。</li>
+<li>数字签名（Digital Signature），以 RSA 签名，ElGamal 签名，DSA 签名为代表。</li>
+</ul>
+<blockquote>
+<p>数据安全基于密钥而不是算法的保密</p>
+</blockquote>
+<p>其中，对称加密体制主要分为两种方式：</p>
+<ul>
+<li>分组密码（Block Cipher），又称为块密码。</li>
+<li>序列密码（Stream Cipher），又称为流密码。</li>
+</ul>
+<p>一般来说，密码设计者的根本目标是保障信息及信息系统的</p>
+<ul>
+<li>机密性（Confidentiality）</li>
+<li>完整性（Integrity）</li>
+<li>可用性（Availability）</li>
+<li>认证性（Authentication）</li>
+<li>不可否认性（Non-repudiation）</li>
+</ul>
+<p>其中，前三者被称为信息安全的 CIA 三要素。</p>
+<p>而对于密码破解者来说，一般是要想办法识别出密码算法，然后进行暴力破解，或者利用密码体制的漏洞进行破解。当然，也有可能通过构造虚假的哈希值或者数字签名来绕过相应的检测。</p>
+<p>一般来说，我们都会假设攻击者已知待破解的密码体制，而攻击类型通常分为以下四种：</p>
+<table>
+<thead>
+<tr class="header">
+<th>攻击类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>唯密文攻击</td>
+<td>只拥有密文</td>
+</tr>
+<tr class="even">
+<td>已知明文攻击</td>
+<td>拥有密文与对应的明文</td>
+</tr>
+<tr class="odd">
+<td>选择明文攻击</td>
+<td>拥有加密权限，能够对明文加密后获得相应密文</td>
+</tr>
+<tr class="even">
+<td>选择密文攻击</td>
+<td>拥有解密权限，能够对密文解密获得相应明文</td>
+</tr>
+</tbody>
+</table>
+<h2 id="古典密码学">古典密码学</h2>
+<h3 id="单表替换加密">单表替换加密</h3>
+<h4 id="凯撒密码">凯撒密码</h4>
+<p>凯撒大帝在高卢参加竞选时，在与他的罗马朋友和同事的私人信件中使用了这种加密方法。这个密码对明文进行了简单的移位处理。 举例来说，如果明文是字母A，则向后移位3个字母，A被加密为D。同理，B被加密为E，C被加密为F，一直到W被加密为Z。对于X来说，移位3个字母超过了Z，则返回到字母A。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png" alt="caesar"><figcaption aria-hidden="true">caesar</figcaption>
+</figure>
+<p><strong>破解方式</strong>：遍历25种可能性，查看输出结果，人工判断解密结果</p>
+<p><strong>例题：</strong> 给定一段字符串密文<code>Wtaad, Iwxh xh Rpthpg Tcrgneixdc</code>，求其明文</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 凯撒密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt_ks</span>(<span class="params">s : <span class="built_in">str</span></span>):</span><br><span class="line">    ress = []</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">26</span>):</span><br><span class="line">        res = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> i.isalpha():</span><br><span class="line">                <span class="keyword">if</span> i.islower():</span><br><span class="line">                    base = <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    base = <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>)</span><br><span class="line">                res += <span class="built_in">chr</span>((<span class="built_in">ord</span>(i) + j - base) % <span class="number">26</span> + base)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                res += i</span><br><span class="line">        ress.append(res)</span><br><span class="line">    <span class="keyword">return</span> ress</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">&#x27;Wtaad, Iwxh xh Rpthpg Tcrgneixdc&#x27;</span></span><br><span class="line"><span class="comment"># decrypt_ks(s)</span></span><br></pre></td></tr></table></figure>
+<h5 id="练习">练习</h5>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BHBNIS2018%5Dcaesar">[HBNIS2018]caesar</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">&#x27;gmbhjtdbftbs&#x27;</span></span><br><span class="line"><span class="comment"># decrypt_ks(s)</span></span><br></pre></td></tr></table></figure>
+<h4 id="简单替换">简单替换</h4>
+<p>简单替换密码（Simple Substitution Cipher）加密时，将每个明文字母替换为与之唯一对应且不同的字母，与凯撒密码的区别在于其密码字母表的字母不是简单的位移，而且完全是混乱的，使得其破解难度高于凯撒密码。比如：</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155811688.png" alt="simple-substitution"><figcaption aria-hidden="true">simple-substitution</figcaption>
+</figure>
+<p>将其对应关系整理成更易读的形式：</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155837499.png" alt="simple-substitution-2"><figcaption aria-hidden="true">simple-substitution-2</figcaption>
+</figure>
+<p>而简单替换密码的密钥就是第二行的字母，即：</p>
+<blockquote>
+<p>WYHFXUMTJVSGENBRDZLQAPCOKI</p>
+</blockquote>
+<p><strong>示例</strong></p>
+<p>我们使用密钥: phqgiumeaylnofdxjkrcvstzwb，加密defend the east wall of the castle：</p>
+<p>首先写出密钥为1时明文和密文的对照表：</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155920433.png" alt="simple-substitution-3"><figcaption aria-hidden="true">simple-substitution-3</figcaption>
+</figure>
+<p>对要加密的明文逐个查表替换：D替换为G、E替换为I... 依次类推，直到整段明文都被加密。</p>
+<blockquote>
+<p>plaintext: defend the east wall of the castle</p>
+<p>ciphertext: giuifg cei iprc tpnn du cei qprcni</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 代码实现</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SimpleSubstitution</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, s</span>):</span><br><span class="line">        self.__table = <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz&#x27;</span></span><br><span class="line">        s = s.lower()</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">len</span>(s) == <span class="number">26</span> <span class="keyword">and</span> <span class="built_in">set</span>(s) == <span class="built_in">set</span>(self.__table)</span><br><span class="line">        self.__enc_dic = &#123;&#125;</span><br><span class="line">        self.__dec_dic = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">            self.__enc_dic[<span class="built_in">chr</span>(i+<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))] = s[i]</span><br><span class="line">            self.__dec_dic[s[i]] = <span class="built_in">chr</span>(i+<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">encipher</span>(<span class="params">self, s</span>):</span><br><span class="line">        text = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        s = s.lower()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">            text += self.__enc_dic.get(i) <span class="keyword">if</span> self.__enc_dic.get(i) <span class="keyword">else</span> i</span><br><span class="line">        <span class="keyword">return</span> text</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decipher</span>(<span class="params">self, s</span>):</span><br><span class="line">        text = <span class="string">&#x27;&#x27;</span></span><br><span class="line">        s = s.lower()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">            text += self.__dec_dic.get(i) <span class="keyword">if</span> self.__dec_dic.get(i) <span class="keyword">else</span> i</span><br><span class="line">        <span class="keyword">return</span> text</span><br><span class="line"></span><br><span class="line">ss = SimpleSubstitution(<span class="string">&#x27;phqgiumeaylnofdxjkrcvstzwb&#x27;</span>)</span><br><span class="line"><span class="comment"># print(ss.encipher(&#x27;defend the east wall of the castle&#x27;))</span></span><br><span class="line"><span class="comment"># print(ss.decipher(&#x27;giuifg cei iprc tpnn du cei qprcni&#x27;))</span></span><br></pre></td></tr></table></figure>
+<h5 id="简单替换密码的密码分析">简单替换密码的密码分析</h5>
+<p>虽然简单替换密码的密钥空间很大（密钥数量约为<span class="math inline">\(2^{88.4}\)</span>），但是还是很容易被破解。因为在英语文本中有很多冗余或统计属性。</p>
+<p><strong>词频分析</strong></p>
+<p>自然英语每个字母出现的频率有着特殊的分布，所以我们首先计算密文中字母的频率分布。</p>
+<p>下图为自然英语的字母频率：</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155939726.png" alt="frequent-analysis"><figcaption aria-hidden="true">frequent-analysis</figcaption>
+</figure>
+<p>这说明'e'是最常见的字母，出现概率约为13%，而z出现的概率却小于1%。经过简单替换密码加密后不会改变这些字母的频率，只会使它们的对应关系变得杂乱无章。</p>
+<p>在上一小节的示例中，'e'被加密为'i'，所以'i'在密文中变成了最常见的密文。密码分析人员必须通过这种方法，找到密文和明文中每个字符的映射关系。</p>
+<p>比如我们将密文中最常见的字母替换为'e'，第二常见的字母替换为't'，以此类推。</p>
+<p>解题网址：<a target="_blank" rel="noopener" href="http://quipqiup.com/" class="uri">http://quipqiup.com/</a></p>
+<h5 id="练习-1">练习</h5>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%E5%87%AF%E6%92%92%EF%BC%9F%E6%9B%BF%E6%8D%A2%EF%BC%9F%E5%91%B5%E5%91%B5!">凯撒？替换？呵呵！</a></p>
+<h4 id="多表替换">多表替换</h4>
+<p>人类需要更加安全的加密方法。意大利文艺复兴时期的天才阿尔伯蒂(Leon BattistaAlberti)进一步改进了凯撒密码，并在加密过程中使用了多字母映射表。阿尔伯蒂的此种加密方法在1553年被意大利人贝拉索(Giovan Battista Bellaso)改进，并由法国人维吉尼亚(Blaise de Vigenere)所推广。因此，这个密码被称为「维吉尼亚密码」(Vigenere Cipher)。</p>
+<p>维吉尼亚密码是一个相对很安全的加密系统，自提出后的300多年间都未得到破解。因此，这一密码很长时间以来都享有至高荣誉:无法破译的密码(Le chiffre indechiffrable)。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160012030.png" alt="vgny"><figcaption aria-hidden="true">vgny</figcaption>
+</figure>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160026901.png" alt="vgny2"><figcaption aria-hidden="true">vgny2</figcaption>
+</figure>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160037083.png" alt="vgny3"><figcaption aria-hidden="true">vgny3</figcaption>
+</figure>
+<p>加密结果：<code>LXFOPVEFRNHR</code></p>
+<p>然而，维吉尼亚密码也不是安全的。事实上，以维吉尼亚密码为代表的「多表代换密码」均有安全漏洞。1863年，德国人卡斯基(Friedrich Kasiski)公开了一份针对维吉尼亚密码等多表代换密码的破解方法，称为「卡斯基检测法」。不过有间接证据表明，早在1863年之前的10年，英国数学家巴贝奇(Charles Babbage)也提出了类似的破解方法。</p>
+<p><strong>解密网站</strong>：<a target="_blank" rel="noopener" href="https://www.guballa.de/vigenere-solver" class="uri">https://www.guballa.de/vigenere-solver</a></p>
+<h5 id="重合指数">重合指数</h5>
+<p>重合指数（Coincidence Index）：令 <span class="math inline">\(𝑥=𝑥_1 𝑥_2⋯𝑥_𝑛\)</span> 为长度为 n 的字符串，定义此字符串 x 的重合指数为任取该字符串两个字母为相同的几率，即</p>
+<p><span class="math display">\[I(x)=\frac{\sum_{i=1}^{26}C_{p_i}^2}{C_n^2}\]</span></p>
+<p>其中 <span class="math inline">\(𝑝_1,𝑝_2,⋯,𝑝_26\)</span> 代表字母 𝑎,𝑏,𝑐,⋯,𝑧 在字符串 𝑥 中所出现的次数。C代表组合数。</p>
+<p>注：假设 x 为一篇普通的英文文章，且 n 很大，那么有</p>
+<p><span class="math display">\[𝐼(𝑥)≈|𝑊|=𝑤_1^2+𝑤_2^2+⋯+𝑤_{26}^2≈0.065\]</span></p>
+<h5 id="练习-2">练习</h5>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BMRCTF2020%5Dvigenere">[MRCTF2020]vigenere</a></p>
+<h2 id="现代密码">现代密码</h2>
+<h3 id="对称加密">对称加密</h3>
+<p>加密和解密用的是同一个密码或者同一套逻辑的加密方式。</p>
+<p>这个密钥也叫对称秘钥，其实这个对称和不对称指的就是加密和解密用的<strong>秘钥</strong>是不是同一个。</p>
+<h4 id="流密码">流密码</h4>
+<p>流密码一般逐字节或者逐比特处理信息。一般来说</p>
+<ul>
+<li>流密码的密钥长度会与明文的长度相同。</li>
+<li>流密码的密钥派生自一个较短的密钥，派生算法通常为一个伪随机数生成算法。</li>
+</ul>
+<p>需要注意的是，流加密目前来说都是对称加密。</p>
+<p>伪随机数生成算法生成的序列的随机性越强，明文中的统计特征被覆盖的更好。</p>
+<p>流密码加解密非常简单，在已知明文的情况下，可以非常容易地获取密钥流。</p>
+<p>流密码的关键在于设计好的伪随机数生成器。一般来说，伪随机数生成器的基本构造模块为反馈移位寄存器。</p>
+<h5 id="移位寄存器">移位寄存器</h5>
+<p>移位寄存器（Shift Register，SR）是指有若干个寄存器排成一行，每个寄存器中都存储着一个二进制数（0或1）。移位寄存器每次把最右端（末端）的数字输出，然后整体向右移动一位。假设一个5位移位寄存器中存储着数据10110，则不断移位、输出的效果如图所示：</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160101570.png" alt="shift_reg"><figcaption aria-hidden="true">shift_reg</figcaption>
+</figure>
+<h5 id="反馈移位寄存器">反馈移位寄存器</h5>
+<p>在移位寄存器向右移位一位以后，左边就会空出一位（如上图所示），这时如果采用一个<strong>反馈函数</strong>，以寄存器中已有的某些序列作为反馈函数的输入，在函数中经过一定的运算后，将反馈函数输出的结果填充到移位寄存器的最左端，那么这样的移位寄存器就会有源源不断的输出。这样的，<strong>拥有反馈函数的移位寄存器称为反馈移位寄存器</strong>（Feedback Shift Register，FSR）。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160121725.png" alt="fk_shift_reg"><figcaption aria-hidden="true">fk_shift_reg</figcaption>
+</figure>
+<h5 id="线性反馈移位寄存器">线性反馈移位寄存器</h5>
+<p>如果反馈移位寄存器的<strong>反馈函数是线性函数</strong>（即只进行简单线性运算的函数），那么这种寄存器就被称为<strong>线性反馈移位寄存器</strong>（Linear Feedback Shift Register，LFSR）。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160136431.png" alt="lfsr"><figcaption aria-hidden="true">lfsr</figcaption>
+</figure>
+<h5 id="lfsr流密码">LFSR流密码</h5>
+<p>LFSR的反馈函数就是简单地对<strong>移位寄存器中的某些位进行异或，并将异或的结果填充到LFSR的最左端</strong>，如图所示。对于LFSR中每一位的数据，可以参与异或，也可以不参与异或。其中，我们把参与异或的位称为<strong>抽头</strong>。</p>
+<p><strong>LFSR的寄存器个数称为LFSR的级数</strong>，一个n级LFSR最多同时存放n位数据。</p>
+<p>加密思路：通过密钥K产生一个密钥流<span class="math inline">\(z=z_0z_1z_2…\)</span>，并使用加密规则对明文串<span class="math inline">\(x=x_0x_1x_2…\)</span>加密，得到加密后的密文<span class="math inline">\(y=y_0y_1y_2…=E_{z_0}(x_0)E_{z_1}(x_1)…\)</span>，加密规则可以使用非常简单的加密算法（如简单的异或运算）。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160149259.png" alt="stream_cipher"><figcaption aria-hidden="true">stream_cipher</figcaption>
+</figure>
+<p>其<strong>密钥流</strong>输出函数为<span class="math inline">\(f(x)≡c_n a_1+c_{n-1}a_2+⋯+c_1x_n\mod 2\)</span></p>
+<p>设初始密钥K为nbit，根据输出函数对用户明文进行加密过程：</p>
+<ol type="1">
+<li>对于前n bit明文，直接使用初始密钥异或进行加密，得到n bit密文</li>
+<li>对于后续每bit明文，先根据输出函数得到密钥，再与明文进行异或得到密文。</li>
+</ol>
+<p>只使用LFSR来产生密钥是非常不安全的。下文将在几种情况下说明LFSR的易攻破性。</p>
+<p><strong>对LFSR的攻击</strong></p>
+<ol type="1">
+<li><strong>已知LFSR的反馈函数和级数n：</strong></li>
+</ol>
+<p>在这种情况下，如果破译者已知连续n位明文 <span class="math inline">\(p_i, i\in [1,n]\)</span> ，和其对应的n位密文 <span class="math inline">\(c_i, i\in [1,n]\)</span> ，则可以计算得出n位密钥 <span class="math inline">\(a_i = m_i \oplus c_i, i\in [1,n]\)</span>。这时，就已知了LFSR的一个状态，再根据反馈函数，即可计算出LFSR的全部密钥流，从而破解LFSR。</p>
+<p><span class="math display">\[(a_0\ a_1\ \cdots\ a_{n-1})\cdot \begin{pmatrix} c_0 \\ c_1 \\ \vdots \\ c_{n-1} \end{pmatrix}= (a_{n})\]</span></p>
+<ol start="2" type="1">
+<li><strong>未知LFSR的反馈函数，但已知其级数n：</strong></li>
+</ol>
+<p>尽管这时我们失去了反馈函数的信息，但我们仍然可以拦截其连续<strong>2n位</strong>的明文 <span class="math inline">\(p_i, i\in [1,2n]\)</span> ，和其对应的<strong>2n位</strong>的密文 <span class="math inline">\(c_i, i\in [1,2n]\)</span> ，得到2n位的密钥 <span class="math inline">\(a_i = m_i \oplus c_i, i\in [1,2n]\)</span>。 <strong>在这2n个密钥中，蕴含着LFSR的n+1种状态</strong>，分别为 <span class="math inline">\({a_1,a_2,\cdots,a_n}\)</span>，<span class="math inline">\({a_2,a_3,\cdots,a_{n+1}}\)</span>， <span class="math inline">\({a_3,a_4,\cdots,a_{n+2}}\)</span> ，......， <span class="math inline">\({a_{n+1},a_{n+2},\cdots,a_{2n}}\)</span> 。这些状态之间存在着相互的递推关系，例如<span class="math inline">\(a_{n+1}\)</span>就是由 <span class="math inline">\({a_1,a_2,\cdots,a_n}\)</span> 计算出来的。以此类推， <span class="math inline">\(a_{i+n}\)</span> 是由 <span class="math inline">\({a_{i},a_{i+1},\cdots,a_{i+n-1}}\)</span>计算出来的。由此，我们可以得出n个线性方程，构成一个线性方程组。</p>
+<p><span class="math display">\[(a_0\ a_1\ \cdots\ a_{n-1})\cdot \begin{pmatrix} 0 &amp; 0 &amp; \cdots &amp; c_0 \\ 1 &amp; 0 &amp; \cdots &amp; c_1 \\ 0 &amp; 1 &amp; \cdots &amp; c_2 \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ 0 &amp; 0 &amp; \cdots &amp; c_{n-1} \end{pmatrix}= (a_1\ a_2 \ \cdots\ a_{n})\]</span></p>
+<p><span class="math display">\[(a_0\ a_1\ \cdots\ a_{n-1})\cdot \begin{pmatrix} c_0 \\ c_1 \\ \vdots \\ c_{n-1} \end{pmatrix}= (a_{n})\]</span></p>
+<p><span class="math display">\[\begin{pmatrix} a_0 &amp; a_1 &amp; \cdots &amp; a_{n-1} \\ a_1 &amp; a_2 &amp; \cdots &amp; a_n \\ a_2 &amp; a_3 &amp; \cdots &amp; a_{n+1} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ a_{n-1} &amp; a_n &amp; \cdots &amp; a_{2n-2} \end{pmatrix}\cdot \begin{pmatrix} c_0 \\ c_1 \\ \vdots \\ c_{n-1} \end{pmatrix}= \begin{pmatrix} a_n\\ a_{n+1} \\ \vdots \\ a_{2n-1} \end{pmatrix}\]</span></p>
+<p><strong>示例：</strong>假设窃密者得到密文串10110 10111 10010和相应的明文串01100 11111 11001，得密钥流为11010 01000 01011（密文串与明文串异或）。进一步假定窃密者还知道密钥流是使用5级线性反馈移位寄存器产生的，那么窃密者可利用密钥流前10个比特建立如下方程：</p>
+<p><span class="math display">\[(a_6\space a_7\space a_8\space a_9\space a_{10})=(c_5\space c_4\space c_3\space c_2\space c_1) { \begin{pmatrix} a_1&amp; a_2&amp; a_3&amp; a_4&amp; a_5 \\ a_2&amp; a_3&amp; a_4&amp; a_5&amp; a_6 \\ a_3&amp; a_4&amp; a_5&amp; a_6&amp; a_7 \\ a_4&amp; a_5&amp; a_6&amp; a_7&amp; a_8 \\ a_5&amp; a_6&amp; a_7&amp; a_8&amp; a_9 \end{pmatrix} }\]</span></p>
+<p>代入数字，得到如下方程：</p>
+<p><span class="math display">\[(0\space 1\space 0\space 0\space 0)=\space (c_5\space c_4\space c_3\space c_2\space c_1) { \begin{pmatrix} 1&amp;1&amp;0&amp;1&amp;0 \\ 1&amp;0&amp;1&amp;0&amp;0 \\ 0&amp;1&amp;0&amp;0&amp;1 \\ 1&amp;0&amp;0&amp;1&amp;0 \\ 0&amp;0&amp;1&amp;0&amp;0 \end{pmatrix} }\]</span></p>
+<p>又因为</p>
+<p><span class="math display">\[{ \begin{pmatrix} 1&amp;1&amp;0&amp;1&amp;0 \\ 1&amp;0&amp;1&amp;0&amp;0 \\ 0&amp;1&amp;0&amp;0&amp;1 \\ 1&amp;0&amp;0&amp;1&amp;0 \\ 0&amp;0&amp;1&amp;0&amp;0 \end{pmatrix} }^{-1}= { \begin{pmatrix} 0&amp;1&amp;0&amp;0&amp;1 \\ 1&amp;0&amp;0&amp;1&amp;0 \\ 0&amp;0&amp;0&amp;0&amp;1 \\ 0&amp;1&amp;0&amp;1&amp;1 \\ 1&amp;0&amp;1&amp;1&amp;0 \end{pmatrix} }\]</span></p>
+<p>得到如下结果</p>
+<p><span class="math display">\[(C_5\space C_4\space C_3\space C_2\space C_1)=(0\space1\space0\space0\space0) { \begin{pmatrix} 0&amp;1&amp;0&amp;0&amp;1 \\ 1&amp;0&amp;0&amp;1&amp;0 \\ 0&amp;0&amp;0&amp;0&amp;1 \\ 0&amp;1&amp;0&amp;1&amp;1 \\ 1&amp;0&amp;1&amp;1&amp;0 \end{pmatrix} }\]</span></p>
+<p>化简得：</p>
+<p><span class="math display">\[(C_5\space C_4\space C_3\space C_2\space C_1)=(1\space 0\space0\space1\space0)\]</span></p>
+<p>即反馈函数为</p>
+<p><span class="math display">\[a_{i+5}=c_5a_i\oplus c_2a_{i+3}=a_i\oplus a_{i+3}\]</span></p>
+<h5 id="练习-3">练习</h5>
+<p><a target="_blank" rel="noopener" href="https://buuoj.cn/challenges#%5BAFCTF2018%5DTiny%20LFSR">[AFCTF2018]Tiny LFSR</a></p>
+<h4 id="lcg">LCG</h4>
+<p><strong>什么是LCG</strong></p>
+<p>LCG是线性同余算法，用来生成伪随机数，定义了三个整数，乘数m，增量c和模数n，m,c,n是生成器设定的常数。</p>
+<p><span class="math display">\[S_{i+1} \equiv m\cdot S_i+c(mod\ n)\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">LCG</span>(<span class="params">seed, params</span>):</span><br><span class="line">    m,c,n = params</span><br><span class="line">    x = seed % n</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (m * x + c) % n</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line">seed = <span class="number">114</span></span><br><span class="line">m = <span class="number">10</span></span><br><span class="line">c = <span class="number">12</span></span><br><span class="line">n = <span class="number">514</span></span><br><span class="line">lcg = LCG(seed, (m,c,n))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line"><span class="comment">#     print(next(lcg))</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<h5 id="对于lcg的攻击">对于LCG的攻击</h5>
+<ol type="1">
+<li><p>已知m，c，n以及s0的情况</p>
+<p><span class="math display">\[s_1 \equiv m\cdot s_0+c(mod\ n)\]</span></p></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">source=<span class="string">b&quot;flag&#123;*********&#125;&quot;</span></span><br><span class="line">plaintext=bytes_to_long(source)</span><br><span class="line">length=plaintext.bit_length()</span><br><span class="line">a = getPrime(length)</span><br><span class="line">b = getPrime(length)</span><br><span class="line">n = getPrime(length)</span><br><span class="line">seed = <span class="number">3281857254</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;seed = &quot;</span>,seed)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    seed = (a*seed+b)%n</span><br><span class="line">ciphertext = seed^plaintext</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;a = &quot;</span>,a)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;b = &quot;</span>,b)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;n = &quot;</span>,n)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;c = &quot;</span>,ciphertext)</span><br><span class="line">    <span class="comment"># seed =  3281857254</span></span><br><span class="line">    <span class="comment"># a =  540148988578728116547540370955365641360430675811</span></span><br><span class="line">    <span class="comment"># b =  691767495086914115399769389216940791240924902423</span></span><br><span class="line">    <span class="comment"># n =  524988838768493801533758786071154204860765947187</span></span><br><span class="line">    <span class="comment"># c =  210504742144537844110730225465101123460260815127</span></span><br></pre></td></tr></table></figure>
+<pre><code><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">seed =  <span class="number">3281857254</span></span><br><span class="line">a =  <span class="number">540148988578728116547540370955365641360430675811</span></span><br><span class="line">b =  <span class="number">691767495086914115399769389216940791240924902423</span></span><br><span class="line">n =  <span class="number">524988838768493801533758786071154204860765947187</span></span><br><span class="line">c =  <span class="number">210504742144537844110730225465101123460260815127</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    seed = (a*seed+b)%n</span><br><span class="line">flag =  c ^ seed</span><br><span class="line"><span class="comment"># print(long_to_bytes(flag))</span></span><br></pre></td></tr></table></figure></code></pre>
+<ol start="2" type="1">
+<li><p>已知m、n、s0、s1的情况 <span class="math display">\[\begin{aligned}s_1 &amp;\equiv m\cdot s_0+c(mod\ n)\\
+ c&amp;\equiv s_1 - m\cdot s_0(mod\ n)\end{aligned}\]</span></p></li>
+<li><p>已知n、s0、s1、s2的情况 <span class="math display">\[\begin{aligned}s_1 &amp;\equiv m\cdot s_0+c(mod\ n)\\
+ s_2 &amp;\equiv m\cdot s_1+c(mod\ n)\\
+s_1-s_2 &amp;\equiv m\cdot(s_0-s_1)(mod\ n)\\
+m&amp;\equiv\frac{s_1-s_2}{s_0-s_1}(mod\ n)\end{aligned}\]</span></p></li>
+</ol>
+<h4 id="分组密码">分组密码</h4>
+<p>密码学家和计算机科学家们继续为安全加密算法的设计做出不懈的努力。他们设计了多种安全可靠的加密算法。比较著名的有1977年1月由美国国家标准局公布的数据加密标准(Data Encryption Standard，DES)。DES的出现是现代密码学的标志之一，意味着密码学已经上升为数学和计算机科学的交叉学科。DES被使用了将近20年。为了适应现今的安全要求，1998年密码学家们推出了一系列替代 DES的新型算法，如MARS、RC6、Sperpent、Twofish等。2000年10月2日，美国国家标准和技术协会(National lnstitution of Standards and Technology，NIST)宣布，经过3年多的筛选和测评，比利时密码学家Daemen和Rijmen共同设计的Rijndael加密算法成为了新的加密标准。这个新的算法被命名为高级加密标准(Advanced Encryption Standard，AES)。现今，AES已经被广泛使用。密码学家们仍然没有发现AES的致命缺陷。我们可以认为，到现在为止，AES仍然是安全的加密算法。</p>
+<p>在今天我们所使用的加密法中，分组加密是最常见的类型。分组加密法每次作用于固定大小的分组（与流密码相反，流密码每次只加密一位）。此外，一个分组的比特数就称为分组长度。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160241776.png" alt="block_cipher"><figcaption aria-hidden="true">block_cipher</figcaption>
+</figure>
+<h5 id="分组密码的模式">分组密码的模式</h5>
+<p><strong>什么是模式</strong></p>
+<p>分组密码只能加密固定长度的分组，但是我们需要加密的明文长度可能会超过分组密码的分组长度，这时就需要对分组密码算法进行迭代，以便将一段很长的明文全部加密。这个迭代的方法就称为分组密码的模式（mode）。</p>
+<p>在介绍模式前我们引入两个术语： 明文分组<span class="math inline">\(（M_n）\)</span>：指分组密码算法中作为加密对象的明文，明文分组的长度与分组密码算法的分组长度是等长的。 密文分组<span class="math inline">\(（C_n）\)</span>：指使用分组密码算法将明文分组加密之后所生成的密文。</p>
+<p><strong>电子编码薄模式（ECB）</strong></p>
+<p>这是分组加密最简单的一种模式，即明文的每一个块加密成密文的每一个块。明文被分为若干块<span class="math inline">\(M_1,M_2,M_3,M_4,… ,M_n\)</span>，通过加密方法<span class="math inline">\(E_k\)</span>，得到密文<span class="math inline">\(C_1,C_2,C_3,C_4,…,C_n\)</span>，当最后一个明文分组小于分组长度时，需要用一些特定的数据进行填充。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160253070.png" alt="ecb_cipher"><figcaption aria-hidden="true">ecb_cipher</figcaption>
+</figure>
+<p>解密过程也是一次对一个分组解密，而且每次解密都使用同一密钥。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160305798.png" alt="ecb_dcipher"><figcaption aria-hidden="true">ecb_dcipher</figcaption>
+</figure>
+<p><strong>ECB模式的特点</strong></p>
+<p>ECB模式是所有模式中最简单的一种。ECB模式中，明文分组与密文分组是一一对应关系，因此，如果明文中存在多个相同的明文分组，则这些明文分组最终都将被转换为相同的 密文分组。这样一来，只要观察一下密文，就可以知道明文中存在怎么样的重复组合，并可以以此为线索来破译密码，因此ECB模式是存在一定风险的。</p>
+<p><strong>对ECB模式的攻击</strong></p>
+<p>ECB模式中，每个明文分组都是各自独立地进行加密和解密，但这其实是一个很大的弱点。假如存在一个攻击者，当他作为中间人截获两方的通信时，他能够改变密文的分组顺序，当接收者对密文进行解密时，由于密文分组的顺序被改变了，因此相应的明文分组的顺序也被改变了，那么接收者实际上是解密出了一段被篡改后的密文。在这种场景中，攻击者不需要破译密码，也不需要知道分组密码的算法，他只需要知道哪个分组记录了什么样的数据。 思考一个模拟的场景：</p>
+<p>假设分组的长度为128比特（16字节），某银行的转账请求数据由以下三个分组构成。</p>
+<p>分组1：付款人的银行账号</p>
+<p>分组2：收款人的银行账号</p>
+<p>分组3：转账金额</p>
+<p>此时我们模拟一个转账请求数据：从A-5374帐号向B-6671帐号转账1亿元，用16进制数据表示：</p>
+<p>明文分组1=41 2D 35 33 37 34 20 20 20 20 20 20 20 20 20 20 （付款人：A-5374）</p>
+<p>明文分组2=42 2D 36 36 37 31 20 20 20 20 20 20 20 20 20 20 （收款人：B-6671）</p>
+<p>明文分组3=31 30 30 30 30 30 30 30 30 20 20 20 20 20 20 20 （转账金额：100000000）</p>
+<p>接下来，攻击者将密文分组1和2的内容进行对调。（此时攻击者并不知道分组的具体内容，但知道这是付款人信息）</p>
+<p>明文分组2=42 2D 36 36 37 31 20 20 20 20 20 20 20 20 20 20 （收款人：B-6671）</p>
+<p>明文分组1=41 2D 35 33 37 34 20 20 20 20 20 20 20 20 20 20 （付款人：A-5374）</p>
+<p>明文分组3=31 30 30 30 30 30 30 30 30 20 20 20 20 20 20 20 （转账金额：100000000）</p>
+<p>当银行对信息进行解密时，信息的内容实际上已经发生了改变，付款人的身份和收款人的身份已经被调换了。 这就是ECB模式的最大弱点，可以在不破译密文的情况下操纵密文。</p>
+<p><strong>密码分组链接模式（CBC）</strong></p>
+<p>这个模式的实现更复杂、更安全，因此它是使用最普遍的块加密模式。在这种模式下，来自上一块的密文与当前明文块做XOR逻辑运算，得到的结果才是加密的位块。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/7b3b9d10db494a4c8323e81f506fa5d1.webp" alt="cbc"><figcaption aria-hidden="true">cbc</figcaption>
+</figure>
+<p><strong>CBC模式的特点</strong></p>
+<p>在CBC模式中，我们无法单独对一个中间的明文分组进行加密，加入要生成第三组密文，那么至少需要凑齐分组1,2,3才行。 观察CBC模式的解密过程，我们发现：如果加密后的分组C2出现内容错误（存储介质故障或者网络传输中的误码等）使得一个分组中的0变成了1。那么解密的时候最多只会让2个分组内容受到数据损坏的影响。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160408841.png" alt="cbc_corrupt"><figcaption aria-hidden="true">cbc_corrupt</figcaption>
+</figure>
+<p>但是，如果不是数据出错，而是密文分组中有比特缺失，那么即使丢失一个比特，也会导致密文分组的长度发生变化，后续的分组发生错位，最终导致后面的所有密文分组都会解密出无效的数据。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160502967.png" alt="cbc_bad"><figcaption aria-hidden="true">cbc_bad</figcaption>
+</figure>
+<p><strong>对CBC模式的攻击</strong></p>
+<p>比特反转：如果攻击者截获了传递信息，在这段信息中包含了初始向量IV，根据CBC模式的解密方式我们可以看出，如果攻击者对IV中的任意比特进行反转（1变为0，0变为1），那么明文中相应的比特位就会发生反转。</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160514687.png" alt="cbc_attack"><figcaption aria-hidden="true">cbc_attack</figcaption>
+</figure>
+<h5 id="练习-4">练习</h5>
+<p><a target="_blank" rel="noopener" href="http://aes.cryptohack.org/flipping_cookie/" class="uri">http://aes.cryptohack.org/flipping_cookie/</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">KEY = ?</span><br><span class="line">FLAG = ?</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@chal.route(<span class="params"><span class="string">&#x27;/flipping_cookie/check_admin/&lt;cookie&gt;/&lt;iv&gt;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_admin</span>(<span class="params">cookie, iv</span>):</span><br><span class="line">    cookie = <span class="built_in">bytes</span>.fromhex(cookie)</span><br><span class="line">    iv = <span class="built_in">bytes</span>.fromhex(iv)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        cipher = AES.new(KEY, AES.MODE_CBC, iv)</span><br><span class="line">        decrypted = cipher.decrypt(cookie)</span><br><span class="line">        unpadded = unpad(decrypted, <span class="number">16</span>)</span><br><span class="line">    <span class="keyword">except</span> ValueError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;error&quot;</span>: <span class="built_in">str</span>(e)&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="string">b&quot;admin=True&quot;</span> <span class="keyword">in</span> unpadded.split(<span class="string">b&quot;;&quot;</span>):</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;flag&quot;</span>: FLAG&#125;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;error&quot;</span>: <span class="string">&quot;Only admin can read the flag&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@chal.route(<span class="params"><span class="string">&#x27;/flipping_cookie/get_cookie/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_cookie</span>():</span><br><span class="line">    expires_at = (datetime.today() + timedelta(days=<span class="number">1</span>)).strftime(<span class="string">&quot;%s&quot;</span>)</span><br><span class="line">    cookie = <span class="string">f&quot;admin=False;expiry=<span class="subst">&#123;expires_at&#125;</span>&quot;</span>.encode()</span><br><span class="line"></span><br><span class="line">    iv = os.urandom(<span class="number">16</span>)</span><br><span class="line">    padded = pad(cookie, <span class="number">16</span>)</span><br><span class="line">    cipher = AES.new(KEY, AES.MODE_CBC, iv)</span><br><span class="line">    encrypted = cipher.encrypt(padded)</span><br><span class="line">    ciphertext = iv.<span class="built_in">hex</span>() + encrypted.<span class="built_in">hex</span>()</span><br></pre></td></tr></table></figure>
+<p>P1 = 'admin=False;expi'</p>
+<p>fake_P = 'admin=True;expir'</p>
+<p>IV ^ DEC(C1) = P1</p>
+<p>IV ^ P1 ^ DEC(C1) = P1 ^ P1</p>
+<p>IV ^ P1 ^ DEC(C1) = 0</p>
+<p>IV ^ P1 ^ fake_P ^ DEC(C1) = fake_P</p>
+<ol type="1">
+<li>get_cookie() submit</li>
+<li>复制cookie值为s</li>
+<li>获得初始IV=s[:32]</li>
+<li>获得P1</li>
+<li>获得fake_P</li>
+<li>将IV与P1与fake_P异或，得到IV2</li>
+<li>将IV2与s[32:]提交到check_admin中</li>
+</ol>
+<h3 id="公钥密码">公钥密码</h3>
+<p>加密的困境:密钥分发问题</p>
+<p>虽然密码学家们设计了多种安全的加密算法，但这些加密算法在使用之前都要解决一个很麻烦的问题:密钥分发问题。</p>
+<p>以门锁为例。我们几乎每天都要和门锁与钥匙打交道。安全的门锁大概有什么样的要求呢?简单地说有这么几条:</p>
+<p>门锁要非常坚固，如果没有钥匙的话，任何人都不能够打开门锁;· 钥匙必须足够复杂，除非得到了原始的开锁钥匙，否则钥匙非常难以复制;· 当然了，门本身也必须足够结实。</p>
+<p>对应来看的话，加密算法也需要具有这些特征:</p>
+<p>加密算法要足够安全，没有密钥的攻击者无法从密文中解读出任何有价值的信息; 密钥必须足够复杂，足够长，哪怕密钥有一个数设置错误，都无法正确解密; 当然了，使用加密算法时也需要足够小心，不要有操作上的失误。</p>
+<p>按照这样的安全要求，人们制作了很多安全的门锁，对应的钥匙也变得越来越复杂。但是，这些门锁都有一个共同的问题:</p>
+<p>锁门的时候必须用钥匙锁!</p>
+<p>在实际生活中如果只是我们自己锁门的话还好。可是，如果我希望别人帮我锁门的话，事情就比较麻烦了，比如: 亲戚来我家做客，但我临时有事要出门，不知道几点回来。难道我要请亲戚看家，等我回来再离开吗?最好的方法是亲戚离开我家的时候，帮我把门撞上就好了。</p>
+<p>我新买了一套房子，需要装修队装修。装修过程中，我可以每天早上来新家把门打开，允许装修队随时进入。但是，如果今天的装修工作结束了，装修队需要等我晚上回来把门锁上才能走? 人类的智慧是无穷的。为了解决上面的问题，人类设计了能撞门的锁。锁门的时候，我们就不再需要钥匙了，直接把门撞上就可以离开。只要把门撞好，没有钥匙同样也打不开门锁。</p>
+<p>在双方进行通信时，我们也会遇到这样的问题。通信就好像双方互相之间发送密码保险箱一样：发送方把信息放在保险箱中，用钥匙将保险箱锁住，这就是加密过程；接收方用相同的钥匙打开保险箱，得到放置在内部的信息，这就是解密过程</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160536135.png" alt="s_cry"><figcaption aria-hidden="true">s_cry</figcaption>
+</figure>
+<p>在公钥密码学诞生之前，密码学家们所设计的所有加密算法都遵从了上面的原理。由于加密解密所使用的密钥相同的，看起来就像是镜子里面对称的一样，因此密码学上把这类加密方法称为<strong>「对称加密」(Symmetric Encryption)</strong>。</p>
+<p>然而，我们遇到了一个很棘手的问题：:双方在通信之前如何得到同一个保险箱的同一个钥匙呢？仅有的办法是两个人一同购买一个保险箱，每个人拿着一把钥匙。然而，在实际通信过程中绝大多数情况下双方很难见面，怎么办呢？第二次世界大战期间，德军解决的方法是设立通信兵。通信兵每个月集合一次，集合时下发这个月所使用的恩格玛机密钥。</p>
+<p>那么，在密码学上能不能找到一种类似撞门的方法：设计一种加密算法，使得加密明文时发送方不需要知道密钥，只使用一个接收方公开的信息实现加密；解密时，接收方仍然可以使用自己的密钥进行解密，而其他人却无法从密文中获取任何有价值的信息呢？</p>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160548577.png" alt="as_cry"><figcaption aria-hidden="true">as_cry</figcaption>
+</figure>
+<p>这时候，加密和解密所使用的密钥就不一样了，密钥不再对称。密码学上把这种加密方法称为「非对称加密」(AsymmetricEncryption)。由于加密时，发送方虽然也使用了密钥，但这个密钥是接收方向全世界公开的，因此这种加密方法又被称为<strong>「公钥加密」(Public Key Encryption)</strong>。所有利用公钥思想实现的密码学被称为「公钥密码学」(Public Key Cryptography)。在1976年之前，公钥密码学的想法被视为天方夜谭。但在1976年，密码学的天才们提出了并实现了这个想法。而这个想法的实现就用到了<code>质数性质</code>和<code>数学困难问题</code>。</p>
+<h4 id="rsa算法">RSA算法</h4>
+<p>RSA算法拥有三个步骤:</p>
+<p>密钥生成、加密、解密。</p>
+<p>Alice执行密钥生成步骤，得到自己的公钥和私钥，并把公钥向外界公开。发送方Bob将利用Alice 的公钥对明文进行加密，并把加密结果发送给Alice。只有拥有公钥所对应私钥的 Alice 才能执行解密步骤，正确恢复出明文。</p>
+<p>RSA算法的具体过程</p>
+<ol type="1">
+<li><p>密钥生成: Alice选择两个大质数𝑝,𝑞，计算𝑛=𝑝⋅𝑞。随后，Alice 选择一个与欧拉函数<span class="math inline">\(\phi(n)=(p−1)(q−1)\)</span>互质的数𝑒，并计算<span class="math inline">\(d=e^{−1}mod(p−1)(q−1)\)</span>。前面我们知道，只有当𝑒和<span class="math inline">\((p−1)(q−1)\)</span>互质，Alice才能找到满足条件的d。Alice的私钥为d，公钥为(𝑛, 𝑒)。</p></li>
+<li><p>加密:Bob想要给Alice发送明文m，Bob简单地计算<span class="math inline">\(c=m^e(mod\ n)\)</span>，就得到了密文c。</p></li>
+<li><p>解密: Alice 收到密文c后，计算<span class="math inline">\(m=C^d(mod\ n)\)</span>。</p></li>
+</ol>
+<figure>
+<img src="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160558355.png" alt="rsa"><figcaption aria-hidden="true">rsa</figcaption>
+</figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/crypto/" rel="tag"># crypto</a>
+              <a href="/tags/share/" rel="tag"># share</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/13/Python-%E5%9F%BA%E7%A1%80/" rel="prev" title="Python 基础">
+      <i class="fa fa-chevron-left"></i> Python 基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" rel="next" title="逆向工程">
+      逆向工程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">密码学概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="nav-number">2.</span> <span class="nav-text">古典密码学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E8%A1%A8%E6%9B%BF%E6%8D%A2%E5%8A%A0%E5%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">单表替换加密</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%AF%E6%92%92%E5%AF%86%E7%A0%81"><span class="nav-number">2.1.1.</span> <span class="nav-text">凯撒密码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">练习</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%9B%BF%E6%8D%A2"><span class="nav-number">2.1.2.</span> <span class="nav-text">简单替换</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%9B%BF%E6%8D%A2%E5%AF%86%E7%A0%81%E7%9A%84%E5%AF%86%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">简单替换密码的密码分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0-1"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">练习</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E8%A1%A8%E6%9B%BF%E6%8D%A2"><span class="nav-number">2.1.3.</span> <span class="nav-text">多表替换</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E5%90%88%E6%8C%87%E6%95%B0"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">重合指数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0-2"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">练习</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">现代密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">3.1.</span> <span class="nav-text">对称加密</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-number">3.1.1.</span> <span class="nav-text">流密码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A7%BB%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">移位寄存器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%8D%E9%A6%88%E7%A7%BB%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">反馈移位寄存器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E5%8F%8D%E9%A6%88%E7%A7%BB%E4%BD%8D%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">3.1.1.3.</span> <span class="nav-text">线性反馈移位寄存器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#lfsr%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-number">3.1.1.4.</span> <span class="nav-text">LFSR流密码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0-3"><span class="nav-number">3.1.1.5.</span> <span class="nav-text">练习</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lcg"><span class="nav-number">3.1.2.</span> <span class="nav-text">LCG</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AF%B9%E4%BA%8Elcg%E7%9A%84%E6%94%BB%E5%87%BB"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">对于LCG的攻击</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81"><span class="nav-number">3.1.3.</span> <span class="nav-text">分组密码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">分组密码的模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0-4"><span class="nav-number">3.1.3.2.</span> <span class="nav-text">练习</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">公钥密码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#rsa%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.1.</span> <span class="nav-text">RSA算法</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lylanfree"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">109k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">1:39</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('post.copy_button').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('post.copy_success')
+          else $(this).text('post.copy_failure')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('post.copy_button')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>
