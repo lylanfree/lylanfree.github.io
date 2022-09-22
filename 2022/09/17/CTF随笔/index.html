@@ -20,21 +20,20 @@
     var CONFIG = {"hostname":"192.168.31.11","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
-  <meta name="description" content="凯撒？替换？ 打开文件">
+  <meta name="description" content="此帖用于记录打CTF过程中一些小技巧，以免忘记，可能会比较杂乱。  perl程序逆向2  perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。 逆向时可以查找script字符串，动态调试过程中找到引用该字符的指令并添加断点，逐步执行即可。  dnspy对代码进行修改后，进行编译，需要保存，并重新载入才完成。 安卓unity游戏的核心逻辑一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="古典密码题解 2">
-<meta property="og:url" content="https://192.168.31.11:5443/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-2/index.html">
+<meta property="og:title" content="CTF随笔">
+<meta property="og:url" content="https://192.168.31.11:5443/2022/09/17/CTF%E9%9A%8F%E7%AC%94/index.html">
 <meta property="og:site_name" content="lylanfree&#39;s blog">
-<meta property="og:description" content="凯撒？替换？ 打开文件">
+<meta property="og:description" content="此帖用于记录打CTF过程中一些小技巧，以免忘记，可能会比较杂乱。  perl程序逆向2  perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。 逆向时可以查找script字符串，动态调试过程中找到引用该字符的指令并添加断点，逐步执行即可。  dnspy对代码进行修改后，进行编译，需要保存，并重新载入才完成。 安卓unity游戏的核心逻辑一">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-09-12T08:28:21.000Z">
-<meta property="article:modified_time" content="2022-09-12T08:56:12.118Z">
+<meta property="article:published_time" content="2022-09-17T03:04:25.000Z">
+<meta property="article:modified_time" content="2022-09-18T04:22:16.717Z">
 <meta property="article:author" content="lylanfree">
-<meta property="article:tag" content="crypto">
-<meta property="article:tag" content="classical cryptography">
+<meta property="article:tag" content="reverse">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://192.168.31.11:5443/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-2/">
+<link rel="canonical" href="https://192.168.31.11:5443/2022/09/17/CTF%E9%9A%8F%E7%AC%94/">
 
 
 <script id="page-configurations">
@@ -47,7 +46,7 @@
   };
 </script>
 
-  <title>古典密码题解 2 | lylanfree's blog</title>
+  <title>CTF随笔 | lylanfree's blog</title>
   
 
 
@@ -199,7 +198,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://192.168.31.11:5443/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-2/">
+    <link itemprop="mainEntityOfPage" href="https://192.168.31.11:5443/2022/09/17/CTF%E9%9A%8F%E7%AC%94/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -212,7 +211,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          古典密码题解 2
+          CTF随笔
         </h1>
 
         <div class="post-meta">
@@ -221,10 +220,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-09-12 16:28:21 / Modified: 16:56:12" itemprop="dateCreated datePublished" datetime="2022-09-12T16:28:21+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-17 11:04:25" itemprop="dateCreated datePublished" datetime="2022-09-17T11:04:25+08:00">2022-09-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-09-18 12:22:16" itemprop="dateModified" datetime="2022-09-18T12:22:16+08:00">2022-09-18</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -248,14 +253,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.9k</span>
+              <span>259</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
+              <span>1 mins.</span>
             </span>
 
         </div>
@@ -267,28 +272,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="凯撒替换">凯撒？替换？</h2>
-<h3 id="打开文件">打开文件</h3>
-<span id="more"></span>
-<p>发现内容为：<code>MTHJ&#123;CUBCGXGUGXWREXIPOYAOEYFIGXWRXCHTKHFCOHCFDUCGTXZO HIXOEOWMEHZO&#125;</code></p>
-<p>采用词频分析网站，进行解密，得到结果为<code>flag substitution cipher decryption is always easy just like a piece of cake</code></p>
-<p>因此flag为<code>flag&#123;substitutioncipherdecryptionisalwayseasyjustlikeapieceofcake&#125;</code></p>
-<h2 id="简单刺激小游戏">简单刺激小游戏</h2>
+        <p>此帖用于记录打CTF过程中一些小技巧，以免忘记，可能会比较杂乱。</p>
 <ol type="1">
-<li>文件内容为<code>f&#123;1calrfesaaE_ygInE&#125;</code>，应该为栅栏密码</li>
-<li>使用脚本，得到结果为：<code>flag&#123;raI1fEnce_Easy&#125;</code></li>
+<li>perl程序逆向2
+<ol type="1">
+<li>perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。</li>
+<li>逆向时可以查找<code>script</code>字符串，动态调试过程中找到引用该字符的指令并添加断点，逐步执行即可。</li>
+</ol></li>
+<li>dnspy对代码进行修改后，进行编译，需要保存，并重新载入才完成。</li>
+<li>安卓unity游戏的核心逻辑一般位于assets-CSharp.dll，将该dll拖入dnspy即可。</li>
+<li>C#里面字符串默认是Unicode，得到的字符串需要在每个字符后添加<code>\x00</code>。</li>
 </ol>
-<h2 id="还原大师">还原大师</h2>
-<p>我们得到了一串神秘字符串：<code>TASC?O3RJMV?WDJKX?ZM</code>，中间的问号为未知大写字母，并得到了该字符串的部分MD5为<code>E903???4DAB</code>，请猜出该字符串，并提交MD5作为答案</p>
-<p>编写脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">s = <span class="string">&#x27;TASC?O3RJMV?WDJKX?ZM&#x27;</span></span><br><span class="line">md5 = <span class="string">&#x27;E903???4DAB&#x27;</span>.lower()</span><br><span class="line"><span class="keyword">for</span> j1 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>)+<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> j2 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>)+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">for</span> j3 <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>), <span class="built_in">ord</span>(<span class="string">&#x27;Z&#x27;</span>)+<span class="number">1</span>):</span><br><span class="line">            ss = s[:<span class="number">4</span>]+<span class="built_in">chr</span>(j1)+ s[<span class="number">5</span>:<span class="number">11</span>] + <span class="built_in">chr</span>(j2)+ s[<span class="number">12</span>:<span class="number">17</span>] + <span class="built_in">chr</span>(j3) + s[-<span class="number">2</span>:]</span><br><span class="line">            <span class="keyword">assert</span>(<span class="built_in">len</span>(ss) == <span class="built_in">len</span>(s))</span><br><span class="line">            mds = hashlib.md5(ss.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest().lower()</span><br><span class="line">            <span class="keyword">if</span> mds[:<span class="number">4</span>] == md5[:<span class="number">4</span>] <span class="keyword">and</span> mds[<span class="number">7</span>:<span class="number">11</span>] == md5[<span class="number">7</span>:]:</span><br><span class="line">                <span class="built_in">print</span>(mds)</span><br><span class="line">                <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
-<p>得到结果为<code>E9032994DABAC08080091151380478A2</code></p>
-<h2 id="古典密码1">古典密码1</h2>
-<p>打开文件，发现内容如下： &gt; iodj{36g9i2777 &gt; &gt; -... ----. ..--- -... .- -.-. ...-- ----. .- .- ..--- &gt; &gt; a0dd}b6942c07</p>
-<p>第1为凯撒加密，第2为摩尔斯密码，第3为栅栏密码</p>
-<p>凯撒和摩尔斯密码解密脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 凯撒密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt_ks</span>(<span class="params">s : <span class="built_in">str</span></span>):</span><br><span class="line">    s = s.lower()</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">27</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> s:</span><br><span class="line">            <span class="keyword">if</span> i.isalpha():</span><br><span class="line">                <span class="built_in">print</span>(<span class="built_in">chr</span>((<span class="built_in">ord</span>(i) + j - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)) % <span class="number">26</span> + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)), end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="built_in">print</span>(i,end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">decrypt_ks(<span class="string">&#x27;iodj&#123;36g9i2777&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 摩尔斯密码</span></span><br><span class="line">a2mo_dict = &#123;<span class="string">&#x27;a&#x27;</span>: <span class="string">&#x27;.-&#x27;</span>, <span class="string">&#x27;b&#x27;</span>: <span class="string">&#x27;-...&#x27;</span>, <span class="string">&#x27;c&#x27;</span>: <span class="string">&#x27;-.-.&#x27;</span>, <span class="string">&#x27;d&#x27;</span>: <span class="string">&#x27;-..&#x27;</span>, <span class="string">&#x27;e&#x27;</span>: <span class="string">&#x27;.&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;f&#x27;</span>: <span class="string">&#x27;..-.&#x27;</span>, <span class="string">&#x27;g&#x27;</span>: <span class="string">&#x27;--.&#x27;</span>, <span class="string">&#x27;h&#x27;</span>: <span class="string">&#x27;....&#x27;</span>, <span class="string">&#x27;i&#x27;</span>: <span class="string">&#x27;..&#x27;</span>, <span class="string">&#x27;j&#x27;</span>: <span class="string">&#x27;.---&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;k&#x27;</span>: <span class="string">&#x27;-.-&#x27;</span>, <span class="string">&#x27;l&#x27;</span>: <span class="string">&#x27;.-..&#x27;</span>, <span class="string">&#x27;m&#x27;</span>: <span class="string">&#x27;--&#x27;</span>, <span class="string">&#x27;n&#x27;</span>: <span class="string">&#x27;-.&#x27;</span>, <span class="string">&#x27;o&#x27;</span>: <span class="string">&#x27;---&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;p&#x27;</span>: <span class="string">&#x27;.--.&#x27;</span>, <span class="string">&#x27;q&#x27;</span>: <span class="string">&#x27;--.-&#x27;</span>, <span class="string">&#x27;r&#x27;</span>: <span class="string">&#x27;.-.&#x27;</span>, <span class="string">&#x27;s&#x27;</span>: <span class="string">&#x27;...&#x27;</span>, <span class="string">&#x27;t&#x27;</span>: <span class="string">&#x27;-&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;u&#x27;</span>: <span class="string">&#x27;..-&#x27;</span>, <span class="string">&#x27;v&#x27;</span>: <span class="string">&#x27;...-&#x27;</span>, <span class="string">&#x27;w&#x27;</span>: <span class="string">&#x27;.--&#x27;</span>, <span class="string">&#x27;x&#x27;</span>: <span class="string">&#x27;-..-&#x27;</span>, <span class="string">&#x27;y&#x27;</span>: <span class="string">&#x27;-.--&#x27;</span>, <span class="string">&#x27;z&#x27;</span>: <span class="string">&#x27;--..&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;0&#x27;</span>: <span class="string">&#x27;-----&#x27;</span>, <span class="string">&#x27;1&#x27;</span>: <span class="string">&#x27;.----&#x27;</span>, <span class="string">&#x27;2&#x27;</span>: <span class="string">&#x27;..---&#x27;</span>, <span class="string">&#x27;3&#x27;</span>: <span class="string">&#x27;...--&#x27;</span>, <span class="string">&#x27;4&#x27;</span>: <span class="string">&#x27;....-&#x27;</span>,</span><br><span class="line">             <span class="string">&#x27;5&#x27;</span>: <span class="string">&#x27;.....&#x27;</span>, <span class="string">&#x27;6&#x27;</span>: <span class="string">&#x27;-....&#x27;</span>, <span class="string">&#x27;7&#x27;</span>: <span class="string">&#x27;--...&#x27;</span>, <span class="string">&#x27;8&#x27;</span>: <span class="string">&#x27;---..&#x27;</span>, <span class="string">&#x27;9&#x27;</span>: <span class="string">&#x27;----.&#x27;</span></span><br><span class="line">             &#125;</span><br><span class="line">mo2a_dict = <span class="built_in">dict</span>(<span class="built_in">zip</span>(a2mo_dict.values(), a2mo_dict.keys()))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">decrypt_ms</span>(<span class="params">s: <span class="built_in">str</span>, split: <span class="built_in">str</span></span>):</span><br><span class="line">    l = s.split(split)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> l:</span><br><span class="line">        <span class="built_in">print</span>(mo2a_dict[i],end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">decrypt_ms(<span class="string">&#x27;-... ----. ..--- -... .- -.-. ...-- ----. .- .- ..---&#x27;</span>,<span class="string">&#x27; &#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>得到解密内容1、2分别为：<code>flag&#123;36d9f2777</code>、<code>b92bac39aa2</code>，使用之前的栅栏密码解码脚本解密内容3，得到<code>ab206cd90d47&#125;</code>，因此flag为<code>flag&#123;36d9f2777b92bac39aa2ab206cd90d47&#125;</code></p>
 
     </div>
 
@@ -298,8 +292,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/crypto/" rel="tag"># crypto</a>
-              <a href="/tags/classical-cryptography/" rel="tag"># classical cryptography</a>
+              <a href="/tags/reverse/" rel="tag"># reverse</a>
           </div>
 
         
@@ -308,13 +301,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-1/" rel="prev" title="古典密码题解 1">
-      <i class="fa fa-chevron-left"></i> 古典密码题解 1
+    <a href="/2022/09/16/2019%E7%BA%A2%E5%B8%BD%E6%9D%AF-ChildRE/" rel="prev" title="2019红帽杯 ChildRE">
+      <i class="fa fa-chevron-left"></i> 2019红帽杯 ChildRE
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/09/12/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E9%A2%98%E8%A7%A3-3/" rel="next" title="古典密码题解 3">
-      古典密码题解 3 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -373,7 +363,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%AF%E6%92%92%E6%9B%BF%E6%8D%A2"><span class="nav-number">1.</span> <span class="nav-text">凯撒？替换？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E6%96%87%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">打开文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%88%BA%E6%BF%80%E5%B0%8F%E6%B8%B8%E6%88%8F"><span class="nav-number">2.</span> <span class="nav-text">简单刺激小游戏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%98%E5%8E%9F%E5%A4%A7%E5%B8%88"><span class="nav-number">3.</span> <span class="nav-text">还原大师</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%811"><span class="nav-number">4.</span> <span class="nav-text">古典密码1</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
