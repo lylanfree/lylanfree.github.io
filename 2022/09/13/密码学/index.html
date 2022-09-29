@@ -17,47 +17,47 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"192.168.31.11","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
   <meta name="description" content="CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。 密码学概述 密码学（Cryptography）一般可分为古典密码学和现代密码学。 其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：  单">
 <meta property="og:type" content="article">
 <meta property="og:title" content="密码学">
-<meta property="og:url" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/index.html">
+<meta property="og:url" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/index.html">
 <meta property="og:site_name" content="lylanfree&#39;s blog">
 <meta property="og:description" content="CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。 密码学概述 密码学（Cryptography）一般可分为古典密码学和现代密码学。 其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：  单">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155811688.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155837499.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155920433.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155939726.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160012030.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160026901.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160037083.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160101570.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160121725.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160136431.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160149259.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160241776.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160253070.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160305798.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/7b3b9d10db494a4c8323e81f506fa5d1.webp">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160408841.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160502967.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160514687.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160536135.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160548577.png">
-<meta property="og:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160558355.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155811688.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155837499.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155920433.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155939726.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160012030.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160026901.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160037083.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160101570.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160121725.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160136431.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160149259.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160241776.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160253070.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160305798.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/7b3b9d10db494a4c8323e81f506fa5d1.webp">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160408841.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160502967.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160514687.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160536135.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160548577.png">
+<meta property="og:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913160558355.png">
 <meta property="article:published_time" content="2022-09-13T07:50:05.000Z">
 <meta property="article:modified_time" content="2022-09-13T09:25:13.716Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="crypto">
 <meta property="article:tag" content="share">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
+<meta name="twitter:image" content="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/image-20220913155739118.png">
 
-<link rel="canonical" href="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+<link rel="canonical" href="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
 
 
 <script id="page-configurations">
@@ -222,7 +222,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://192.168.31.11:5443/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -726,7 +726,7 @@ m&amp;\equiv\frac{s_1-s_2}{s_0-s_1}(mod\ n)\end{aligned}\]</span></p></li>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -739,7 +739,7 @@ m&amp;\equiv\frac{s_1-s_2}{s_0-s_1}(mod\ n)\end{aligned}\]</span></p></li>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -776,13 +776,13 @@ m&amp;\equiv\frac{s_1-s_2}{s_0-s_1}(mod\ n)\end{aligned}\]</span></p></li>
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">129k</span>
+    <span title="Symbols count total">140k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">1:58</span>
+    <span title="Reading time total">2:07</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
