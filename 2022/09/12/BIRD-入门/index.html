@@ -28,9 +28,9 @@
 <meta property="og:description" content="BIRD，即BIRD Internet Routing Daemon，是一个开源软件，支持各类标准路由协议，包括BGP，RIP和OSPF。本文主要关注BGP和OSPF协议，下面对其进行简单介绍。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/image-20220912212527054-16629891354721.png">
-<meta property="og:image" content="http://example.com/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/Users/lylan/Desktop/resources/8e5851d6517a45fe8067e76f0b6e0f64.png">
+<meta property="og:image" content="http://example.com/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/IX-100.png">
 <meta property="article:published_time" content="2022-09-12T13:23:11.000Z">
-<meta property="article:modified_time" content="2022-09-12T13:33:50.487Z">
+<meta property="article:modified_time" content="2023-04-29T06:54:28.991Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="bird">
 <meta property="article:tag" content="network">
@@ -224,10 +224,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-09-12 21:23:11 / Modified: 21:33:50" itemprop="dateCreated datePublished" datetime="2022-09-12T21:23:11+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 21:23:11" itemprop="dateCreated datePublished" datetime="2022-09-12T21:23:11+08:00">2022-09-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-04-29 14:54:28" itemprop="dateModified" datetime="2023-04-29T14:54:28+08:00">2023-04-29</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -311,7 +317,7 @@
 <h2 id="bgp-peering">BGP Peering</h2>
 <p>在IX-100中，AS-150，AS-151，AS-2，AS-3和AS-4都连接到IX-100网络 <em>0.100.0.0/24</em>。每个自治系统都有BGP路由器连接到该网络中，且属于物理连接，但并不意味着自治系统已经与其他系统进行了对等连接，为了建立对等连接，每个BGP路由器需要设置<code>peering</code>关系。</p>
 <figure>
-<img src="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/Users\lylan\Desktop\resources\8e5851d6517a45fe8067e76f0b6e0f64.png" alt="IX-100.png"><figcaption aria-hidden="true">IX-100.png</figcaption>
+<img src="/2022/09/12/BIRD-%E5%85%A5%E9%97%A8/IX-100.png" alt="IX-100"><figcaption aria-hidden="true">IX-100</figcaption>
 </figure>
 <h3 id="建立peering关系">建立Peering关系</h3>
 <p>在两个BGP路由器物理连接后，需要设置BGP peering用于相互通信和交换路由信息。BGP路由器可以建立多个peer，每个叫做 <em>peering session</em>。BIRD使用<code>bgp</code>协议建立 <em>peering session</em>。</p>
@@ -447,7 +453,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -460,7 +466,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-count">20</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -487,7 +493,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -497,13 +503,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">222k</span>
+    <span title="Symbols count total">224k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:22</span>
+    <span title="Reading time total">3:24</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
