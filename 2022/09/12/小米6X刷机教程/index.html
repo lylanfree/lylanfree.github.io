@@ -28,7 +28,7 @@
 <meta property="og:description" content="最进闲来无事，早就想将手中的小米6X手机刷机了，本以为刷机很简单，却也整整搞了一天才完成，这里记录下刷机的过程。 解锁 首先下载官方解锁工具，然后进行以下步骤：">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-12T10:45:29.000Z">
-<meta property="article:modified_time" content="2022-09-12T13:23:27.454Z">
+<meta property="article:modified_time" content="2023-12-22T12:22:50.264Z">
 <meta property="article:author" content="lylanfree">
 <meta property="article:tag" content="刷机">
 <meta name="twitter:card" content="summary">
@@ -220,10 +220,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2022-09-12 18:45:29 / Modified: 21:23:27" itemprop="dateCreated datePublished" datetime="2022-09-12T18:45:29+08:00">2022-09-12</time>
+              <time title="Created: 2022-09-12 18:45:29" itemprop="dateCreated datePublished" datetime="2022-09-12T18:45:29+08:00">2022-09-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-12-22 20:22:50" itemprop="dateModified" datetime="2023-12-22T20:22:50+08:00">2023-12-22</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -247,7 +253,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.8k</span>
+              <span>2.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -271,7 +277,8 @@
 <p>首先下载<a target="_blank" rel="noopener" href="https://www.miui.com/unlock/download.html">官方解锁工具</a>，然后进行以下步骤：</p>
 <span id="more"></span>
 <ol type="1">
-<li>进入“设置 -&gt; 开发者选项 -&gt; 设备解锁状态”中绑定账号和设备；</li>
+<li>进入“设置 -&gt; 开发者选项 -&gt;
+设备解锁状态”中绑定账号和设备；</li>
 <li>手动进入Bootloader模式（关机后，同时按住开机键和音量下键）；</li>
 <li>通过USB连接手机，点击 “解锁”按钮；</li>
 <li>电脑打开解锁工具，使用绑定过手机的账号登录解锁工具，使用USB连接进入了fastboot模式的手机，此时会显示已连接的状态，若未连接，则点击设置，进行驱动检测。</li>
@@ -279,7 +286,10 @@
 <p>连接成功后，点击<strong>解锁</strong>按钮，手机将会进行解锁，但<code>手机内资料将会被清空，记得备份好手机资料</code>。解锁后，手机系统将会恢复出场设置。</p>
 <blockquote>
 <p>使用USB2.0接口进行连接，否则无法连接到手机</p>
+<p>在win11中，打开miflash_unlock.exe后，FastBoot模式下会掉驱动，可以采用以下方法解决<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 </blockquote>
+<p>复制以下代码，存为bat脚本，然后右键以管理员权限运行，添加完成后正常关闭窗口，此后再打开<code>miflash_unlock.exe</code>便不会掉驱动了。</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"></span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\<span class="number">18</span>D1D00D0100&quot; /v &quot;osvc&quot; /t REG_BINARY /d &quot;<span class="number">0000</span>&quot; /f</span><br><span class="line"></span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\<span class="number">18</span>D1D00D0100&quot; /v &quot;SkipContainerIdQuery&quot; /t REG_BINARY /d &quot;<span class="number">01000000</span>&quot; /f</span><br><span class="line"></span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\<span class="number">18</span>D1D00D0100&quot; /v &quot;SkipBOSDescriptorQuery&quot; /t REG_BINARY /d &quot;<span class="number">01000000</span>&quot; /f</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
 <h2 id="刷入第三方bootloader">刷入第三方bootloader</h2>
 <p>手机重启，同时按电源键和音量下键，进入fastboot模式，打开电脑上的platform-tools文件夹，在该文件夹下进入cmd命令行或者powershell。</p>
 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; .\fastboot.exe flash recovery [recovery.img] </span><br></pre></td></tr></table></figure>
@@ -290,10 +300,11 @@
 <ol type="1">
 <li>进入<code>Factory reset</code>，然后点击<code>Format data/factory reset</code>、<code>Format cache partition</code>和<code>Format system partition</code>；</li>
 <li>手机清除后，点击<code>Apply Update</code>，再点击<code>Apply from ADB</code>，此时进入ADB模式；</li>
-<li>USB连接电脑，使用adb工具运行命令<code>adb sideload 镜像.zip</code>，此时会自动进行刷入，当刷入成功后，会显示<strong>Total xfer: 1.00x,</strong>。此时已经成功刷入系统，点击重启即可。</li>
+<li>USB连接电脑，使用adb工具运行命令<code>adb sideload 镜像.zip</code>，此时会自动进行刷入，当刷入成功后，会显示<strong>Total
+xfer: 1.00x,</strong>。此时已经成功刷入系统，点击重启即可。</li>
 </ol>
 <h2 id="刷入magisk">刷入magisk</h2>
-<p>FastBoot刷Magisk的优点<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>FastBoot刷Magisk的优点<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <ol type="1">
 <li>无需第三方Recovery</li>
 <li>不影响系统升级（完整包升级）</li>
@@ -302,12 +313,15 @@
 <ol type="1">
 <li><p>安装magisk APP</p></li>
 <li><p>从镜像.zip中提取boot.img，放到手机中；（如果系统包里面没有boot.img，只有payload.bin，请参考这个<a href="magiskcn.com/payload-boot">教程</a>提取：)</p></li>
-<li><p>打开Magisk【安装 – 选择并修补一个文件 – 弹窗文件管理窗口（找到刚刚提取的boot.img）- 开始】</p></li>
+<li><p>打开Magisk【安装 – 选择并修补一个文件 –
+弹窗文件管理窗口（找到刚刚提取的boot.img）- 开始】</p></li>
 <li><p>修补结束，会生成一个名字为（magisk_patched-版本号_随机字符.img）的文件（每次生成的随机字符都不一样，使用的时候请输入生成的名字），将生成的文件复制到电脑中</p></li>
-<li><p>手机进入fastboot模式，连接电脑，使用platform-tools运行如下命令 <code>fastboot flash boot 面具文件</code></p></li>
+<li><p>手机进入fastboot模式，连接电脑，使用platform-tools运行如下命令
+<code>fastboot flash boot 面具文件</code></p></li>
 <li><p>出现下面这三行代码，就是成功刷入了。</p>
 <blockquote>
-<p>Sending 'boot' (131072 KB) OKAY [ 3.049s] Writing 'boot' OKAY [ 0.587s] Finished. Total time: 4.582s</p>
+<p>Sending 'boot' (131072 KB) OKAY [ 3.049s] Writing 'boot' OKAY [
+0.587s] Finished. Total time: 4.582s</p>
 </blockquote></li>
 <li><p>重启手机，已经成功刷入面具</p></li>
 </ol>
@@ -315,10 +329,10 @@
 <p>若想恢复无面具的系统，则按步骤5、6、7刷入从<code>镜像.zip</code>中提取的<code>boot.img</code></p>
 </blockquote>
 <h2 id="刷机包汇总">刷机包汇总</h2>
-<p>MIUI<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<p>Arrow OS<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
-<p>Lineage OS<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
-<p>TWRP<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p>MIUI<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<p>Arrow OS<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>Lineage OS<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
+<p>TWRP<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/xiaoleGun/android_device_xiaomi_wayne-4.19">KaleidoscopeOS-unofficial</a></p>
 <h2 id="恢复系统">恢复系统</h2>
 <ol type="1">
@@ -331,16 +345,17 @@
 <blockquote>
 <p>右下角可以选择全部删除、保留用户数据、全部删除并lock三个选项，若选择<code>全部删除并lock</code>，则需要重新解bootloader。</p>
 </blockquote>
-<section class="footnotes" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1" role="doc-endnote"><p><a target="_blank" rel="noopener" href="https://magiskcn.com/" class="uri">https://magiskcn.com/</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>https://web.vip.miui.com/page/info/mio/mio/detail?postId=5876321&amp;app_version=dev.20051<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>https://arrowos.net/download<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>https://download.lineageos.org/wayne<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5" role="doc-endnote"><p>https://dl.twrp.me/wayne/<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>https://blog.csdn.net/gmaaa123/article/details/102882838<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a target="_blank" rel="noopener" href="https://magiskcn.com/" class="uri">https://magiskcn.com/</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://www.miuistore.com/<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://arrowos.net/download<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://download.lineageos.org/wayne<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://dl.twrp.me/wayne/<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>
+</aside>
 
     </div>
 
@@ -440,7 +455,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -453,7 +468,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -490,13 +505,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">224k</span>
+    <span title="Symbols count total">227k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:24</span>
+    <span title="Reading time total">3:26</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
