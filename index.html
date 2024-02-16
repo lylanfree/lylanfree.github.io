@@ -927,7 +927,7 @@ buf</strong>地址即可。构造exp如下：</p>
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-09-18 12:22:16" itemprop="dateModified" datetime="2022-09-18T12:22:16+08:00">2022-09-18</time>
+                <time title="Modified: 2024-02-16 13:41:56" itemprop="dateModified" datetime="2024-02-16T13:41:56+08:00">2024-02-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -945,7 +945,7 @@ buf</strong>地址即可。构造exp如下：</p>
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>259</span>
+              <span>581</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -966,14 +966,31 @@ buf</strong>地址即可。构造exp如下：</p>
       
           <p>此帖用于记录打CTF过程中一些小技巧，以免忘记，可能会比较杂乱。</p>
 <ol type="1">
-<li>perl程序逆向2
+<li><p>perl程序逆向2</p>
 <ol type="1">
 <li>perl是解释语言，perlapp只是把你的perl程序压缩后放在资源里面，执行的时候会解压的。</li>
 <li>逆向时可以查找<code>script</code>字符串，动态调试过程中找到引用该字符的指令并添加断点，逐步执行即可。</li>
 </ol></li>
-<li>dnspy对代码进行修改后，进行编译，需要保存，并重新载入才完成。</li>
-<li>安卓unity游戏的核心逻辑一般位于assets-CSharp.dll，将该dll拖入dnspy即可。</li>
-<li>C#里面字符串默认是Unicode，得到的字符串需要在每个字符后添加<code>\x00</code>。</li>
+<li><p>dnspy对代码进行修改后，进行编译，需要保存，并重新载入才完成。</p></li>
+<li><p>安卓unity游戏的核心逻辑一般位于assets-CSharp.dll，将该dll拖入dnspy即可。</p></li>
+<li><p>C#里面字符串默认是Unicode，得到的字符串需要在每个字符后添加<code>\x00</code>。</p></li>
+<li><p>linux as 汇编重复数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.rept 3 # 重复次数</span><br><span class="line">.long 0 # 重复数据值</span><br><span class="line">.endr</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>.byte ：把8 位数当成数据插入到汇编中</li>
+<li>.hword： 把16位数当成数据插入到汇编中</li>
+<li>.long和 .int : 把32位数当成数据插入到汇编中</li>
+<li>.quad： 把64位数当成数据插入到汇编中</li>
+<li>.float: 把浮点数当成数据插入到汇编中</li>
+<li>.ascii “string” : 把 string 当作数据插入到汇编中，ascii
+伪操作定义的字符串需要自行添加结尾字符<code>\0</code></li>
+<li>.asciz "string" ：类似 ascii, 在string 后面插入
+一个结尾字符 <code>\0</code></li>
+</ul>
+</blockquote></li>
+<li><p>as
+使用intel语法，在命令中添加-msyntax=intel，或在asm文件中添加<code>.intel_syntax noprefix</code>标记</p></li>
 </ol>
 
       
@@ -1396,7 +1413,7 @@ buf</strong>地址即可。构造exp如下：</p>
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
