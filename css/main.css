@@ -1193,7 +1193,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffdbc2;
+  background: #fff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2420,4 +2420,9 @@ embed {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+figcaption {
+  font: italic smaller sans-serif;
+  padding: 1px;
+  text-align: center;
 }
